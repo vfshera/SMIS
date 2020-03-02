@@ -1,4 +1,10 @@
-<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+<div class="loader">
+    <img src="/storage/images/loader.svg" alt="Loading...">
+</div>
+
+{{-- END LOADER --}}
+
+<nav class="navbar navbar-expand-md fixed-top navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             <img src="/storage/images/smislogo.png" alt="SMIS LOGO" height="40px" width="80px">
@@ -17,6 +23,15 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
                 @guest
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Parent</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Student</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>

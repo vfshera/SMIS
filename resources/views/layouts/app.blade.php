@@ -9,17 +9,20 @@
 
     <title>{{ config('app.name', 'SMIS') }}</title>
 
-
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <div id="app">
+
         @include('parts.navbar')
-        <main class="py-4">
+
+        <main>
             @yield('content')
         </main>
+
         <script src="{{ asset('js/app.js')}}"></script>
+
     </div>
 </body>
 </html>
