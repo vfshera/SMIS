@@ -44,7 +44,7 @@
     </div>
 
     {{-- NEWS --}}
-    <div id="news" class="container m-auto pt-3 pb-5 particles-effect">
+    <div id="news" class="container m-auto pt-3 pb-5">
         <h1 class="text-center">News</h1>
         <div class="row card-deck">
             <div class="card col-md-4 p-0">
@@ -243,27 +243,36 @@
             </div>
             <div class="form-row mb-2">
                 <label for="message">Message :</label>
-                <textarea name="message" class="col-md-12 form-control" id="" cols="30" rows="10" required></textarea>
+                <textarea name="message" class="col-md-12 form-control" id="" cols="30" rows="10" required>
+
+                </textarea>
             </div>
-            <button type="submit" class="btn btn-primary col-md-4 mt-5 m-auto float-right">SEND</button>
+            <button type="submit" class="btn btn-lg btn-primary col-md-4 mt-5 m-auto float-right">SEND</button>
         </form>
 
     </div>
  </div>
 
+ {{-- SCROLL TO TOP --}}
+ <a id="gotopbtn" href="#">
+     <i class="fas fa-arrow-up"></i>
+</a>
 
 
+<footer id="home-footer" class=" mt-5">
+   <div class="text-center pb-4 pt-5">
+        <h5>Phone : 122356789</h5>
+        <h5>Address : 101 TAVETA</h5>
+        <h5>Email : info@smis.ac.ke</h5>
 
-<footer id="home-footer" class="mb-5 mt-5">
-    <h3 class="text-center">&copy;SMIS</h3>
+        <h4 class="mt-3">&copy;SMIS</h4>
+    </div>
 </footer>
 
 
-
-
+{{-- SCRIPTS --}}
 
         <script>
-
                 function initMap() {
 
                 var murray = {lat: -3.4558834, lng: 38.3488217};
@@ -275,6 +284,5 @@
                 }
         </script>
 
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvcIspinZD9e-KrQON36ITVP2ygT5HK6c&callback=initMap">
-        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvcIspinZD9e-KrQON36ITVP2ygT5HK6c&callback=initMap"></script>
 @endsection

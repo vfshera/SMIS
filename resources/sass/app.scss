@@ -7,6 +7,10 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+$fa-font-path: "../webfonts";
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+
 *{
     margin: 0;
     padding: 0;
@@ -78,7 +82,34 @@
     width: 100% ;
 }
 
-#home-footer{
-    height: 30px;
-    width: 100%;
+
+
+// SCROLL
+html{
+    scroll-behavior: smooth;
+  }
+
+  .fas {
+    color: white !important;
 }
+  #gotopbtn{
+    position: fixed;
+    width: 45px;
+    height: 45px;
+    background: rgba($color: royalblue, $alpha: .9);
+    bottom: 40px;
+    right: 50px;
+    display: none;
+    text-decoration: none;
+    text-align: center;
+    line-height: 50px;
+    font-size: 22px;
+  }
+
+
+  #home-footer
+  {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.712);
+      color: white;
+  }

@@ -50158,18 +50158,24 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./resources/js/util.js");
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_util_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var aos__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aos */ "./node_modules/aos/dist/aos.js");
-/* harmony import */ var aos__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aos__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var aos_dist_aos_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! aos/dist/aos.css */ "./node_modules/aos/dist/aos.css");
-/* harmony import */ var aos_dist_aos_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(aos_dist_aos_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _countDown__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./countDown */ "./resources/js/countDown.js");
+/* harmony import */ var _countDown__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_countDown__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loader */ "./resources/js/loader.js");
+/* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_loader__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _scrollToTop__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scrollToTop */ "./resources/js/scrollToTop.js");
+/* harmony import */ var _scrollToTop__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_scrollToTop__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var aos__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! aos */ "./node_modules/aos/dist/aos.js");
+/* harmony import */ var aos__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(aos__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var aos_dist_aos_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! aos/dist/aos.css */ "./node_modules/aos/dist/aos.css");
+/* harmony import */ var aos_dist_aos_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(aos_dist_aos_css__WEBPACK_IMPORTED_MODULE_4__);
+
+
 
 
  // You can also use <link> for styles
 // ..
 
-aos__WEBPACK_IMPORTED_MODULE_1___default.a.init();
+aos__WEBPACK_IMPORTED_MODULE_3___default.a.init();
 /**
  *
  * First we will load all of this project's JavaScript dependencies which
@@ -50330,22 +50336,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/util.js":
-/*!******************************!*\
-  !*** ./resources/js/util.js ***!
-  \******************************/
+/***/ "./resources/js/countDown.js":
+/*!***********************************!*\
+  !*** ./resources/js/countDown.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-window.addEventListener("load", function () {
-  var loader = document.querySelector(".loader");
-  loader.className += " hidden"; // class "loader hidden"
-}); // $(window).on("load",() =>{
-//     $('.loader').fadeOut("slow");
-// });
 // COUNTDOWN
 // Set the date we're counting down to
-
 var countDownDate = new Date("May 5, 2020 00:00:00").getTime(); // Update the count down every 1 second
 
 var x = setInterval(function () {
@@ -50366,6 +50365,45 @@ var x = setInterval(function () {
     document.getElementById("count").innerHTML = "EXPIRED";
   }
 }, 1000);
+
+/***/ }),
+
+/***/ "./resources/js/loader.js":
+/*!********************************!*\
+  !*** ./resources/js/loader.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+window.addEventListener("load", function () {
+  var loader = document.querySelector(".loader");
+  loader.className += " hidden"; // class "loader hidden"
+});
+
+/***/ }),
+
+/***/ "./resources/js/scrollToTop.js":
+/*!*************************************!*\
+  !*** ./resources/js/scrollToTop.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+mybutton = document.getElementById("gotopbtn");
+
+window.onscroll = function () {
+  if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+};
+
+mybutton.on('click', function () {
+  document.body.scrollTop = 0; // For Safari
+
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+});
 
 /***/ }),
 
