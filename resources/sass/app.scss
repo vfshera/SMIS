@@ -30,6 +30,8 @@ $fa-font-path: "../webfonts";
 
 }
 
+
+
 .loader > img{
     width: 220px;
     animation: myBounce 0.7s;
@@ -106,10 +108,16 @@ html{
     font-size: 22px;
   }
 
-
-  #home-footer
+  .home-footer
   {
+
+      height: 200px;
       width: 100%;
       background-color: rgba(0, 0, 0, 0.712);
       color: white;
   }
+
+
+ .fas.fa-sign-out-alt {
+     background-color: black;
+ }

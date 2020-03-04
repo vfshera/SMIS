@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 {{-- NEWS PHOTO SLIDER --}}
     <div id="smis-carousel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -48,7 +47,7 @@
         <h1 class="text-center">News</h1>
         <div class="row card-deck">
             <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-right"
+                <div class="card-body" data-aos="fade-up"
                     data-aos-offset="200"
                     data-aos-delay="25"
                     data-aos-duration="1000"
@@ -82,7 +81,7 @@
             </div>
 
             <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-left"
+                <div class="card-body" data-aos="fade-up"
                     data-aos-offset="200"
                     data-aos-delay="30"
                     data-aos-duration="1200"
@@ -101,7 +100,7 @@
 
         <div class="row card-deck mt-2">
             <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-right"
+                <div class="card-body" data-aos="fade-up"
                     data-aos-offset="200"
                     data-aos-delay="20"
                     data-aos-duration="1000"
@@ -135,7 +134,7 @@
             </div>
 
             <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-left"
+                <div class="card-body" data-aos="fade-up"
                     data-aos-offset="200"
                     data-aos-delay="20"
                     data-aos-duration="1200"
@@ -151,6 +150,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 {{-- IMPORTANT DATES --}}
 
@@ -211,7 +212,7 @@
 
  <div class="row m-auto"style="width:99%">
      <div class="col-md-6 mt-5 mb-5"
-        data-aos="fade-right"
+        data-aos="fade-up"
         data-aos-offset="200"
         data-aos-delay="20"
         data-aos-duration="1200"
@@ -223,7 +224,7 @@
         </div>
      </div>
      <div class="col-md-6 smis-contact mt-5 mb-5"
-        data-aos="fade-left"
+        data-aos="fade-up"
         data-aos-offset="200"
         data-aos-delay="20"
         data-aos-duration="1200"
@@ -259,14 +260,16 @@
 </a>
 
 
-<footer id="home-footer" class=" mt-5">
+<footer class=" home-footer mt-5">
    <div class="text-center pb-4 pt-5">
         <h5>Phone : 122356789</h5>
         <h5>Address : 101 TAVETA</h5>
         <h5>Email : info@smis.ac.ke</h5>
 
         <h4 class="mt-3">&copy;SMIS</h4>
+
     </div>
+
 </footer>
 
 
@@ -275,12 +278,12 @@
         <script>
                 function initMap() {
 
-                var murray = {lat: -3.4558834, lng: 38.3488217};
+                const murray = {lat: -3.4558834, lng: 38.3488217};
 
-                var map = new google.maps.Map(
+                const map = new google.maps.Map(
                     document.getElementById('map'), {zoom: 16, center: murray});
 
-                var marker = new google.maps.Marker({position: murray, map: map});
+                cost marker = new google.maps.Marker({position: murray, map: map});
                 }
         </script>
 
