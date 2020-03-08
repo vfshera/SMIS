@@ -1,8 +1,8 @@
-import Admin from './components/AdminHome.vue'
+import Admin from './components/AdminIndex.vue'
 
 export const routes = [
     {
-        path:'/am',
+        path:'/home',
         component: Admin
     }
 ]

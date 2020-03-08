@@ -12,7 +12,7 @@
             </ul>
 
         <!-- Right navbar links -->
-            <ul class="navbar-nav m-auto">
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block m">
                     <a href="/" class="nav-link">SITE</a>
                 </li>
@@ -278,7 +278,12 @@
                     </div>
             <!-- /.content-header -->
 
-            <!-- <router-view></router-view> -->
+                <transition>
+                    <keep-alive>
+                        <router-view></router-view>
+                    </keep-alive>
+                </transition>
+
 
             <footer class="main-footer">
                 <strong>Copyright &copy;SMIS. 2020</strong>
