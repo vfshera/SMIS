@@ -3,14 +3,13 @@ import './loader';
 import './scrollToTop';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import 'particles.js/particles';
-const particlesJS = window.particlesJS;
+import VueRouter from 'vue-router'
+
+
 // You can also use <link> for styles
 // ..
 AOS.init();
 
-
-particlesJS.load('particles-js', 'assets/particles.json');
 /**
  *
  * First we will load all of this project's JavaScript dependencies which
@@ -18,9 +17,18 @@ particlesJS.load('particles-js', 'assets/particles.json');
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
 require('./bootstrap');
 
 window.Vue = require('vue');
+Vue.use(VueRouter)
+
+import {routes} from './route_list.js';
+
+const router = new VueRouter({
+  routes,
+   mode:'history'
+})
 
 /**
  * The following block of code may be used to automatically register your
@@ -33,7 +41,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('admin', require('./components/AdminHome.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

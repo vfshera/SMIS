@@ -1,6 +1,4 @@
-<div class="loader">
-    <img src="/storage/images/loader.svg" alt="Loading...">
-</div>
+@include('parts.loader')
 
 {{-- END LOADER --}}
 
@@ -43,7 +41,7 @@
                         @endif
 
                         <a class="nav-link ml-5" href="#" style="font-weight:900">
-                            {{ Auth::user()->name }}
+                            <a class="nav-link" href="/home">{{ Auth::user()->name }}</a>
                         </a>
 
                         <li class="nav-item">
