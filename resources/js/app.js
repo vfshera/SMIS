@@ -15,11 +15,15 @@ Vue.use(VueRouter)
 
 import {routes} from './route_list.js';
 
+import Auth from './auth';
+
+Vue.prototype.$auth = new Auth(window.user);
 
 const router = new VueRouter({
   routes,
    mode:'history'
 })
+
 
 
 Vue.component('admin', require('./components/AdminHome.vue').default);

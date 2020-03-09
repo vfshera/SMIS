@@ -14,6 +14,9 @@
         <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block m">
+                    <router-link to="/home" class="nav-link">DASHBOARD</router-link>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block m">
                     <a href="/" class="nav-link">SITE</a>
                 </li>
             <!-- Messages Dropdown Menu -->
@@ -120,17 +123,18 @@
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
 
-                <a href="#" class="ml-3 text-white d-inline" style="font-weight:900;font-size:24px">Your Name</a>
+            <a href="#" class="ml-3 text-white d-inline" style="font-weight:900;font-size:24px">{{ user.name }}</a>
+            <small class="d-block">{{ user.email}}</small>
                         <li class="nav-item">
-                                <!-- <a class="nav-link" href="/logout"
+                                <a class="nav-link" href="/logout"
                                 onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">
                                 Logout <i class="fas fa-sign-out-alt"></i>
                                 </a>
 
                                 <form id="logout-form" action="/logout" method="POST" style="display: none;">
-                                    @csrf
-                                </form> -->
+                                    {{ mycsrf }}
+                                </form>
                         </li>
 
                 </div>
@@ -151,29 +155,8 @@
                     <i class="nav-icon fas fa-chart-pie"></i>
                     <p>
                         Charts
-                        <i class="right fas fa-angle-left"></i>
                     </p>
                     </a>
-                    <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="pages/charts/chartjs.html" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>ChartJS</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="pages/charts/flot.html" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Flot</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="pages/charts/inline.html" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Inline</p>
-                        </a>
-                    </li>
-                    </ul>
                 </li>
 
                 <li class="nav-item has-treeview">
@@ -206,27 +189,17 @@
                     </ul>
                 </li>
 
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                    <i class="nav-icon far fa-plus-square"></i>
-                    <p>
-                        ACTIONS
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-
                         <li class="nav-item">
-                            <a href="/register" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Teachers</p>
-                            </a>
+                            <router-link :to="{ name: 'allTeachers' }"  class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Teachers</p>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/examples/register.html" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Students</p>
-                            </a>
+                            <router-link :to="{ name: 'allStudents' }" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Students</p>
+                            </router-link>
                         </li>
                         <li class="nav-item">
                             <a href="pages/examples/forgot-password.html" class="nav-link">
@@ -253,8 +226,6 @@
                             </a>
                         </li>
 
-                    </ul>
-                </li>
 
             <!-- /.sidebar-menu -->
                 </ul>
@@ -278,11 +249,9 @@
                     </div>
             <!-- /.content-header -->
 
-                <transition>
-                    <keep-alive>
-                        <router-view></router-view>
-                    </keep-alive>
-                </transition>
+
+                        <router-view class="ml-3 mr-3"></router-view>
+
 
 
             <footer class="main-footer">
@@ -305,10 +274,22 @@
 <script>
     export default {
         name: 'admin',
+        data(){
+            return{
+               User:[],
+               mycsrf: '',
 
-        props:[],
+            }
+        },
+        props:['user'],
         mounted() {
-            console.log('Component mounted.')
+            this.mycsrf = window.csrf;
         }
     }
 </script>
+
+<style  scoped>
+    small{
+        color:white;
+    }
+</style>
