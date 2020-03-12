@@ -85,7 +85,16 @@
         },
         props:[],
         mounted() {
-            console.log(window.user)
+
+
+            axios.get('/api/user')
+                  .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch (response => {
+
+
+                    });
         }
     }
 </script>

@@ -6,18 +6,16 @@ import 'aos/dist/aos.css';
 import VueRouter from 'vue-router';
 
 
+
 AOS.init();
 
 require('./bootstrap');
 
 window.Vue = require('vue');
-Vue.use(VueRouter)
 
 import {routes} from './route_list.js';
 
-import Auth from './auth';
-
-Vue.prototype.$auth = new Auth(window.user);
+Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes,
@@ -25,9 +23,10 @@ const router = new VueRouter({
 })
 
 
-
 Vue.component('admin', require('./components/AdminHome.vue').default);
-
+Vue.component('sidebar', require('./components/SideBar.vue').default);
+Vue.component('notifications', require('./components/Notifications.vue').default);
+Vue.component('messages', require('./components/Messages.vue').default);
 
 const app = new Vue({
     el: '#app',

@@ -18,8 +18,28 @@ class UserTableSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@admin.com',
                 'password' => Hash::make('Lucia'),
-                'access' => 1,
+                'access' => 0,
                 // Password Launch
+            ]
+        );
+
+        $student = User::create(
+            [
+                'name' => 'Student',
+                'email' => 'student@school.com',
+                'password' => Hash::make('abc123'),
+                'access' => 1,
+                // Password abcd
+            ]
+        );
+
+        $teacher = User::create(
+            [
+                'name' => 'Teacher',
+                'email' => 'teacher@school.com',
+                'password' => Hash::make('y=mx+c'),
+                'access' => 2,
+                // Password y=mx+c
             ]
         );
     }

@@ -34,6 +34,8 @@
         <link rel="stylesheet" href="adminlte/plugins/daterangepicker/daterangepicker.css">
         <!-- summernote -->
         <link rel="stylesheet" href="adminlte/plugins/summernote/summernote-bs4.css">
+
+        <link rel="stylesheet" href="adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
 </head>
 <body>
         @include('parts.loader')
@@ -52,6 +54,11 @@
         <script>
         $.widget.bridge('uibutton', $.ui.button)
         </script>
+        <script src="adminlte/plugins/jquery/jquery.min.js"></script>
+        <!-- DataTables -->
+        <script src="adminlte/plugins/datatables/jquery.dataTables.js"></script>
+        <script src="adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+        <!-- AdminLTE App -->
         <!-- Bootstrap 4 -->
         <script src="adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- ChartJS -->

@@ -2,7 +2,7 @@
     <div>
     <div class="card">
         <div class="card-header">
-              <h3 class="card-title">STUDENTS</h3>
+              <h3 class="card-title">ROOT USERS</h3>
           </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -75,6 +75,40 @@
                   <td>A</td>
                 </tr>
                 <tr>
+                  <td>Gecko</td>
+                  <td>Firefox 1.5</td>
+                  <td>Win 98+ / OSX.2+</td>
+                  <td>1.8</td>
+                  <td>A</td>
+                </tr>
+                 <tr>
+                  <td>Trident</td>
+                  <td>Internet
+                    Explorer 4.0
+                  </td>
+                  <td>Win 95+</td>
+                  <td> 4</td>
+                  <td>X</td>
+                </tr>
+                <tr>
+                  <td>Trident</td>
+                  <td>Internet
+                    Explorer 5.0
+                  </td>
+                  <td>Win 95+</td>
+                  <td>5</td>
+                  <td>C</td>
+                </tr>
+                <tr>
+                  <td>Trident</td>
+                  <td>Internet
+                    Explorer 5.5
+                  </td>
+                  <td>Win 95+</td>
+                  <td>5.5</td>
+                  <td>A</td>
+                </tr>
+                <tr>
                   <td>Trident</td>
                   <td>Internet
                     Explorer 6
@@ -141,24 +175,33 @@
 <script>
 
     export default {
-        name: 'Students',
+        name: 'Admins',
         data(){
             return{
 
             }
         },
+        methods:{
+             loadUsers(){
+
+            },
+        },
         props:[],
         mounted() {
-            $('#dt').DataTable({
-                    "paging": true,
-                    "lengthChange": false,
-                    "searching": true,
-                    "ordering": true,
-                    "info": true,
-                    "autoWidth": false,
-                });
-        }
+             axios.get('/api/users')
+                    .then(response =>{
+                        console.log(response)
+                    })
+                    .catch(err =>{
+                            console.log(err);
+
+                    })
+
+
+
+        },
     }
+
 
 
 </script>
