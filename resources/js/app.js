@@ -4,13 +4,35 @@ import './scrollToTop';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import VueRouter from 'vue-router';
+import Vue from 'vue';
+import Swal from 'sweetalert2'
 
-
-AOS.init();
+window.Swal = Swal;
 
 require('./bootstrap');
 
 window.Vue = require('vue');
+
+window.Fire = new Vue();
+
+window.Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+
+
+// Vue.use(Swal);
+
+AOS.init();
+
+
 
 import {routes} from './route_list.js';
 

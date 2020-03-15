@@ -94,7 +94,7 @@
                     rep:this.stream.rep,
                 })
                     .then(function (response) {
-                         location.reload();
+                         Fire.$emit('StreamAdded');
                     })
                     .catch(error =>{
                            this.validationErrors = error.response.data.errors;
@@ -111,6 +111,9 @@
         mounted() {
 
             this.fetcthData();
+            Fire.$on('StreamAdded',()=>{
+                this.fetcthData();
+            });
         }
     }
 

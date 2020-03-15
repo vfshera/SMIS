@@ -23,8 +23,10 @@ Route::middleware('auth:api')->get('/allusers', 'API\UserResourceController@allU
 Route::middleware('auth:api')->get('/users', 'API\UserResourceController@root');
 
 //students
-Route::middleware('auth:api')->get('/students', 'API\UserResourceController@students');
+Route::middleware('auth:api')->get('/loggedstudents', 'API\UserResourceController@students');
+Route::middleware('auth:api')->get('/students', 'API\StudentsController@students');
 Route::middleware('auth:api')->post('/add-student-info', 'API\StudentsController@store');
+Route::middleware('auth:api')->delete('/delete-student/{id}', 'API\StudentsController@destroy');
 
 //forms
 Route::middleware('auth:api')->get('/forms', 'API\FormController@allforms');

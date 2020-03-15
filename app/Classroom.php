@@ -10,6 +10,11 @@ class Classroom extends Model
         'form_id', 'stream_id',
     ];
 
+    public function getClassName(){
+        return $this->form() + " " + $this->stream();
+
+    }
+    
     public function form(){
         return $this->belongsTo(\App\Form::class);
     }

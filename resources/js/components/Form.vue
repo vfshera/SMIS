@@ -94,7 +94,11 @@
                     math_rep:this.form.rep,
                 })
                     .then(function (response) {
-                         location.reload();
+                         Fire.$emit('FormAdded');
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Form Added successfully'
+                            })
                     })
                     .catch(error =>{
                            this.validationErrors = error.response.data.errors;
@@ -111,6 +115,9 @@
         mounted() {
 
             this.fetcthData();
+            Fire.$on('FormAdded',()=>{
+                this.fetcthData();
+            });
         }
     }
 

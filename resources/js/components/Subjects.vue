@@ -37,12 +37,12 @@
           <!-- /.card -->
 
 
-          <!-- Modal -->
-            <div class="modal fade" id="addSudentDetails" tabindex="-1" role="dialog" aria-labelledby="addSudentDetails" aria-hidden="true">
+
+            <div class="modal fade" id="addSubject" tabindex="-1" role="dialog" aria-labelledby="addSubject" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title ml-2" id="addSudentDetailsTitle">ADD NEW SUBJECT</h5>
+                        <h5 class="modal-title ml-2" id="addSubjectDetailsTitle">ADD NEW SUBJECT</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -97,6 +97,16 @@
         },
         props:[],
         methods:{
+            fetcthData(){
+                 axios.get('/api/subjects')
+                    .then(response =>{
+                       this.subjects = response.data.data;
+                    })
+                    .catch(err =>{
+                            console.log(err);
+
+                    });
+            },
             addDetails(){
                 axios.post('/api/add-subject', {
                     title:this.subject.title.toUpperCase(),
@@ -104,7 +114,14 @@
                     abbreviation:this.subject.abbreviation.toUpperCase(),
                 })
                     .then(function (response) {
-                         location.reload();
+                         Fire.$emit('SubjectAdded');
+                         $('#addSubject').modal('hide');
+                         $('body').removeClass('modal-open');
+                         $('.modal-backdrop').remove();
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Subject Added successfully'
+                            })
                     })
                     .catch(error =>{
                            this.validationErrors = error.response.data.errors;
@@ -119,14 +136,12 @@
              }
         },
         mounted() {
-            axios.get('/api/subjects')
-                    .then(response =>{
-                       this.subjects = response.data.data;
-                    })
-                    .catch(err =>{
-                            console.log(err);
 
-           });
+           this.fetcthData();
+
+           Fire.$on('SubjectAdded',()=>{
+                this.fetcthData();
+            });
 
         }
     }

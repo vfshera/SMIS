@@ -26,6 +26,8 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.12.1",
         "aos": "^3.0.0-beta.6",
-        "vue-router": "^3.1.6"
+        "sweetalert2": "^9.10.0",
+        "vue-router": "^3.1.6",
+        "vue-sweetalert2": "^3.0.3"
     }
 }

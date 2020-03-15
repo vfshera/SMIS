@@ -16927,3 +16927,11 @@ html {
   color: #2121d8 !important;
 }
 
+.fa-pencil-alt {
+  color: rgba(65, 74, 245, 0.9) !important;
+}
+
+.fa-trash-alt {
+  color: red;
+}
+
