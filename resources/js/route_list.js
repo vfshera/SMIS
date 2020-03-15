@@ -2,6 +2,7 @@ import Admin from './components/AdminIndex.vue'
 import Admins from './components/Admins.vue'
 import Teachers from './components/Teachers.vue'
 import Students from './components/Students.vue'
+import Subjects from './components/Subjects.vue'
 import Classrooms from './components/Classrooms.vue'
 import Form from './components/Form.vue'
 import formStream from './components/stream.vue'
@@ -40,6 +41,11 @@ export const routes = [
         path:'/classes',
         name: 'addClass',
         component: Classrooms
+    },
+    {
+        path:'/subjects',
+        name: 'addSubject',
+        component: Subjects
     }
 
 ]

@@ -41,3 +41,8 @@ Route::middleware('auth:api')->post('/add-class', 'API\ClassroomsController@stor
 //teachers
 Route::middleware('auth:api')->get('/teachers', 'API\UserResourceController@teachers');
 
+
+//subjects
+Route::middleware('auth:api')->get('/subjects', 'API\SubjectsController@allsubjects');
+Route::middleware('auth:api')->post('/add-subject', 'API\SubjectsController@store');
+

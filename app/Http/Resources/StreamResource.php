@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ClassroomResource extends JsonResource
+class StreamResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,10 @@ class ClassroomResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'form' => $this->form->name,
-            'stream' => $this->stream->name,
+            'name' => $this->name,
+            'rep' => $this->rep,
             'created_at'=> date('D, dS F  Y', strtotime($this->created_at)),
+
         ];
     }
 }

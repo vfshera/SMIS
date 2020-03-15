@@ -23,45 +23,24 @@
                         </a>
                     </li> -->
 
-                    <li class="nav-item has-treeview">
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
                         <i class="nav-icon far fa-envelope"></i>
                         <p>
                             Mailbox
-                            <i class="fas fa-angle-left right"></i>
                         </p>
                         </a>
-                        <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Inbox</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Compose</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Read</p>
-                            </a>
-                        </li>
-                        </ul>
-                    </li>
+                   </li>
 
                             <li class="nav-item">
                                 <router-link :to="{ name: 'allTeachers' }"  class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fas fa-chalkboard-teacher nav-icon"></i>
                                     <p>Teachers</p>
                                 </router-link>
                             </li>
                             <li class="nav-item">
                                 <router-link :to="{ name: 'allStudents' }" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fas fa-user-graduate nav-icon"></i>
                                     <p>Students</p>
                                 </router-link>
                             </li>
@@ -95,14 +74,14 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Subject</p>
-                                </a>
+                                <router-link :to="{ name: 'addSubject' }"  class="nav-link">
+                                <i class="fas fa-book-reader nav-icon"></i>
+                                <p>Subjects</p>
+                                </router-link>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class=" nav-icon far fa-calendar-alt"></i>
                                 <p>Timetable</p>
                                 </a>
                             </li>

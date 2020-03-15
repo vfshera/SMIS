@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StreamResource;
 use App\Stream;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class StreamsController extends Controller
     public function allstreams(){
         $strms = Stream::orderBy('created_at', 'DESC')->paginate(10);
 
-        return json_encode($strms);
+        return StreamResource::collection($strms);
     }
 
     public function store(Request $request)

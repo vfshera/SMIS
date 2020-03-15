@@ -4,7 +4,7 @@
         <div class="card-header">
               <h3 class="card-title">STUDENTS</h3>
 
-                    <input class="form-control col-md-6  d-inline ml-5" type="search" placeholder="Search" v-model="search" aria-label="Search">
+                    <input class="form-control col-md-6  d-inline " style="margin-left:200px" type="search" placeholder="Search" v-model="search" aria-label="Search">
 
               <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addSudentDetails"><i class="far fa-address-card mr-3"></i>ADD DETAILS</span>
           </div>
@@ -91,7 +91,7 @@
                             <div class="form-row">
                                 <div class="form-group  col-md-6">
                                     <label for="town">Town</label>
-                                        
+
                                     <span v-if="validationErrors.town" class="text-danger">@{{ validationErrors.town[0] }}</span>
                                 </div>
                                 <div class="form-group  col-md-6">
