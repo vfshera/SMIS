@@ -15,12 +15,32 @@ class UserResourceController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index(){
+    public function allUsers(){
 
-        $allUsers = User::all()->paginate(10)->get();
+        $everyUser = User::all();
 
-        return UserResource::collection($allUsers);
+        return UserResource::collection($everyUser);
     }
 
+    public function root(){
+
+        $adminUsers = User::admins()->orderBy('created_at', 'DESC')->paginate(10);
+
+        return UserResource::collection($adminUsers);
+    }
+
+    public function students(){
+
+        $studentUsers = User::students()->orderBy('created_at', 'DESC')->paginate(10);
+
+        return UserResource::collection($studentUsers);
+    }
+
+    public function teachers(){
+
+        $teacherUsers = User::teachers()->orderBy('created_at', 'DESC')->paginate(10);
+
+        return UserResource::collection($teacherUsers);
+    }
 
 }

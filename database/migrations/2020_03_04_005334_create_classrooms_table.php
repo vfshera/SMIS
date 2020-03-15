@@ -15,8 +15,8 @@ class CreateClassroomsTable extends Migration
     {
         Schema::create('classrooms', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('form');
-            $table->string('stream');
+            $table->string('form_id');
+            $table->string('stream_id');
             $table->timestamps();
         });
     }

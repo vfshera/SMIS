@@ -40,6 +40,22 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="access" class="col-md-4 col-form-label text-md-right">{{ __('Account Type') }}</label>
+
+                            <select name="access" class="col-md-6">
+                                <option  class="form-control @error('access') is-invalid @enderror"  required autocomplete="access" value="" selected disabled>---SELECT---</option>
+                                <option  class="form-control @error('access') is-invalid @enderror"  required autocomplete="access" value="1">Student</option>
+                                <option  class="form-control @error('access') is-invalid @enderror" required autocomplete="access" value="2">Teacher</option>
+                                <option  class="form-control @error('access') is-invalid @enderror"   required autocomplete="access" value="0">Admin</option>
+                                @error('access')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </select>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">

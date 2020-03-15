@@ -6,7 +6,6 @@ import 'aos/dist/aos.css';
 import VueRouter from 'vue-router';
 
 
-
 AOS.init();
 
 require('./bootstrap');

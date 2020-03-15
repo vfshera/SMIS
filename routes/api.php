@@ -17,4 +17,27 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:api')->get('/users', 'API\UserResourceController@index');
+
+//users
+Route::middleware('auth:api')->get('/allusers', 'API\UserResourceController@allUsers');
+Route::middleware('auth:api')->get('/users', 'API\UserResourceController@root');
+
+//students
+Route::middleware('auth:api')->get('/students', 'API\UserResourceController@students');
+Route::middleware('auth:api')->post('/add-student-info', 'API\StudentsController@store');
+
+//forms
+Route::middleware('auth:api')->get('/forms', 'API\FormController@allforms');
+Route::middleware('auth:api')->post('/add-form', 'API\FormController@store');
+
+//streams
+Route::middleware('auth:api')->get('/streams', 'API\StreamsController@allstreams');
+Route::middleware('auth:api')->post('/add-stream', 'API\StreamsController@store');
+
+//classrooms
+Route::middleware('auth:api')->get('/classes', 'API\ClassroomsController@allclasses');
+Route::middleware('auth:api')->post('/add-class', 'API\ClassroomsController@store');
+
+//teachers
+Route::middleware('auth:api')->get('/teachers', 'API\UserResourceController@teachers');
+

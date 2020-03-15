@@ -37,4 +37,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+
+    public function scopeAdmins($query){
+        return $query->where('access', 0);
+    }
+
+    public function scopeStudents($query){
+        return $query->where('access', 1);
+    }
+
+    public function scopeTeachers($query){
+        return $query->where('access', 2);
+    }
 }

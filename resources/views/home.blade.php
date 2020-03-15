@@ -23,6 +23,9 @@
                     <li class="nav-item d-none d-sm-inline-block m">
                         <a href="/" class="nav-link">SITE</a>
                     </li>
+                    <li class="nav-item d-none d-sm-inline-block m">
+                        <a href="/register" class="nav-link">REGISTER</a>
+                    </li>
 
                     <messages></messages>
                     <notifications class="mr-4"></notifications>
@@ -70,5 +73,5 @@
      </div>
      </div>
 
-     
+
 @endsection

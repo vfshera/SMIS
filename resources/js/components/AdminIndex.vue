@@ -77,24 +77,33 @@
 
 <script>
     export default {
-        name: 'example',
+        name: 'AdminIndex',
         data(){
             return{
-
+                users: [],
+                studentsNo: '',
+                teacherssNo: '',
+                classesNo: '',
             }
         },
         props:[],
+        methods:{
+
+        },
         mounted() {
-
-
-            axios.get('/api/user')
-                  .then(response => {
-                        console.log(response.data);
+             axios.get('/api/allusers')
+                    .then(response =>{
+                       this.users = response.data.data;
                     })
-                    .catch (response => {
+                    // .then(()=>console.log(this.users.length))
+                    .catch(err =>{
+                            console.log(err);
+
+           });
 
 
-                    });
+
+
         }
     }
 </script>
