@@ -6,7 +6,7 @@
 
                     <input class="form-control col-md-6  d-inline " style="margin-left:200px" type="search" placeholder="Search" v-model="search" aria-label="Search">
 
-              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addSudentDetails"><i class="far fa-address-card mr-3"></i>ADD DETAILS</span>
+              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addStudentDetails"><i class="far fa-address-card mr-3"></i>ADD DETAILS</span>
           </div>
             <!-- /.card-header -->
             <div class="card-body">

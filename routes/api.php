@@ -38,6 +38,7 @@ Route::middleware('auth:api')->post('/add-stream', 'API\StreamsController@store'
 
 //classrooms
 Route::middleware('auth:api')->get('/classes', 'API\ClassroomsController@allclasses');
+Route::middleware('auth:api')->get('/classes/{id}', 'API\ClassroomsController@getClass');
 Route::middleware('auth:api')->post('/add-class', 'API\ClassroomsController@store');
 
 //teachers
@@ -47,4 +48,5 @@ Route::middleware('auth:api')->get('/teachers', 'API\UserResourceController@teac
 //subjects
 Route::middleware('auth:api')->get('/subjects', 'API\SubjectsController@allsubjects');
 Route::middleware('auth:api')->post('/add-subject', 'API\SubjectsController@store');
+Route::middleware('auth:api')->post('/delete-sub/{id}', 'API\SubjectsController@destroy');
 

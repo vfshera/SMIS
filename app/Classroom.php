@@ -14,7 +14,7 @@ class Classroom extends Model
         return $this->form() + " " + $this->stream();
 
     }
-    
+
     public function form(){
         return $this->belongsTo(\App\Form::class);
     }
@@ -24,7 +24,7 @@ class Classroom extends Model
     }
 
     public function students(){
-        return $this->hasMany(\App\Student::class);
+        return $this->hasMany(\App\Student::class, 'class_id');
     }
 }
 

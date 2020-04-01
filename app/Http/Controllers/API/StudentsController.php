@@ -55,6 +55,7 @@ class StudentsController extends Controller
 
         $student = Student::find($id);
 
+
         $student->delete();
 
         return json_encode(['message'=>'Deleted Successfully']);

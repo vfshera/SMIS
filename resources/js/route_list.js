@@ -4,6 +4,7 @@ import Teachers from './components/Teachers.vue'
 import Students from './components/Students.vue'
 import Subjects from './components/Subjects.vue'
 import Classrooms from './components/Classrooms.vue'
+import Classlist from './components/Classlist.vue'
 import Form from './components/Form.vue'
 import formStream from './components/stream.vue'
 
@@ -46,6 +47,13 @@ export const routes = [
         path:'/subjects',
         name: 'addSubject',
         component: Subjects
+    },
+
+    {
+        path:'/classlist/:id',
+        name: 'classList',
+        props:true,
+        component: Classlist
     }
 
 ]

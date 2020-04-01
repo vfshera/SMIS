@@ -25,12 +25,34 @@ class SubjectsController extends Controller
                 'description' => 'required',
              ]);
 
+             if($request->has('id')){
+
+                $subjct = Subject::find($request->input('id'));
+                $subjct->title = $request->input('title');
+                $subjct->abbreviation = $request->input('abbreviation');
+                $subjct->description = $request->input('description');
+
+                $subjct->save();
+
+                return json_encode("Class Updated Successfully");
+
+            } else {
+
+                $newForm = Subject::create($data);
+
+                return json_encode("Class Created Successfully");
+            }
 
 
-            $newForm = Subject::create($data);
+    }
 
-            return json_encode($newForm);
+    public function destroy($id)
+    {
+        $subject = Subject::find($id);
 
 
+        // $subject->delete();
+
+        return json_encode(dd($subject));
     }
 }
