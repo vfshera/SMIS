@@ -42,11 +42,20 @@ Route::middleware('auth:api')->get('/classes/{id}', 'API\ClassroomsController@ge
 Route::middleware('auth:api')->post('/add-class', 'API\ClassroomsController@store');
 
 //teachers
-Route::middleware('auth:api')->get('/teachers', 'API\UserResourceController@teachers');
+Route::middleware('auth:api')->get('/teachers', 'API\TeachersController@getTeachers');
+Route::middleware('auth:api')->get('/loggedteachers', 'API\UserResourceController@teachers');
+Route::middleware('auth:api')->post('/add-teacher-info', 'API\TeachersController@store');
+Route::middleware('auth:api')->delete('/delete-teacher/{id}', 'API\TeachersController@destroy');
+
+
+//duties
+Route::middleware('auth:api')->post('/add-duty', 'API\DutiesController@store');
+Route::middleware('auth:api')->delete('/delete-duty/{id}', 'API\DutiesController@destroy');
+Route::middleware('auth:api')->get('/reload-duty/{id}', 'API\DutiesController@getTeacherDuties');
 
 
 //subjects
 Route::middleware('auth:api')->get('/subjects', 'API\SubjectsController@allsubjects');
 Route::middleware('auth:api')->post('/add-subject', 'API\SubjectsController@store');
-Route::middleware('auth:api')->post('/delete-sub/{id}', 'API\SubjectsController@destroy');
+Route::middleware('auth:api')->delete('/delete-sub/{id}', 'API\SubjectsController@destroy');
 

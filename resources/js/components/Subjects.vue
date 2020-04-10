@@ -6,7 +6,7 @@
 
                     <input class="form-control col-md-6  d-inline " style="margin-left:200px" type="search" placeholder="Search" v-model="search" aria-label="Search">
 
-              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addSubject"><i class="far fa-address-card mr-3"></i>ADD SUBJECT</span>
+              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addSubject" @click="resetSub()"><i class="far fa-address-card mr-3"></i>ADD SUBJECT</span>
           </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -54,13 +54,13 @@
                                 <div class="form-row">
                                     <div class="form-group  col-md-6">
                                         <label for="pfirstname">Subject Title</label>
-                                        <input type="text" class="form-control" v-model="subject.title" id="pfirstname" placeholder="Parent or Guardian First Name">
-                                        <span v-if="validationErrors.title" class="text-danger">@The parents first name field is required</span>
+                                        <input type="text" class="form-control" v-model="subject.title" id="pfirstname" placeholder="Enter Subject Title Here ....">
+                                        <span v-if="validationErrors.title" class="text-danger">Subject Title is required</span>
                                     </div>
                                     <div class="form-group  col-md-6">
                                         <label for="psecname">Abbreviation</label>
-                                        <input type="text" class="form-control" v-model="subject.abbreviation" id="psecname" placeholder="Parent or Guardian Second Name">
-                                        <span v-if="validationErrors.abbreviation" class="text-danger">@The parents second name field is required.</span>
+                                        <input type="text" class="form-control" v-model="subject.abbreviation" id="psecname" placeholder="Enter Abbreviation Here ...">
+                                        <span v-if="validationErrors.abbreviation" class="text-danger">Abbreviation field is required.</span>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -93,12 +93,12 @@
                                 <div class="form-row">
                                     <div class="form-group  col-md-6">
                                         <label for="pfirstname">Subject Title</label>
-                                        <input type="text" class="form-control" v-model="subject.title" id="pfirstname" placeholder="Parent or Guardian First Name">
+                                        <input type="text" class="form-control" v-model="subject.title" id="pfirstname" placeholder="Enter Subject Title Here ....">
                                         <span v-if="validationErrors.title" class="text-danger">@The parents first name field is required</span>
                                     </div>
                                     <div class="form-group  col-md-6">
                                         <label for="psecname">Abbreviation</label>
-                                        <input type="text" class="form-control" v-model="subject.abbreviation" id="psecname" placeholder="Parent or Guardian Second Name">
+                                        <input type="text" class="form-control" v-model="subject.abbreviation" id="psecname" placeholder="Enter Abbreviation Here ....">
                                         <span v-if="validationErrors.abbreviation" class="text-danger">@The parents second name field is required.</span>
                                     </div>
                                 </div>
@@ -145,13 +145,23 @@
                 this.subject.description = sub.description;
                 this.subject.abbreviation = sub.abbreviation;
             },
+             resetSub(){
+                this.subject.id = '';
+                this.subject.title = '';
+                this.subject.description = '';
+                this.subject.abbreviation = '';
+            },
             fetcthData(){
                  axios.get('/api/subjects')
                     .then(response =>{
                        this.subjects = response.data.data;
                     })
                     .catch(err =>{
-                            console.log(err);
+                         Swal.fire(
+                                    'Error!',
+                                    err,
+                                    'warning'
+                                    )
 
                     });
             },
@@ -198,6 +208,7 @@
                          $('#addSubject').modal('hide');
                          $('body').removeClass('modal-open');
                          $('.modal-backdrop').remove();
+                         this.resetSub();
                          Toast.fire({
                             icon: 'success',
                             title: 'Subject Added successfully'
@@ -209,7 +220,7 @@
             },
              editSubject(){
                 axios.post('/api/add-subject', {
-                    id:this.subject,
+                    id:this.subject.id,
                     title:this.subject.title.toUpperCase(),
                     description:this.subject.description,
                     abbreviation:this.subject.abbreviation.toUpperCase(),
@@ -219,13 +230,21 @@
                          $('#editSubject').modal('hide');
                          $('body').removeClass('modal-open');
                          $('.modal-backdrop').remove();
+                          this.resetSub();
                          Toast.fire({
                             icon: 'success',
                             title: 'Subject Updated successfully'
                             })
                     })
                     .catch(error =>{
-                           this.validationErrors = error.response.data.errors;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            timer:4000,
+                            showConfirmButton:false,
+                            text: error.response.data.message,
+                            })
+
                     });
             },
         },

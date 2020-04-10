@@ -6,7 +6,7 @@
 
                     <input class="form-control col-md-6  d-inline " style="margin-left:200px" type="search" placeholder="Search" v-model="search" aria-label="Search">
 
-              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addSudentDetails"><i class="far fa-address-card mr-3"></i>ADD DETAILS</span>
+              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addTeachersDetails" @click="resetTeacher"><i class="far fa-address-card mr-3"></i>ADD DETAILS</span>
           </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -14,15 +14,29 @@
                 <thead>
                 <tr>
                   <th>Name</th>
+                  <th>TSC</th>
+                  <th>Phone</th>
                   <th>Email</th>
+                  <th>Teaches</th>
+                  <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
 
                  <tr v-for="teacher in searchedTeachers" :key="teacher.id">
-                  <td>{{ teacher.name}}</td>
+                  <td data-toggle="modal" data-target="#TeachersDetails" @click="setTeacher(teacher)">{{ teacher.name}}</td>
+                  <td>{{ teacher.tsc}}</td>
+                  <td>{{ teacher.tel}}</td>
                   <td>{{ teacher.email}}</td>
-                  <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editTeacher"></i> <i class="ml-1 far fa-trash-alt" @click="deleteTeacger(teacher.id)"></i></td>
+                  <td>
+                      <span v-for="(sb ,index) in teacher.teaches" :key="sb.id" >
+                                        <span v-if="teacher.teaches.length == index + 1 && index != 0"> & </span>
+                                        {{ sb.abbr }}
+                                        <span v-if="teacher.teaches.length > 2 && teacher.teaches.length != index + 2 && teacher.teaches.length != index + 1"> , </span>
+
+                     </span>
+                  </td>
+                  <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editTeacher" @click="setTeacher(teacher)"></i> <i class="ml-1 far fa-trash-alt" @click="deleteTeacher(teacher.id)"></i></td>
                 </tr>
 
 
@@ -33,7 +47,83 @@
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
+           <div class="modal fade" id="addDuties" tabindex="-1" role="dialog" aria-labelledby="addDuties" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title ml-2" id="TeacherDetailsTitle">Assign Subject To {{teacher.name}}</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- Modal -->          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="p-2" @submit.prevent="addDuty">
+                             <label for="classroom">Subject</label>
+                            <div class="row">
+                                <div class="form-group col-md-10">
+                                <select v-model="teacher.newduty" class="form-control">
+                                        <option disabled> Choose A Subject</option>
+                                        <option v-for="sub in subjects" :key="sub.id" :value="sub.id" placeholder="Choose A Subject"> {{ sub.title }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class=" btn btn-primary float-right">ASSIGN</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
 
+             <div class="modal fade" id="TeachersDetails" tabindex="-1" role="dialog" aria-labelledby="TeachersDetails" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title ml-2" id="TeacherDetailsTitle">{{ teacher.name }} Details</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- Modal -->          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row ml-2">
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="">TSC Number</label>
+                                    <p>{{ teacher.tsc}}</p>
+                                </div>
+                                <div>
+                                    <label for="">Contacts</label>
+                                    <p>{{ teacher.tel}}</p>
+                                    <p>{{ teacher.email}}</p>
+                                </div>
+                                <div>
+                                    <label for="">Address</label>
+                                    <p>P.O Box {{ teacher.address}} ,{{ teacher.town}}</p>
+                                    <p>{{ teacher.county}} County.</p>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                 <label for="" class="mb-0 pb-0">Teaches</label>
+                                 <i class="float-right text-primary fa fa-plus" @click="openClasses('#TeachersDetails','#addDuties')"></i>
+                                 <hr>
+                                    <p v-for="sb in teacher.subjects" :key="sb.id">
+                                            {{ sb.name }}
+                                            <span class="d-block text-muted pl-1" style="border:1px solid grey;border-radius:5px">
+                                                {{ sb.abbr.toLowerCase() }}
+                                                <span class="text-danger ml-1" @click="deleteDuty(sb.duty_id)">&times;</span>
+                                            </span>
+                                    </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-muted blue">Joined on {{ teacher.joined }}</div>
+                    </div>
+                </div>
+            </div>
+            </div>
 
 
             <div class="modal fade" id="addTeachersDetails" tabindex="-1" role="dialog" aria-labelledby="addTeachersDetails" aria-hidden="true">
@@ -46,35 +136,22 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- <form class="p-2" @submit.prevent="addDetails">
+                        <form class="p-2" @submit.prevent="addTeacher">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                 <label for="name">For</label>
-                                <select class="form-control" v-model="teacher.id">
-                                    <option  v-for="st in logged" :key="st.id" :value="st.id"> {{ st.name }}</option>
+                                <select class="form-control" v-model="teacher.uid">
+                                    <option  v-for="tcher in logged" :key="tcher.id" :value="tcher.id"> {{ tcher.name }}</option>
                                 </select>
-                                <span v-if="validationErrors.s_id" class="text-danger">The Student ID is Required</span>
+                                <span v-if="validationErrors.id" class="text-danger">{{ validationErrors.id[0] }}</span>
                                </div>
                                 <div class="form-group col-md-6">
-                                <label for="classroom">Class</label>
-                                <select v-model="teacher.class_id" class="form-control">
-                                    <option v-for="cl in classes" :key="cl.id" :value="cl.id"> {{ cl.form + " " + cl.stream }}</option>
-                                </select>
-                                <span v-if="validationErrors.class_id" class="text-danger">@{{ validationErrors.class_id[0] }}</span>
+                                <label for="classroom">TSC Number</label>
+                                <input type="text" v-model="teacher.tsc" class="form-control" id="address">
+                                <span v-if="validationErrors.tsc" class="text-danger">@{{ validationErrors.tsc[0] }}</span>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group  col-md-6">
-                                    <label for="pfirstname">Parent / Guardian First Name</label>
-                                    <input type="text" class="form-control" v-model="teacher.parents_fname" id="pfirstname" placeholder="Parent or Guardian First Name">
-                                    <span v-if="validationErrors.parents_fname" class="text-danger">@The parents first name field is required</span>
-                                </div>
-                                <div class="form-group  col-md-6">
-                                    <label for="psecname">Parent / Guardian Second Name</label>
-                                    <input type="text" class="form-control" v-model="teacher.parents_sname" id="psecname" placeholder="Parent or Guardian Second Name">
-                                    <span v-if="validationErrors.parents_sname" class="text-danger">@The parents second name field is required.</span>
-                                </div>
-                            </div>
+
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="address">Address</label>
@@ -82,9 +159,9 @@
                                     <span v-if="validationErrors.address" class="text-danger">@{{ validationErrors.address[0] }}</span>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="tel">Telephone (Parent)</label>
-                                    <input type="text" v-model="teacher.parents_tel" class="form-control" id="tel">
-                                    <span v-if="validationErrors.parents_tel" class="text-danger">@{{ validationErrors.parents_tel[0] }}</span>
+                                    <label for="tel">Telephone</label>
+                                    <input type="text" v-model="teacher.tel" class="form-control" id="tel">
+                                    <span v-if="validationErrors.tel" class="text-danger">@{{ validationErrors.tel[0] }}</span>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -109,7 +186,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary float-right">SUBMIT</button>
-                        </form> -->
+                        </form>
                     </div>
                 </div>
             </div>
@@ -119,41 +196,26 @@
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title ml-2" id="addSudentDetailsTitle">EDIT TEACHER DETAILS</h5>
+                        <h5 class="modal-title ml-2" id="TeacherDetailsTitle">EDIT TEACHER DETAILS</h5>
+
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <!-- Modal -->          <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form class="p-2" @submit.prevent="editStudent">
+                        <form class="p-2" @submit.prevent="editTeacher">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                 <label for="name">For</label>
-                                <select class="form-control" v-model="teacher.id">
-                                    <option  v-for="st in logged" :key="st.id" :value="st.id"> {{ st.name }}</option>
-                                </select>
-                                <span v-if="validationErrors.s_id" class="text-danger">The Student ID is Required</span>
+                                 <label for="name" class="form-control">{{ teacher.name }}</label>
                                </div>
                                 <div class="form-group col-md-6">
-                                <label for="classroom">Class</label>
-                                <select v-model="teacher.class_id" class="form-control">
-                                    <option v-for="cl in classes" :key="cl.id" :value="cl.id"> {{ cl.form + " " + cl.stream }}</option>
-                                </select>
-                                <span v-if="validationErrors.class_id" class="text-danger">@{{ validationErrors.class_id[0] }}</span>
+                                <label for="classroom">TSC Number</label>
+                                <input type="text" v-model="teacher.tsc" class="form-control" id="address">
+                                <span v-if="validationErrors.tsc" class="text-danger">@{{ validationErrors.tsc[0] }}</span>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group  col-md-6">
-                                    <label for="pfirstname">Parent / Guardian First Name</label>
-                                    <input type="text" class="form-control" v-model="teacher.parents_fname" id="pfirstname" placeholder="Parent or Guardian First Name">
-                                    <span v-if="validationErrors.parents_fname" class="text-danger">@The parents first name field is required</span>
-                                </div>
-                                <div class="form-group  col-md-6">
-                                    <label for="psecname">Parent / Guardian Second Name</label>
-                                    <input type="text" class="form-control" v-model="teacher.parents_sname" id="psecname" placeholder="Parent or Guardian Second Name">
-                                    <span v-if="validationErrors.parents_sname" class="text-danger">@The parents second name field is required.</span>
-                                </div>
-                            </div>
+
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="address">Address</label>
@@ -161,9 +223,9 @@
                                     <span v-if="validationErrors.address" class="text-danger">@{{ validationErrors.address[0] }}</span>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="tel">Telephone (Parent)</label>
-                                    <input type="text" v-model="teacher.parents_tel" class="form-control" id="tel">
-                                    <span v-if="validationErrors.parents_tel" class="text-danger">@{{ validationErrors.parents_tel[0] }}</span>
+                                    <label for="tel">Telephone</label>
+                                    <input type="text" v-model="teacher.tel" class="form-control" id="tel">
+                                    <span v-if="validationErrors.tel" class="text-danger">@{{ validationErrors.tel[0] }}</span>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -186,30 +248,38 @@
                                     <span v-if="validationErrors.county" class="text-danger">@{{ validationErrors.county[0] }}</span>
                                 </div>
                             </div>
-
-                            <button type="submit" class="btn btn-primary float-right">UPDATE</button>
+                                <span class="text-primary" @click="openClasses('#editTeacher','#TeachersDetails')">Edit {{ teacher.name }}'s Classes</span>
+                            <button type="submit" class="btn btn-primary float-right">SUBMIT</button>
                         </form>
                     </div>
                 </div>
             </div>
             </div>
-
     </div>
 </template>
 
 <script>
 
     export default {
-        name: 'Students',
+        name: 'Teachers',
         data(){
             return{
                 logged : [],
                 teachers : [],
-                classes: [],
+                subjects: [],
                 teacher: {
+                    newduty:'',
                     id: '',
                     name: '',
-                    contact: '',
+                    uid: '',
+                    tsc: '',
+                    tel: '',
+                    email: '',
+                    address: '',
+                    county: '',
+                    town: '',
+                    joined: '',
+                    subjects: []
                 },
                 search: '',
                 validationErrors: [],
@@ -217,6 +287,102 @@
         },
         props:[],
         methods:{
+              setTeacher(tcher){
+                  this.teacher.id =  tcher.id
+                  this.teacher.name =  tcher.name
+                  this.teacher.tsc  =  tcher.tsc
+                  this.teacher.tel  =  tcher.tel
+                  this.teacher.email  =  tcher.email
+                  this.teacher.address  =  tcher.address
+                  this.teacher.county  =  tcher.county
+                  this.teacher.town  =  tcher.town
+                  this.teacher.joined  =  tcher.joined
+                  this.teacher.subjects  =  tcher.teaches
+
+             },
+              resetTeacher(){
+                  this.teacher.id =  '';
+                  this.teacher.name =  '';
+                  this.teacher.tsc  =  '';
+                  this.teacher.tel  =  '';
+                  this.teacher.email  =  '';
+                  this.teacher.address  =  '';
+                  this.teacher.county  =  '';
+                  this.teacher.town  =  '';
+                  this.teacher.joined  =  '';
+                  this.teacher.subjects  =  '';
+
+             },
+             openClasses(close,open){
+                 $(close).modal('hide');
+                 $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+
+                $(open).modal('show');
+             },
+             addDuty(){
+                axios.post('/api/add-duty/',
+                        {
+                            teacher_id:this.teacher.id,
+                            subject_id:this.teacher.newduty
+                        }
+                    ).then(response =>{
+                                    this.openClasses('#addDuties','#TeachersDetails');
+                                    axios.get('/api/reload-duty/'+this.teacher.id)
+                                        .then(response =>{
+                                            this.teacher.subjects = response.data.data;
+                                        })
+                                        .catch(err =>{
+                                            console.log("Error from Reload --- " + err)
+                                        });
+                                    Fire.$emit('UpdateTeachers');
+                                })
+                                .catch(err =>{
+                                     console.log("Error from Add Duty --- " + err)
+                                });
+             },
+             deleteDuty(id){
+                        Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                            if (result.value) {
+                                axios.delete('/api/delete-duty/'+id)
+                                .then(response =>{
+                                    // $('#TeachersDetails').modal('hide');
+                                    // $('body').removeClass('modal-open');
+                                    // $('.modal-backdrop').remove();
+                                     axios.get('/api/reload-duty/'+this.teacher.id)
+                                        .then(response =>{
+                                            this.teacher.subjects = response.data.data;
+                                        })
+                                        .catch(err =>{
+                                            console.log("Error from Reload --- " + err)
+                                        });
+                                    Fire.$emit('UpdateTeachers');
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: 'Duty Deleted Successfully'
+                                        })
+                                })
+                                .catch(err =>{
+                                    console.log("Error from Delete Duty --- " + err)
+                                    // Swal.fire(
+                                    //     'Error!',
+                                    //     err,
+                                    //     'warning'
+                                    //     )
+                                });
+
+
+                            }
+                    })
+             },
             deleteTeacher(id){
                     Swal.fire({
                         title: 'Are you sure?',
@@ -230,18 +396,20 @@
                         if (result.value) {
                             axios.delete('/api/delete-teacher/'+id)
                             .then(response =>{
-                                Fire.$emit('StudentAdded');
+                                Fire.$emit('UpdateTeachers');
                                 Toast.fire({
                                     icon: 'success',
                                     title: 'Teacher Deleted Successfully'
                                     })
                             })
                             .catch(err =>{
-                                   Swal.fire(
-                                    'Error!',
-                                    err,
-                                    'warning'
-                                    )
+
+                                console.log("Error from Delete Teacher --- " + err)
+                                //    Swal.fire(
+                                //     'Error!',
+                                //     err,
+                                //     'warning'
+                                //     )
                             });
 
 
@@ -259,18 +427,6 @@
                                     console.log(err);
 
                 });
-
-                axios.get('/api/classes')
-                            .then(response =>{
-                            this.classes = response.data.data;
-                            console.log(this.classes);
-
-                            })
-                            .catch(err =>{
-                                    console.log(err);
-
-                            });
-
                 axios.get('/api/loggedteachers')
                             .then(response =>{
                             this.logged = response.data.data;
@@ -279,44 +435,59 @@
                                     console.log(err);
 
                 });
-            },
-            editStudent(){
-                   Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                        }).then((result) => {
-                        if (result.value) {
+                axios.get('/api/subjects')
+                    .then(response =>{
+                       this.subjects = response.data.data;
 
-
-                        }
                     })
+                    .catch(err =>{
+                            console.log(err);
+
+                    });
+            },
+            editTeacher(){
+                    axios.post('/api/add-teacher-info', {
+                        id: this.teacher.id,
+                        user_id: this.teacher.uid,
+                        tsc_number:this.teacher.tsc,
+                        tel:this.teacher.tel,
+                        address:this.teacher.address,
+                        county:this.teacher.county,
+                        town :this.teacher.town,
+                    })
+                    .then(function (response) {
+                        Fire.$emit('UpdateTeachers');
+                         $('#editTeacher').modal('hide');
+                         $('body').removeClass('modal-open');
+                         $('.modal-backdrop').remove();
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Teacher Updated successfully'
+                            })
+                    })
+                    .catch(error =>{
+                           this.validationErrors = error.response.data.errors;
+                    });
 
             },
-            addDetails(){
+            addTeacher(){
 
                 axios.post('/api/add-teacher-info', {
-                    user_id: this.teacher.id,
-                    parents_fname:this.teacher.parents_fname,
-                    parents_sname:this.teacher.parents_sname,
-                    parents_tel:this.teacher.parents_tel,
-                    class_id :this.teacher.class_id,
+                    user_id: this.teacher.uid,
+                    tsc_number:this.teacher.tsc,
+                    tel:this.teacher.tel,
                     address:this.teacher.address,
                     county:this.teacher.county,
                     town :this.teacher.town,
                 })
                     .then(function (response) {
-                        Fire.$emit('StudentAdded');
-                         $('#addStudentDetails').modal('hide');
+                        Fire.$emit('UpdateTeachers');
+                         $('#addTeacherDetails').modal('hide');
                          $('body').removeClass('modal-open');
                          $('.modal-backdrop').remove();
                         Toast.fire({
                             icon: 'success',
-                            title: 'Student Added successfully'
+                            title: 'Teacher Added Successfully'
                             })
                     })
                     .catch(error =>{
@@ -334,7 +505,7 @@
         mounted() {
 
                this.fetchTeachers();
-               Fire.$on('StudentAdded',()=>{
+               Fire.$on('UpdateTeachers',()=>{
                    this.fetchTeachers();
                });
         }

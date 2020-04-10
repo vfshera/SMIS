@@ -2085,7 +2085,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.users = response.data.data;
     }) // .then(()=>console.log(this.users.length))
     ["catch"](function (err) {
-      console.log(err);
+      Swal.fire('Error!', err, 'warning');
     });
   }
 });
@@ -2154,7 +2154,7 @@ __webpack_require__.r(__webpack_exports__);
     }).then(function () {
       return console.log(_this.users);
     })["catch"](function (err) {
-      console.log(err);
+      Swal.fire('Error!', err, 'warning');
     });
   }
 });
@@ -3125,8 +3125,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Students',
   data: function data() {
@@ -3136,10 +3134,12 @@ __webpack_require__.r(__webpack_exports__);
       classes: [],
       student: {
         id: '',
+        name: '',
         parents_fname: '',
         parents_sname: '',
         parents_tel: '',
         class_id: '',
+        className: '',
         address: '',
         county: '',
         town: ''
@@ -3150,6 +3150,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   methods: {
+    setStudent: function setStudent(student) {
+      this.student.id = student.id, this.student.name = student.name, this.student.parents_fname = student.parents_fname, this.student.parents_sname = student.parents_sname, this.student.parents_tel = student.parents_tel, this.student.class_id = student.class_id, this.student.className = student.class_name, this.student.address = student.address, this.student.county = student.county, this.student.town = student.town;
+    },
     deleteStudent: function deleteStudent(id) {
       Swal.fire({
         title: 'Are you sure?',
@@ -3193,21 +3196,40 @@ __webpack_require__.r(__webpack_exports__);
         console.log(err);
       });
     },
-    editStudent: function editStudent() {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then(function (result) {
-        if (result.value) {}
+    updateStudent: function updateStudent() {
+      var _this2 = this;
+
+      axios.post('/api/add-student-info', {
+        id: this.student.id,
+        parents_fname: this.student.parents_fname,
+        parents_sname: this.student.parents_sname,
+        parents_tel: this.student.parents_tel,
+        class_id: this.student.class_id,
+        address: this.student.address,
+        county: this.student.county,
+        town: this.student.town
+      }).then(function (response) {
+        Fire.$emit('StudentAdded');
+        $('#editStudent').modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        Toast.fire({
+          icon: 'success',
+          title: 'Student Updated successfully'
+        });
+      })["catch"](function (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          timer: 3500,
+          showConfirmButton: false,
+          text: error.response.data.message
+        });
+        _this2.validationErrors = error.response.data.errors;
       });
     },
     addDetails: function addDetails() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.post('/api/add-student-info', {
         user_id: this.student.id,
@@ -3228,25 +3250,25 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Student Added successfully'
         });
       })["catch"](function (error) {
-        _this2.validationErrors = error.response.data.errors;
+        _this3.validationErrors = error.response.data.errors;
       });
     }
   },
   computed: {
     searchedStudents: function searchedStudents() {
-      var _this3 = this;
+      var _this4 = this;
 
       return this.students.filter(function (stdnt) {
-        return stdnt.name.toLowerCase().match(_this3.search.toLowerCase());
+        return stdnt.name.toLowerCase().match(_this4.search.toLowerCase());
       });
     }
   },
   mounted: function mounted() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.fetchStudents();
     Fire.$on('StudentAdded', function () {
-      _this4.fetchStudents();
+      _this5.fetchStudents();
     });
   }
 });
@@ -3407,13 +3429,19 @@ __webpack_require__.r(__webpack_exports__);
       this.subject.description = sub.description;
       this.subject.abbreviation = sub.abbreviation;
     },
+    resetSub: function resetSub() {
+      this.subject.id = '';
+      this.subject.title = '';
+      this.subject.description = '';
+      this.subject.abbreviation = '';
+    },
     fetcthData: function fetcthData() {
       var _this = this;
 
       axios.get('/api/subjects').then(function (response) {
         _this.subjects = response.data.data;
       })["catch"](function (err) {
-        console.log(err);
+        Swal.fire('Error!', err, 'warning');
       });
     },
     deleteSubject: function deleteSubject(id) {
@@ -3451,6 +3479,7 @@ __webpack_require__.r(__webpack_exports__);
         $('#addSubject').modal('hide');
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();
+        this.resetSub();
         Toast.fire({
           icon: 'success',
           title: 'Subject Added successfully'
@@ -3460,10 +3489,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editSubject: function editSubject() {
-      var _this3 = this;
-
       axios.post('/api/add-subject', {
-        id: this.subject,
+        id: this.subject.id,
         title: this.subject.title.toUpperCase(),
         description: this.subject.description,
         abbreviation: this.subject.abbreviation.toUpperCase()
@@ -3472,30 +3499,37 @@ __webpack_require__.r(__webpack_exports__);
         $('#editSubject').modal('hide');
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();
+        this.resetSub();
         Toast.fire({
           icon: 'success',
           title: 'Subject Updated successfully'
         });
       })["catch"](function (error) {
-        _this3.validationErrors = error.response.data.errors;
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          timer: 4000,
+          showConfirmButton: false,
+          text: error.response.data.message
+        });
       });
     }
   },
   computed: {
     searchedSubjects: function searchedSubjects() {
-      var _this4 = this;
+      var _this3 = this;
 
       return this.subjects.filter(function (sub) {
-        return sub.title.toLowerCase().match(_this4.search.toLowerCase());
+        return sub.title.toLowerCase().match(_this3.search.toLowerCase());
       });
     }
   },
   mounted: function mounted() {
-    var _this5 = this;
+    var _this4 = this;
 
     this.fetcthData();
     Fire.$on('GetSubjects', function () {
-      _this5.fetcthData();
+      _this4.fetcthData();
     });
   }
 });
@@ -3710,17 +3744,87 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'Students',
+  name: 'Teachers',
   data: function data() {
     return {
       logged: [],
       teachers: [],
-      classes: [],
+      subjects: [],
       teacher: {
+        newduty: '',
         id: '',
         name: '',
-        contact: ''
+        uid: '',
+        tsc: '',
+        tel: '',
+        email: '',
+        address: '',
+        county: '',
+        town: '',
+        joined: '',
+        subjects: []
       },
       search: '',
       validationErrors: []
@@ -3728,6 +3832,92 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   methods: {
+    setTeacher: function setTeacher(tcher) {
+      this.teacher.id = tcher.id;
+      this.teacher.name = tcher.name;
+      this.teacher.tsc = tcher.tsc;
+      this.teacher.tel = tcher.tel;
+      this.teacher.email = tcher.email;
+      this.teacher.address = tcher.address;
+      this.teacher.county = tcher.county;
+      this.teacher.town = tcher.town;
+      this.teacher.joined = tcher.joined;
+      this.teacher.subjects = tcher.teaches;
+    },
+    resetTeacher: function resetTeacher() {
+      this.teacher.id = '';
+      this.teacher.name = '';
+      this.teacher.tsc = '';
+      this.teacher.tel = '';
+      this.teacher.email = '';
+      this.teacher.address = '';
+      this.teacher.county = '';
+      this.teacher.town = '';
+      this.teacher.joined = '';
+      this.teacher.subjects = '';
+    },
+    openClasses: function openClasses(close, open) {
+      $(close).modal('hide');
+      $('body').removeClass('modal-open');
+      $('.modal-backdrop').remove();
+      $(open).modal('show');
+    },
+    addDuty: function addDuty() {
+      var _this = this;
+
+      axios.post('/api/add-duty/', {
+        teacher_id: this.teacher.id,
+        subject_id: this.teacher.newduty
+      }).then(function (response) {
+        _this.openClasses('#addDuties', '#TeachersDetails');
+
+        axios.get('/api/reload-duty/' + _this.teacher.id).then(function (response) {
+          _this.teacher.subjects = response.data.data;
+        })["catch"](function (err) {
+          console.log("Error from Reload --- " + err);
+        });
+        Fire.$emit('UpdateTeachers');
+      })["catch"](function (err) {
+        console.log("Error from Add Duty --- " + err);
+      });
+    },
+    deleteDuty: function deleteDuty(id) {
+      var _this2 = this;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]('/api/delete-duty/' + id).then(function (response) {
+            // $('#TeachersDetails').modal('hide');
+            // $('body').removeClass('modal-open');
+            // $('.modal-backdrop').remove();
+            axios.get('/api/reload-duty/' + _this2.teacher.id).then(function (response) {
+              _this2.teacher.subjects = response.data.data;
+            })["catch"](function (err) {
+              console.log("Error from Reload --- " + err);
+            });
+            Fire.$emit('UpdateTeachers');
+            Toast.fire({
+              icon: 'success',
+              title: 'Duty Deleted Successfully'
+            });
+          })["catch"](function (err) {
+            console.log("Error from Delete Duty --- " + err); // Swal.fire(
+            //     'Error!',
+            //     err,
+            //     'warning'
+            //     )
+          });
+        }
+      });
+    },
     deleteTeacher: function deleteTeacher(id) {
       Swal.fire({
         title: 'Are you sure?',
@@ -3740,91 +3930,103 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           axios["delete"]('/api/delete-teacher/' + id).then(function (response) {
-            Fire.$emit('StudentAdded');
+            Fire.$emit('UpdateTeachers');
             Toast.fire({
               icon: 'success',
               title: 'Teacher Deleted Successfully'
             });
           })["catch"](function (err) {
-            Swal.fire('Error!', err, 'warning');
+            console.log("Error from Delete Teacher --- " + err); //    Swal.fire(
+            //     'Error!',
+            //     err,
+            //     'warning'
+            //     )
           });
         }
       });
     },
     fetchTeachers: function fetchTeachers() {
-      var _this = this;
+      var _this3 = this;
 
       axios.get('/api/teachers').then(function (response) {
-        _this.teachers = response.data.data;
-      })["catch"](function (err) {
-        console.log(err);
-      });
-      axios.get('/api/classes').then(function (response) {
-        _this.classes = response.data.data;
-        console.log(_this.classes);
+        _this3.teachers = response.data.data;
       })["catch"](function (err) {
         console.log(err);
       });
       axios.get('/api/loggedteachers').then(function (response) {
-        _this.logged = response.data.data;
+        _this3.logged = response.data.data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+      axios.get('/api/subjects').then(function (response) {
+        _this3.subjects = response.data.data;
       })["catch"](function (err) {
         console.log(err);
       });
     },
-    editStudent: function editStudent() {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then(function (result) {
-        if (result.value) {}
-      });
-    },
-    addDetails: function addDetails() {
-      var _this2 = this;
+    editTeacher: function editTeacher() {
+      var _this4 = this;
 
       axios.post('/api/add-teacher-info', {
-        user_id: this.teacher.id,
-        parents_fname: this.teacher.parents_fname,
-        parents_sname: this.teacher.parents_sname,
-        parents_tel: this.teacher.parents_tel,
-        class_id: this.teacher.class_id,
+        id: this.teacher.id,
+        user_id: this.teacher.uid,
+        tsc_number: this.teacher.tsc,
+        tel: this.teacher.tel,
         address: this.teacher.address,
         county: this.teacher.county,
         town: this.teacher.town
       }).then(function (response) {
-        Fire.$emit('StudentAdded');
-        $('#addStudentDetails').modal('hide');
+        Fire.$emit('UpdateTeachers');
+        $('#editTeacher').modal('hide');
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();
         Toast.fire({
           icon: 'success',
-          title: 'Student Added successfully'
+          title: 'Teacher Updated successfully'
         });
       })["catch"](function (error) {
-        _this2.validationErrors = error.response.data.errors;
+        _this4.validationErrors = error.response.data.errors;
+      });
+    },
+    addTeacher: function addTeacher() {
+      var _this5 = this;
+
+      axios.post('/api/add-teacher-info', {
+        user_id: this.teacher.uid,
+        tsc_number: this.teacher.tsc,
+        tel: this.teacher.tel,
+        address: this.teacher.address,
+        county: this.teacher.county,
+        town: this.teacher.town
+      }).then(function (response) {
+        Fire.$emit('UpdateTeachers');
+        $('#addTeacherDetails').modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        Toast.fire({
+          icon: 'success',
+          title: 'Teacher Added Successfully'
+        });
+      })["catch"](function (error) {
+        _this5.validationErrors = error.response.data.errors;
       });
     }
   },
   computed: {
     searchedTeachers: function searchedTeachers() {
-      var _this3 = this;
+      var _this6 = this;
 
       return this.teachers.filter(function (tchr) {
-        return tchr.name.toLowerCase().match(_this3.search.toLowerCase());
+        return tchr.name.toLowerCase().match(_this6.search.toLowerCase());
       });
     }
   },
   mounted: function mounted() {
-    var _this4 = this;
+    var _this7 = this;
 
     this.fetchTeachers();
-    Fire.$on('StudentAdded', function () {
-      _this4.fetchTeachers();
+    Fire.$on('UpdateTeachers', function () {
+      _this7.fetchTeachers();
     });
   }
 });
@@ -44702,6 +44904,11 @@ var render = function() {
                       attrs: {
                         "data-toggle": "modal",
                         "data-target": "#editStudent"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.setStudent(student)
+                        }
                       }
                     }),
                     _vm._v(" "),
@@ -44851,14 +45058,24 @@ var render = function() {
                               }
                             }
                           },
-                          _vm._l(_vm.classes, function(cl) {
-                            return _c(
-                              "option",
-                              { key: cl.id, domProps: { value: cl.id } },
-                              [_vm._v(" " + _vm._s(cl.form + " " + cl.stream))]
-                            )
-                          }),
-                          0
+                          [
+                            _c("option", { attrs: { selected: "" } }, [
+                              _vm._v("Choose...")
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(_vm.classes, function(cl) {
+                              return _c(
+                                "option",
+                                { key: cl.id, domProps: { value: cl.id } },
+                                [
+                                  _vm._v(
+                                    " " + _vm._s(cl.form + " " + cl.stream)
+                                  )
+                                ]
+                              )
+                            })
+                          ],
+                          2
                         ),
                         _vm._v(" "),
                         _vm.validationErrors.class_id
@@ -45194,7 +45411,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        return _vm.editStudent($event)
+                        return _vm.updateStudent($event)
                       }
                     }
                   },
@@ -45206,52 +45423,13 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c(
-                          "select",
+                          "label",
                           {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.student.id,
-                                expression: "student.id"
-                              }
-                            ],
                             staticClass: "form-control",
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.student,
-                                  "id",
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
+                            attrs: { for: "name" }
                           },
-                          _vm._l(_vm.logged, function(st) {
-                            return _c(
-                              "option",
-                              { key: st.id, domProps: { value: st.id } },
-                              [_vm._v(" " + _vm._s(st.name))]
-                            )
-                          }),
-                          0
-                        ),
-                        _vm._v(" "),
-                        _vm.validationErrors.s_id
-                          ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v("The Student ID is Required")
-                            ])
-                          : _vm._e()
+                          [_vm._v(_vm._s(_vm.student.name))]
+                        )
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group col-md-6" }, [
@@ -45294,7 +45472,10 @@ var render = function() {
                           _vm._l(_vm.classes, function(cl) {
                             return _c(
                               "option",
-                              { key: cl.id, domProps: { value: cl.id } },
+                              {
+                                key: cl.id,
+                                domProps: { value: _vm.student.class_id }
+                              },
                               [_vm._v(" " + _vm._s(cl.form + " " + cl.stream))]
                             )
                           }),
@@ -45761,7 +45942,22 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _vm._m(0)
+        _c(
+          "span",
+          {
+            staticClass: "btn btn-primary float-right ",
+            attrs: { "data-toggle": "modal", "data-target": "#addSubject" },
+            on: {
+              click: function($event) {
+                return _vm.resetSub()
+              }
+            }
+          },
+          [
+            _c("i", { staticClass: "far fa-address-card mr-3" }),
+            _vm._v("ADD SUBJECT")
+          ]
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
@@ -45773,7 +45969,7 @@ var render = function() {
                 attrs: { id: "dt" }
               },
               [
-                _vm._m(1),
+                _vm._m(0),
                 _vm._v(" "),
                 _c(
                   "tbody",
@@ -45839,7 +46035,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -45873,7 +46069,7 @@ var render = function() {
                           attrs: {
                             type: "text",
                             id: "pfirstname",
-                            placeholder: "Parent or Guardian First Name"
+                            placeholder: "Enter Subject Title Here ...."
                           },
                           domProps: { value: _vm.subject.title },
                           on: {
@@ -45892,9 +46088,7 @@ var render = function() {
                         _vm._v(" "),
                         _vm.validationErrors.title
                           ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v(
-                                "@The parents first name field is required"
-                              )
+                              _vm._v("Subject Title is required")
                             ])
                           : _vm._e()
                       ]),
@@ -45917,7 +46111,7 @@ var render = function() {
                           attrs: {
                             type: "text",
                             id: "psecname",
-                            placeholder: "Parent or Guardian Second Name"
+                            placeholder: "Enter Abbreviation Here ..."
                           },
                           domProps: { value: _vm.subject.abbreviation },
                           on: {
@@ -45936,9 +46130,7 @@ var render = function() {
                         _vm._v(" "),
                         _vm.validationErrors.abbreviation
                           ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v(
-                                "@The parents second name field is required."
-                              )
+                              _vm._v("Abbreviation field is required.")
                             ])
                           : _vm._e()
                       ])
@@ -46030,7 +46222,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(3),
+              _vm._m(2),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -46064,7 +46256,7 @@ var render = function() {
                           attrs: {
                             type: "text",
                             id: "pfirstname",
-                            placeholder: "Parent or Guardian First Name"
+                            placeholder: "Enter Subject Title Here ...."
                           },
                           domProps: { value: _vm.subject.title },
                           on: {
@@ -46108,7 +46300,7 @@ var render = function() {
                           attrs: {
                             type: "text",
                             id: "psecname",
-                            placeholder: "Parent or Guardian Second Name"
+                            placeholder: "Enter Abbreviation Here ...."
                           },
                           domProps: { value: _vm.subject.abbreviation },
                           on: {
@@ -46202,22 +46394,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      {
-        staticClass: "btn btn-primary float-right ",
-        attrs: { "data-toggle": "modal", "data-target": "#addSubject" }
-      },
-      [
-        _c("i", { staticClass: "far fa-address-card mr-3" }),
-        _vm._v("ADD SUBJECT")
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -46341,7 +46517,21 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _vm._m(0)
+        _c(
+          "span",
+          {
+            staticClass: "btn btn-primary float-right ",
+            attrs: {
+              "data-toggle": "modal",
+              "data-target": "#addTeachersDetails"
+            },
+            on: { click: _vm.resetTeacher }
+          },
+          [
+            _c("i", { staticClass: "far fa-address-card mr-3" }),
+            _vm._v("ADD DETAILS")
+          ]
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
@@ -46352,15 +46542,55 @@ var render = function() {
             attrs: { id: "dt" }
           },
           [
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c(
               "tbody",
               _vm._l(_vm.searchedTeachers, function(teacher) {
                 return _c("tr", { key: teacher.id }, [
-                  _c("td", [_vm._v(_vm._s(teacher.name))]),
+                  _c(
+                    "td",
+                    {
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#TeachersDetails"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.setTeacher(teacher)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(teacher.name))]
+                  ),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(teacher.tsc))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(teacher.tel))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(teacher.email))]),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    _vm._l(teacher.teaches, function(sb, index) {
+                      return _c("span", { key: sb.id }, [
+                        teacher.teaches.length == index + 1 && index != 0
+                          ? _c("span", [_vm._v(" & ")])
+                          : _vm._e(),
+                        _vm._v(
+                          "\n                                    " +
+                            _vm._s(sb.abbr) +
+                            "\n                                    "
+                        ),
+                        teacher.teaches.length > 2 &&
+                        teacher.teaches.length != index + 2 &&
+                        teacher.teaches.length != index + 1
+                          ? _c("span", [_vm._v(" , ")])
+                          : _vm._e()
+                      ])
+                    }),
+                    0
+                  ),
                   _vm._v(" "),
                   _c("td", [
                     _c("i", {
@@ -46368,6 +46598,11 @@ var render = function() {
                       attrs: {
                         "data-toggle": "modal",
                         "data-target": "#editTeacher"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.setTeacher(teacher)
+                        }
                       }
                     }),
                     _vm._v(" "),
@@ -46375,7 +46610,7 @@ var render = function() {
                       staticClass: "ml-1 far fa-trash-alt",
                       on: {
                         click: function($event) {
-                          return _vm.deleteTeacger(teacher.id)
+                          return _vm.deleteTeacher(teacher.id)
                         }
                       }
                     })
@@ -46389,17 +46624,280 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(2),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "addDuties",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "addDuties",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h3",
+                  {
+                    staticClass: "modal-title ml-2",
+                    attrs: { id: "TeacherDetailsTitle" }
+                  },
+                  [_vm._v("Assign Subject To " + _vm._s(_vm.teacher.name))]
+                ),
+                _vm._v(" "),
+                _vm._m(1)
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "p-2",
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.addDuty($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("label", { attrs: { for: "classroom" } }, [
+                      _vm._v("Subject")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "form-group col-md-10" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.teacher.newduty,
+                                expression: "teacher.newduty"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.teacher,
+                                  "newduty",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { disabled: "" } }, [
+                              _vm._v(" Choose A Subject")
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(_vm.subjects, function(sub) {
+                              return _c(
+                                "option",
+                                {
+                                  key: sub.id,
+                                  attrs: { placeholder: "Choose A Subject" },
+                                  domProps: { value: sub.id }
+                                },
+                                [_vm._v(" " + _vm._s(sub.title))]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(2)
+                    ])
+                  ]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
     _vm._v(" "),
     _c(
       "div",
       {
         staticClass: "modal fade",
         attrs: {
-          id: "editTeacher",
+          id: "TeachersDetails",
           tabindex: "-1",
           role: "dialog",
-          "aria-labelledby": "editTeacher",
+          "aria-labelledby": "TeachersDetails",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h3",
+                  {
+                    staticClass: "modal-title ml-2",
+                    attrs: { id: "TeacherDetailsTitle" }
+                  },
+                  [_vm._v(_vm._s(_vm.teacher.name) + " Details")]
+                ),
+                _vm._v(" "),
+                _vm._m(3)
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "row ml-2" }, [
+                  _c("div", { staticClass: "col-md-6" }, [
+                    _c("div", [
+                      _c("label", { attrs: { for: "" } }, [
+                        _vm._v("TSC Number")
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(_vm.teacher.tsc))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("label", { attrs: { for: "" } }, [_vm._v("Contacts")]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(_vm.teacher.tel))]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(_vm.teacher.email))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("label", { attrs: { for: "" } }, [_vm._v("Address")]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _vm._v(
+                          "P.O Box " +
+                            _vm._s(_vm.teacher.address) +
+                            " ," +
+                            _vm._s(_vm.teacher.town)
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(_vm.teacher.county) + " County.")])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-md-6" },
+                    [
+                      _c(
+                        "label",
+                        { staticClass: "mb-0 pb-0", attrs: { for: "" } },
+                        [_vm._v("Teaches")]
+                      ),
+                      _vm._v(" "),
+                      _c("i", {
+                        staticClass: "float-right text-primary fa fa-plus",
+                        on: {
+                          click: function($event) {
+                            return _vm.openClasses(
+                              "#TeachersDetails",
+                              "#addDuties"
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("hr"),
+                      _vm._v(" "),
+                      _vm._l(_vm.teacher.subjects, function(sb) {
+                        return _c("p", { key: sb.id }, [
+                          _vm._v(
+                            "\n                                        " +
+                              _vm._s(sb.name) +
+                              "\n                                        "
+                          ),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "d-block text-muted pl-1",
+                              staticStyle: {
+                                border: "1px solid grey",
+                                "border-radius": "5px"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                            " +
+                                  _vm._s(sb.abbr.toLowerCase()) +
+                                  "\n                                            "
+                              ),
+                              _c(
+                                "span",
+                                {
+                                  staticClass: "text-danger ml-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteDuty(sb.duty_id)
+                                    }
+                                  }
+                                },
+                                [_vm._v("×")]
+                              )
+                            ]
+                          )
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c("div", { staticClass: "text-muted blue" }, [
+                  _vm._v("Joined on " + _vm._s(_vm.teacher.joined))
+                ])
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "addTeachersDetails",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "addTeachersDetails",
           "aria-hidden": "true"
         }
       },
@@ -46412,7 +46910,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(3),
+              _vm._m(4),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -46422,7 +46920,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        return _vm.editStudent($event)
+                        return _vm.addTeacher($event)
                       }
                     }
                   },
@@ -46440,8 +46938,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.teacher.id,
-                                expression: "teacher.id"
+                                value: _vm.teacher.uid,
+                                expression: "teacher.uid"
                               }
                             ],
                             staticClass: "form-control",
@@ -46457,7 +46955,7 @@ var render = function() {
                                   })
                                 _vm.$set(
                                   _vm.teacher,
-                                  "id",
+                                  "uid",
                                   $event.target.multiple
                                     ? $$selectedVal
                                     : $$selectedVal[0]
@@ -46465,84 +46963,26 @@ var render = function() {
                               }
                             }
                           },
-                          _vm._l(_vm.logged, function(st) {
+                          _vm._l(_vm.logged, function(tcher) {
                             return _c(
                               "option",
-                              { key: st.id, domProps: { value: st.id } },
-                              [_vm._v(" " + _vm._s(st.name))]
+                              { key: tcher.id, domProps: { value: tcher.id } },
+                              [_vm._v(" " + _vm._s(tcher.name))]
                             )
                           }),
                           0
                         ),
                         _vm._v(" "),
-                        _vm.validationErrors.s_id
+                        _vm.validationErrors.id
                           ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v("The Student ID is Required")
+                              _vm._v(_vm._s(_vm.validationErrors.id[0]))
                             ])
                           : _vm._e()
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group col-md-6" }, [
                         _c("label", { attrs: { for: "classroom" } }, [
-                          _vm._v("Class")
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.teacher.class_id,
-                                expression: "teacher.class_id"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.teacher,
-                                  "class_id",
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
-                          _vm._l(_vm.classes, function(cl) {
-                            return _c(
-                              "option",
-                              { key: cl.id, domProps: { value: cl.id } },
-                              [_vm._v(" " + _vm._s(cl.form + " " + cl.stream))]
-                            )
-                          }),
-                          0
-                        ),
-                        _vm._v(" "),
-                        _vm.validationErrors.class_id
-                          ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v(
-                                "@" + _vm._s(_vm.validationErrors.class_id[0])
-                              )
-                            ])
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-row" }, [
-                      _c("div", { staticClass: "form-group  col-md-6" }, [
-                        _c("label", { attrs: { for: "pfirstname" } }, [
-                          _vm._v("Parent / Guardian First Name")
+                          _vm._v("TSC Number")
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -46550,80 +46990,26 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.teacher.parents_fname,
-                              expression: "teacher.parents_fname"
+                              value: _vm.teacher.tsc,
+                              expression: "teacher.tsc"
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "pfirstname",
-                            placeholder: "Parent or Guardian First Name"
-                          },
-                          domProps: { value: _vm.teacher.parents_fname },
+                          attrs: { type: "text", id: "address" },
+                          domProps: { value: _vm.teacher.tsc },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.$set(
-                                _vm.teacher,
-                                "parents_fname",
-                                $event.target.value
-                              )
+                              _vm.$set(_vm.teacher, "tsc", $event.target.value)
                             }
                           }
                         }),
                         _vm._v(" "),
-                        _vm.validationErrors.parents_fname
+                        _vm.validationErrors.tsc
                           ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v(
-                                "@The parents first name field is required"
-                              )
-                            ])
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group  col-md-6" }, [
-                        _c("label", { attrs: { for: "psecname" } }, [
-                          _vm._v("Parent / Guardian Second Name")
-                        ]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.teacher.parents_sname,
-                              expression: "teacher.parents_sname"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "psecname",
-                            placeholder: "Parent or Guardian Second Name"
-                          },
-                          domProps: { value: _vm.teacher.parents_sname },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.teacher,
-                                "parents_sname",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm.validationErrors.parents_sname
-                          ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v(
-                                "@The parents second name field is required."
-                              )
+                              _vm._v("@" + _vm._s(_vm.validationErrors.tsc[0]))
                             ])
                           : _vm._e()
                       ])
@@ -46672,7 +47058,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group col-md-6" }, [
                         _c("label", { attrs: { for: "tel" } }, [
-                          _vm._v("Telephone (Parent)")
+                          _vm._v("Telephone")
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -46680,33 +47066,26 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.teacher.parents_tel,
-                              expression: "teacher.parents_tel"
+                              value: _vm.teacher.tel,
+                              expression: "teacher.tel"
                             }
                           ],
                           staticClass: "form-control",
                           attrs: { type: "text", id: "tel" },
-                          domProps: { value: _vm.teacher.parents_tel },
+                          domProps: { value: _vm.teacher.tel },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.$set(
-                                _vm.teacher,
-                                "parents_tel",
-                                $event.target.value
-                              )
+                              _vm.$set(_vm.teacher, "tel", $event.target.value)
                             }
                           }
                         }),
                         _vm._v(" "),
-                        _vm.validationErrors.parents_tel
+                        _vm.validationErrors.tel
                           ? _c("span", { staticClass: "text-danger" }, [
-                              _vm._v(
-                                "@" +
-                                  _vm._s(_vm.validationErrors.parents_tel[0])
-                              )
+                              _vm._v("@" + _vm._s(_vm.validationErrors.tel[0]))
                             ])
                           : _vm._e()
                       ])
@@ -46820,7 +47199,309 @@ var render = function() {
                         staticClass: "btn btn-primary float-right",
                         attrs: { type: "submit" }
                       },
-                      [_vm._v("UPDATE")]
+                      [_vm._v("SUBMIT")]
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "editTeacher",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "editTeacher",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered modal-lg",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(5),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "p-2",
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.editTeacher($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group col-md-6" }, [
+                        _c("label", { attrs: { for: "name" } }, [
+                          _vm._v("For")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-control",
+                            attrs: { for: "name" }
+                          },
+                          [_vm._v(_vm._s(_vm.teacher.name))]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group col-md-6" }, [
+                        _c("label", { attrs: { for: "classroom" } }, [
+                          _vm._v("TSC Number")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.teacher.tsc,
+                              expression: "teacher.tsc"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "address" },
+                          domProps: { value: _vm.teacher.tsc },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.teacher, "tsc", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.validationErrors.tsc
+                          ? _c("span", { staticClass: "text-danger" }, [
+                              _vm._v("@" + _vm._s(_vm.validationErrors.tsc[0]))
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group col-md-6" }, [
+                        _c("label", { attrs: { for: "address" } }, [
+                          _vm._v("Address")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.teacher.address,
+                              expression: "teacher.address"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "address" },
+                          domProps: { value: _vm.teacher.address },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.teacher,
+                                "address",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.validationErrors.address
+                          ? _c("span", { staticClass: "text-danger" }, [
+                              _vm._v(
+                                "@" + _vm._s(_vm.validationErrors.address[0])
+                              )
+                            ])
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group col-md-6" }, [
+                        _c("label", { attrs: { for: "tel" } }, [
+                          _vm._v("Telephone")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.teacher.tel,
+                              expression: "teacher.tel"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "tel" },
+                          domProps: { value: _vm.teacher.tel },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.teacher, "tel", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.validationErrors.tel
+                          ? _c("span", { staticClass: "text-danger" }, [
+                              _vm._v("@" + _vm._s(_vm.validationErrors.tel[0]))
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group  col-md-6" }, [
+                        _c("label", { attrs: { for: "town" } }, [
+                          _vm._v("Town")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.teacher.town,
+                              expression: "teacher.town"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "town" },
+                          domProps: { value: _vm.teacher.town },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.teacher, "town", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.validationErrors.town
+                          ? _c("span", { staticClass: "text-danger" }, [
+                              _vm._v("@" + _vm._s(_vm.validationErrors.town[0]))
+                            ])
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group  col-md-6" }, [
+                        _c("label", { attrs: { for: "county" } }, [
+                          _vm._v("County")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.teacher.county,
+                                expression: "teacher.county"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { id: "county" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.teacher,
+                                  "county",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { selected: "" } }, [
+                              _vm._v("Choose...")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", [_vm._v("Nairobi")]),
+                            _vm._v(" "),
+                            _c("option", [_vm._v("Mombasa")]),
+                            _vm._v(" "),
+                            _c("option", [_vm._v("Kisumu")]),
+                            _vm._v(" "),
+                            _c("option", [_vm._v("Nakuru")]),
+                            _vm._v(" "),
+                            _c("option", [_vm._v("Lamu")]),
+                            _vm._v(" "),
+                            _c("option", [_vm._v("Vihiga")])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm.validationErrors.county
+                          ? _c("span", { staticClass: "text-danger" }, [
+                              _vm._v(
+                                "@" + _vm._s(_vm.validationErrors.county[0])
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "text-primary",
+                        on: {
+                          click: function($event) {
+                            return _vm.openClasses(
+                              "#editTeacher",
+                              "#TeachersDetails"
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "Edit " + _vm._s(_vm.teacher.name) + "'s Classes"
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary float-right",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("SUBMIT")]
                     )
                   ]
                 )
@@ -46837,27 +47518,19 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      {
-        staticClass: "btn btn-primary float-right ",
-        attrs: { "data-toggle": "modal", "data-target": "#addSudentDetails" }
-      },
-      [
-        _c("i", { staticClass: "far fa-address-card mr-3" }),
-        _vm._v("ADD DETAILS")
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Email")])
+        _c("th", [_vm._v("TSC")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Phone")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Teaches")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
       ])
     ])
   },
@@ -46866,59 +47539,48 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c(
-      "div",
+      "button",
       {
-        staticClass: "modal fade",
+        staticClass: "close",
         attrs: {
-          id: "addTeachersDetails",
-          tabindex: "-1",
-          role: "dialog",
-          "aria-labelledby": "addTeachersDetails",
-          "aria-hidden": "true"
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
         }
       },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "modal-dialog modal-dialog-centered modal-lg",
-            attrs: { role: "document" }
-          },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c(
-                  "h5",
-                  {
-                    staticClass: "modal-title ml-2",
-                    attrs: { id: "addTeacherDetailsTitle" }
-                  },
-                  [_vm._v("ADD TEACHERS DETAILS")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close"
-                    }
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("×")
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" })
-            ])
-          ]
-        )
-      ]
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2" }, [
+      _c(
+        "button",
+        {
+          staticClass: " btn btn-primary float-right",
+          attrs: { type: "submit" }
+        },
+        [_vm._v("ASSIGN")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
   },
   function() {
@@ -46930,7 +47592,35 @@ var staticRenderFns = [
         "h5",
         {
           staticClass: "modal-title ml-2",
-          attrs: { id: "addSudentDetailsTitle" }
+          attrs: { id: "addTeacherDetailsTitle" }
+        },
+        [_vm._v("ADD TEACHERS DETAILS")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        {
+          staticClass: "modal-title ml-2",
+          attrs: { id: "TeacherDetailsTitle" }
         },
         [_vm._v("EDIT TEACHER DETAILS")]
       ),

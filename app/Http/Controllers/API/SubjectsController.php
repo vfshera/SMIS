@@ -11,7 +11,7 @@ class SubjectsController extends Controller
 
 
     public function allsubjects(){
-        $subjects = Subject::orderBy('created_at', 'DESC')->paginate(10);
+        $subjects = Subject::orderBy('id', 'DESC')->paginate(10);
 
         return json_encode($subjects);
     }
@@ -26,21 +26,20 @@ class SubjectsController extends Controller
              ]);
 
              if($request->has('id')){
-
-                $subjct = Subject::find($request->input('id'));
+                $subjct = Subject::findOrFail($request->input('id'));
                 $subjct->title = $request->input('title');
                 $subjct->abbreviation = $request->input('abbreviation');
                 $subjct->description = $request->input('description');
 
                 $subjct->save();
 
-                return json_encode("Class Updated Successfully");
+                return json_encode("Subject Updated Successfully");
 
             } else {
 
                 $newForm = Subject::create($data);
 
-                return json_encode("Class Created Successfully");
+                return json_encode("Subject Created Successfully");
             }
 
 
@@ -48,11 +47,10 @@ class SubjectsController extends Controller
 
     public function destroy($id)
     {
-        $subject = Subject::find($id);
+        $sub = Subject::findOrFail($id);
 
+        $sub->delete();
 
-        // $subject->delete();
-
-        return json_encode(dd($subject));
+        return json_encode("Subject Deleted Successfully");
     }
 }

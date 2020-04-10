@@ -27,7 +27,7 @@ class ClassroomsController extends Controller
 
             if($request->has('id')){
 
-                $classrm = Classroom::find($request->input('id'));
+                $classrm = Classroom::findOrFail($request->input('id'));
                 $classrm->form_id = $request->input('form_id');
                 $classrm->stream_id = $request->input('stream_id');
 

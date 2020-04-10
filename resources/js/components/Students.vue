@@ -39,7 +39,7 @@
                   <td>{{ student.town }}</td>
                   <td>{{ student.county}}</td>
                   <td>{{ student.joined}}</td>
-                  <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editStudent"></i> <i class="ml-1 far fa-trash-alt" @click="deleteStudent(student.id)"></i></td>
+                  <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editStudent" @click="setStudent(student)"></i> <i class="ml-1 far fa-trash-alt" @click="deleteStudent(student.id)"></i></td>
                 </tr>
 
 
@@ -75,6 +75,7 @@
                                 <div class="form-group col-md-6">
                                 <label for="classroom">Class</label>
                                 <select v-model="student.class_id" class="form-control">
+                                    <option selected>Choose...</option>
                                     <option v-for="cl in classes" :key="cl.id" :value="cl.id"> {{ cl.form + " " + cl.stream }}</option>
                                 </select>
                                 <span v-if="validationErrors.class_id" class="text-danger">@{{ validationErrors.class_id[0] }}</span>
@@ -142,19 +143,16 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form class="p-2" @submit.prevent="editStudent">
+                        <form class="p-2" @submit.prevent="updateStudent">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                 <label for="name">For</label>
-                                <select class="form-control" v-model="student.id">
-                                    <option  v-for="st in logged" :key="st.id" :value="st.id"> {{ st.name }}</option>
-                                </select>
-                                <span v-if="validationErrors.s_id" class="text-danger">The Student ID is Required</span>
+                                <label for="name" class="form-control">{{ student.name }}</label>
                                </div>
                                 <div class="form-group col-md-6">
                                 <label for="classroom">Class</label>
                                 <select v-model="student.class_id" class="form-control">
-                                    <option v-for="cl in classes" :key="cl.id" :value="cl.id"> {{ cl.form + " " + cl.stream }}</option>
+                                    <option v-for="cl in classes" :key="cl.id" :value="student.class_id"> {{ cl.form + " " + cl.stream }}</option>
                                 </select>
                                 <span v-if="validationErrors.class_id" class="text-danger">@{{ validationErrors.class_id[0] }}</span>
                                 </div>
@@ -225,10 +223,12 @@
                 classes: [],
                 student: {
                     id: '',
+                    name: '',
                     parents_fname: '',
                     parents_sname: '',
                     parents_tel:'',
                     class_id : '',
+                    className: '',
                     address: '',
                     county: '',
                     town : '',
@@ -239,6 +239,18 @@
         },
         props:[],
         methods:{
+            setStudent(student){
+                    this.student.id = student.id,
+                    this.student.name = student.name,
+                    this.student.parents_fname = student.parents_fname,
+                    this.student.parents_sname = student.parents_sname,
+                    this.student.parents_tel = student.parents_tel,
+                    this.student.class_id  = student.class_id,
+                    this.student.className  = student.class_name,
+                    this.student.address = student.address,
+                    this.student.county = student.county,
+                    this.student.town  = student.town
+             },
             deleteStudent(id){
                     Swal.fire({
                         title: 'Are you sure?',
@@ -302,21 +314,36 @@
 
                 });
             },
-            editStudent(){
-                   Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                        }).then((result) => {
-                        if (result.value) {
-
-
-                        }
+            updateStudent(){
+                axios.post('/api/add-student-info', {
+                    id: this.student.id,
+                    parents_fname:this.student.parents_fname,
+                    parents_sname:this.student.parents_sname,
+                    parents_tel:this.student.parents_tel,
+                    class_id :this.student.class_id,
+                    address:this.student.address,
+                    county:this.student.county,
+                    town :this.student.town,
+                }).then(function (response) {
+                        Fire.$emit('StudentAdded');
+                         $('#editStudent').modal('hide');
+                         $('body').removeClass('modal-open');
+                         $('.modal-backdrop').remove();
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Student Updated successfully'
+                            })
                     })
+                    .catch(error =>{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            timer:3500,
+                            showConfirmButton:false,
+                            text: error.response.data.message,
+                            })
+                           this.validationErrors = error.response.data.errors;
+                    });
 
             },
             addDetails(){
@@ -330,8 +357,7 @@
                     address:this.student.address,
                     county:this.student.county,
                     town :this.student.town,
-                })
-                    .then(function (response) {
+                }).then(function (response) {
                         Fire.$emit('StudentAdded');
                          $('#addStudentDetails').modal('hide');
                          $('body').removeClass('modal-open');

@@ -54,7 +54,11 @@
                     })
                     .then(()=>console.log(this.users))
                     .catch(err =>{
-                            console.log(err);
+                            Swal.fire(
+                                    'Error!',
+                                    err,
+                                    'warning'
+                                    )
 
                     });
 
