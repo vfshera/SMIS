@@ -24,7 +24,7 @@ class TeachersResource extends JsonResource
                 'town' => $this->town,
                 'county' => $this->county,
                 'teaches' => SubjectsResource::collection( $this->duties),
-                'joined'=> date('dS F  Y', strtotime($this->created_at)),
+                'joined' => date('dS F  Y', strtotime($this->created_at)),
         ];
     }
 }

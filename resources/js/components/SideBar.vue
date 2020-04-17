@@ -71,6 +71,7 @@
                                         <p>Stream</p>
                                         </router-link>
                                     </li>
+
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -79,11 +80,17 @@
                                 <p>Subjects</p>
                                 </router-link>
                             </li>
+                              <li class="nav-item">
+                                 <router-link :to="{ name: 'term' }"  class="nav-link">
+                                <i class=" nav-icon far fa-calendar-alt"></i>
+                                <p>Term</p>
+                                 </router-link>
+                            </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                 <router-link :to="{ name: 'timeTables' }"  class="nav-link">
                                 <i class=" nav-icon far fa-calendar-alt"></i>
                                 <p>Timetable</p>
-                                </a>
+                                 </router-link>
                             </li>
 
 

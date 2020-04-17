@@ -16,11 +16,9 @@ class CreateTimetablesTable extends Migration
         Schema::create('timetables', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('class_id');
-            $table->string('teacher_id');
+            $table->string('duty_id');
             $table->string('term_id');
-            $table->string('subject_id');
-            $table->string('start_time');
-            $table->string('end_time');
+            $table->string('time');
             $table->timestamps();
         });
     }

@@ -15,4 +15,8 @@ class Duty extends Model
     public function subject(){
         return $this->belongsTo(\App\Subject::class, 'subject_id');
     }
+
+    public function timetables(){
+        return $this->hasMany(\App\Timetable::class);
+    }
 }

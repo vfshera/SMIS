@@ -9,9 +9,14 @@ use App\Duty;
 use App\Http\Resources\SubjectsResource;
 class DutiesController extends Controller
 {
-    public function getTeacherDuties($teacherID){
-        $duties = Duty::where('teacher_id', $teacherID)->get();
+    public function getDuties(){
+        $duties = Duty::orderBy('subject_id' , 'DESC')->get();
          return SubjectsResource::collection( $duties);
+    }
+
+    public function getTeacherDuties($teacherID){
+        $tduties = Duty::where('teacher_id', $teacherID)->get();
+         return SubjectsResource::collection( $tduties);
     }
     public function store(Request $request)
     {

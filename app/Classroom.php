@@ -26,5 +26,9 @@ class Classroom extends Model
     public function students(){
         return $this->hasMany(\App\Student::class, 'class_id');
     }
+
+    public function timetables(){
+        return $this->hasMany(\App\Timetable::class);
+    }
 }
 

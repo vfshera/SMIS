@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTermsTable extends Migration
+class CreateUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateTermsTable extends Migration
      */
     public function up()
     {
-        Schema::create('terms', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('year');
-            $table->dateTime('beginning_on');
-            $table->dateTime('ending_on');
-            $table->boolean('status')->default(false);
+            $table->string('subject_id');
+            $table->string('student_id');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateTermsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('terms');
+        Schema::dropIfExists('units');
     }
 }

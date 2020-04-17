@@ -5,7 +5,9 @@ import Students from './components/Students.vue'
 import Subjects from './components/Subjects.vue'
 import Classrooms from './components/Classrooms.vue'
 import Classlist from './components/Classlist.vue'
+import Timetables from './components/Timetables.vue'
 import Form from './components/Form.vue'
+import Term from './components/Terms.vue'
 import formStream from './components/stream.vue'
 
 export const routes = [
@@ -47,6 +49,16 @@ export const routes = [
         path:'/subjects',
         name: 'addSubject',
         component: Subjects
+    },
+    {
+        path:'/timetables',
+        name: 'timeTables',
+        component: Timetables
+    },
+    {
+        path:'/term',
+        name: 'term',
+        component: Term
     },
 
     {
