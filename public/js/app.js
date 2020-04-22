@@ -2500,7 +2500,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       return this.classes.filter(function (cls) {
-        return cls.form.toLowerCase().match(_this4.search.toLowerCase()) || cls.stream.toLowerCase().match(_this4.search.toLowerCase());
+        return cls.form.name.toLowerCase().match(_this4.search.toLowerCase()) || cls.stream.name.toLowerCase().match(_this4.search.toLowerCase());
       });
     }
   },
@@ -4007,7 +4007,7 @@ __webpack_require__.r(__webpack_exports__);
         town: this.teacher.town
       }).then(function (response) {
         Fire.$emit('UpdateTeachers');
-        $('#addTeacherDetails').modal('hide');
+        $('#addTeachersDetails').modal('hide');
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();
         Toast.fire({
@@ -4300,6 +4300,67 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4448,10 +4509,38 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       classes: [],
+      levels: {
+        one: {
+          name: '',
+          list: {}
+        },
+        two: {
+          name: '',
+          list: {}
+        },
+        three: {
+          name: '',
+          list: {}
+        },
+        four: {
+          name: '',
+          list: {}
+        }
+      },
+      classCategories: {
+        formOne: [],
+        formTwo: [],
+        formThree: [],
+        formFour: []
+      },
       terms: [],
       duties: [],
       timetables: [],
       view: true,
+      currTable: {
+        name: '',
+        fields: []
+      },
       tmtable: {
         classroom_id: '',
         term_id: '',
@@ -4465,6 +4554,102 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   methods: {
+    setTimetable: function setTimetable(name) {
+      var _this = this;
+
+      this.timetables.forEach(function (tbl) {
+        if (tbl.classData.name === name) {
+          _this.currTable.fields.push(tbl);
+
+          _this.currTable.name = name;
+        }
+      });
+    },
+    buidTimetable: function buidTimetable() {
+      var monday = document.querySelector('.monday');
+      var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      this.currTable.fields.forEach(function (fld) {
+        if (fld.day === days[0]) {
+          monday.innerHTML = "<div class=\"class \" data-tooltip=\"English Literature\">2ELI1 [C1]</div>";
+        }
+      });
+    },
+    getAbbr: function getAbbr(num, name) {
+      var index = name.indexOf(" ") + 1;
+      var abbr = name.charAt(index).toUpperCase();
+      return num + abbr;
+    },
+    countLevels: function countLevels(toFind) {
+      var found = 0; // default to 0
+
+      for (var i = 0; i < this.timetables.length; i++) {
+        var timetbl = this.timetables[i];
+
+        if (timetbl.classData.form.math_rep === toFind) {
+          found += 1;
+        }
+      }
+
+      return found;
+    },
+    buildCategories: function buildCategories() {
+      var _this2 = this;
+
+      this.timetables.forEach(function (t) {
+        if (t.classData.form.math_rep === "1") {
+          _this2.classCategories.formOne.push(t);
+
+          console.log(" Form 1 " + t.classData.name);
+        } else if (t.classData.form.math_rep === "2") {
+          _this2.classCategories.formTwo.push(t);
+
+          console.log(" Form 2 " + t.classData.name);
+        } else if (t.classData.form.math_rep === "3") {
+          _this2.classCategories.formThree.push(t);
+
+          console.log(" Form 3 " + t.classData.name);
+        } else if (t.classData.form.math_rep === "4") {
+          _this2.classCategories.formFour.push(t);
+
+          console.log(" Form 3 " + t.classData.name);
+        }
+      });
+      this.buildClassNames();
+    },
+    buildClassNames: function buildClassNames() {
+      var names4 = [];
+      this.classCategories.formFour.forEach(function (tbl) {
+        names4.push(tbl.classData.name);
+      });
+
+      var unique4 = _toConsumableArray(new Set(names4));
+
+      this.levels.four.list = unique4;
+      var names3 = [];
+      this.classCategories.formThree.forEach(function (tbl) {
+        names3.push(tbl.classData.name);
+      });
+
+      var unique3 = _toConsumableArray(new Set(names3));
+
+      this.levels.three.list = unique3;
+      var names2 = [];
+      this.classCategories.formTwo.forEach(function (tbl) {
+        names2.push(tbl.classData.name);
+      });
+
+      var unique2 = _toConsumableArray(new Set(names2));
+
+      this.levels.two.list = unique2;
+      var names = [];
+      this.classCategories.formOne.forEach(function (tbl) {
+        names.push(tbl.classData.name);
+      });
+
+      var unique = _toConsumableArray(new Set(names));
+
+      this.levels.one.list = unique;
+    },
     toggleForm: function toggleForm() {
       this.view = !this.view;
     },
@@ -4476,31 +4661,37 @@ __webpack_require__.r(__webpack_exports__);
       this.tmtable.time = '';
     },
     fetcthData: function fetcthData() {
-      var _this = this;
+      var _this3 = this;
 
       axios.get('/api/classes').then(function (response) {
-        _this.classes = response.data.data;
+        _this3.classes = response.data.data;
       })["catch"](function (err) {
         alert(err);
       });
       axios.get('/api/duties').then(function (response) {
-        _this.duties = response.data.data;
+        _this3.duties = response.data.data;
       })["catch"](function (err) {
         alert(err);
       });
       axios.get('/api/terms').then(function (response) {
-        _this.terms = response.data.data;
+        _this3.terms = response.data.data;
       })["catch"](function (err) {
         console.log(err);
       });
       axios.get('/api/timetables').then(function (response) {
-        _this.timetables = response.data.data;
+        _this3.timetables = response.data.data;
+        _this3.levels.one.name = _this3.countLevels("1");
+        _this3.levels.two.name = _this3.countLevels("2");
+        _this3.levels.three.name = _this3.countLevels("3");
+        _this3.levels.four.name = _this3.countLevels("4");
+
+        _this3.buildCategories();
       })["catch"](function (err) {
         console.log(err);
       });
     },
     addDetails: function addDetails() {
-      var _this2 = this;
+      var _this4 = this;
 
       axios.post('/api/add-timetable', {
         class_id: this.tmtable.classroom_id,
@@ -4509,18 +4700,29 @@ __webpack_require__.r(__webpack_exports__);
         day: this.tmtable.day,
         time: this.tmtable.time
       }).then(function (response) {
-        Fire.$emit('FormAdded');
-        resetTmtbl();
+        Fire.$emit('TimetableAdded');
+
+        _this4.resetTmtbl();
+
         Toast.fire({
           icon: 'success',
-          title: 'Form Added successfully'
+          title: 'Timetable Added successfully'
         });
       })["catch"](function (error) {
-        _this2.validationErrors = error.response.data.errors;
+        //    this.validationErrors = error.response.data.errors;
+        console.log(error);
       });
     }
   },
   computed: {
+    // classNames:function(){
+    //     let names = [];
+    //     this.timetables.forEach(tbl => {
+    //         names.push(tbl.classData.name);
+    //     });
+    //         let unique = [...new Set(names)];
+    //     return unique;
+    // },
     allowedTerms: function allowedTerms() {
       return this.terms.filter(function (trm) {
         return trm.status === 1;
@@ -4531,11 +4733,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this5 = this;
 
     this.fetcthData();
-    Fire.$on('FormAdded', function () {
-      _this3.fetcthData();
+    Fire.$on('TimetableAdded', function () {
+      _this5.fetcthData();
     });
   }
 });
@@ -9234,6 +9436,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\nsmall[data-v-7ae8801a]{\n    color:white;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\nhtml[data-v-641c271d], body[data-v-641c271d] { height: 100%; margin: 0;\n}\nbody[data-v-641c271d] {\nfont-family: 'Open Sans', sans-serif;\ncolor: #efefef;\noverflow: hidden;\n}\n.day[data-v-641c271d] {\nwidth: 18%;\nheight: 100vh;\nfloat: left;\nbackground-color: #fff;\nbackground-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);\nbackground-size: 1px 20%;\n}\n.day.time[data-v-641c271d] { width: 10%;\n}\n.day_title[data-v-641c271d] {\nheight: 10%;\nbackground-color: #34495e;\nfont-size: 20px;\nfont-weight: 600;\ntext-transform: uppercase;\ntext-align: center;\nline-height: 10vh;\ncolor:white;\n}\n.hour[data-v-641c271d] {\nheight: 10%;\nbackground-color: rgba(52, 73, 94,0.9);\nfont-size: 16px;\ncolor:white;\nfont-weight: 400;\ntext-align: center;\nline-height: 10vh;\n}\n.class[data-v-641c271d] {\nwidth: 100%;\nheight: 10vh; /*90min*/\nline-height: 15vh;\nfont-size: 2vw;\nfont-weight: 300;\npadding-left: 10px;\n}\n.class.short[data-v-641c271d] { height: 7.5vh; line-height: 7.5vh;\n} /* 45min class */\n.class.b5[data-v-641c271d] { margin-top: 2.5vh;\n} /* after 5 min break */\n.class.b25[data-v-641c271d] { margin-top: 7.5vh;\n} /* after 25 min break */\n.navy[data-v-641c271d] { background-color: #34495e;\n}\n.grey[data-v-641c271d] { background-color: #bdc3c7; color: #202020;\n}\n.gray[data-v-641c271d] { background-color: #7f8c8d;\n}\n.red[data-v-641c271d] { background-color: #e74c3c;\n}\n.spacing[data-v-641c271d] { background-color: transparent;\n}\n\n\n\n/* Add this attribute to the element that needs a tooltip */\n[data-tooltip][data-v-641c271d] {\nposition: relative;\nz-index: 2;\ncursor: pointer;\nwidth: initial;\n}\n\n/* Hide the tooltip content by default */\n[data-tooltip][data-v-641c271d]:before,\n[data-tooltip][data-v-641c271d]:after {\nvisibility: hidden;\npointer-events: none;\n}\n\n/* Position tooltip above the element */\n[data-tooltip][data-v-641c271d]:before {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-bottom: 10px;\nmargin-left: -75px;\npadding: 7px 5px;\nwidth: 140px;\nbackground-color: black;\ncolor: #fff;\ncontent: attr(data-tooltip);\ntext-align: center;\nfont-size: 14px;\nline-height: 1.2;\n}\n\n/* Triangle hack to make tooltip look like a speech bubble */\n[data-tooltip][data-v-641c271d]:after {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-left: -7px;\nmargin-bottom: 3px;\nwidth: 0;\nborder-top: 7px solid black;\nborder-right: 7px solid transparent;\nborder-left: 7px solid transparent;\ncontent: \" \";\nfont-size: 0;\nline-height: 0;\n}\n\n/* Show tooltip content on hover */\n[data-tooltip][data-v-641c271d]:hover:before,\n[data-tooltip][data-v-641c271d]:hover:after {\nvisibility: visible;\nbottom: 90%;\n}\n", ""]);
 
 // exports
 
@@ -40106,6 +40327,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -43824,9 +44075,13 @@ var staticRenderFns = [
           _c("div", { staticClass: "col-lg-3 col-6" }, [
             _c("div", { staticClass: "small-box bg-info" }, [
               _c("div", { staticClass: "inner" }, [
-                _c("h3", [_vm._v("150")]),
+                _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                  _vm._v("150")
+                ]),
                 _vm._v(" "),
-                _c("p", [_vm._v("Teachers")])
+                _c("p", { staticClass: "animated  fadeInUp " }, [
+                  _vm._v("Teachers")
+                ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "icon" }, [
@@ -43835,7 +44090,10 @@ var staticRenderFns = [
               _vm._v(" "),
               _c(
                 "a",
-                { staticClass: "small-box-footer", attrs: { href: "#" } },
+                {
+                  staticClass: "small-box-footer  animated  fadeInRight  ",
+                  attrs: { href: "#" }
+                },
                 [
                   _vm._v("More info "),
                   _c("i", { staticClass: "fas fa-arrow-circle-right" })
@@ -43847,9 +44105,13 @@ var staticRenderFns = [
           _c("div", { staticClass: "col-lg-3 col-6" }, [
             _c("div", { staticClass: "small-box bg-success" }, [
               _c("div", { staticClass: "inner" }, [
-                _c("h3", [_vm._v("1140")]),
+                _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                  _vm._v("1140")
+                ]),
                 _vm._v(" "),
-                _c("p", [_vm._v("Students")])
+                _c("p", { staticClass: "animated  fadeInUp " }, [
+                  _vm._v("Students")
+                ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "icon" }, [
@@ -43858,7 +44120,10 @@ var staticRenderFns = [
               _vm._v(" "),
               _c(
                 "a",
-                { staticClass: "small-box-footer", attrs: { href: "#" } },
+                {
+                  staticClass: "small-box-footer  animated  fadeInRight  ",
+                  attrs: { href: "#" }
+                },
                 [
                   _vm._v("More info "),
                   _c("i", { staticClass: "fas fa-arrow-circle-right" })
@@ -43870,9 +44135,13 @@ var staticRenderFns = [
           _c("div", { staticClass: "col-lg-3 col-6" }, [
             _c("div", { staticClass: "small-box bg-warning" }, [
               _c("div", { staticClass: "inner" }, [
-                _c("h3", [_vm._v("64")]),
+                _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                  _vm._v("64")
+                ]),
                 _vm._v(" "),
-                _c("p", [_vm._v("Classes")])
+                _c("p", { staticClass: "animated  fadeInUp " }, [
+                  _vm._v("Classes")
+                ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "icon" }, [
@@ -43881,7 +44150,10 @@ var staticRenderFns = [
               _vm._v(" "),
               _c(
                 "a",
-                { staticClass: "small-box-footer", attrs: { href: "#" } },
+                {
+                  staticClass: "small-box-footer  animated  fadeInRight  ",
+                  attrs: { href: "#" }
+                },
                 [
                   _vm._v("More info "),
                   _c("i", { staticClass: "fas fa-arrow-circle-right" })
@@ -43893,9 +44165,13 @@ var staticRenderFns = [
           _c("div", { staticClass: "col-lg-3 col-6" }, [
             _c("div", { staticClass: "small-box bg-danger" }, [
               _c("div", { staticClass: "inner" }, [
-                _c("h3", [_vm._v("65")]),
+                _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                  _vm._v("65")
+                ]),
                 _vm._v(" "),
-                _c("p", [_vm._v("Unique Visitors")])
+                _c("p", { staticClass: "animated  fadeInUp " }, [
+                  _vm._v("Unique Visitors")
+                ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "icon" }, [
@@ -43904,7 +44180,10 @@ var staticRenderFns = [
               _vm._v(" "),
               _c(
                 "a",
-                { staticClass: "small-box-footer", attrs: { href: "#" } },
+                {
+                  staticClass: "small-box-footer  animated  fadeInRight  ",
+                  attrs: { href: "#" }
+                },
                 [
                   _vm._v("More info "),
                   _c("i", { staticClass: "fas fa-arrow-circle-right" })
@@ -48690,10 +48969,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&":
-/*!*************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d& ***!
-  \*************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -49070,7 +49349,226 @@ var render = function() {
         })
       ]),
       _vm._v(" "),
-      _vm._m(2)
+      _c("div", { staticClass: "card-body" }, [
+        _vm.levels.one
+          ? _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.levels.one.list, function(frm) {
+                return _c(
+                  "div",
+                  {
+                    key: frm.id,
+                    staticClass: "col-md-2 col-sm-6 col-12",
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#classTimetable"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.setTimetable(frm)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-danger",
+                        domProps: { textContent: _vm._s(_vm.getAbbr(1, frm)) }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content" }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v("93,139")
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.levels.two
+          ? _c(
+              "div",
+              { staticClass: "row " },
+              _vm._l(_vm.levels.two.list, function(frm) {
+                return _c(
+                  "div",
+                  {
+                    key: frm.id,
+                    staticClass: "col-md-2 col-sm-6 col-12",
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#classTimetable"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.setTimetable(frm)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-warning",
+                        attrs: { "data-toggle": "modal" },
+                        domProps: { textContent: _vm._s(_vm.getAbbr(2, frm)) }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content" }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v("13,648")
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.levels.three
+          ? _c(
+              "div",
+              { staticClass: "row  " },
+              _vm._l(_vm.levels.three.list, function(frm) {
+                return _c(
+                  "div",
+                  {
+                    key: frm.id,
+                    staticClass: "col-md-2 col-sm-6 col-12 ",
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#classTimetable"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.setTimetable(frm)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-info ",
+                        attrs: { "data-toggle": "modal" },
+                        domProps: { textContent: _vm._s(_vm.getAbbr(3, frm)) }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content " }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v("1,410")
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.levels.four
+          ? _c(
+              "div",
+              { staticClass: "row  " },
+              _vm._l(_vm.levels.four.list, function(frm) {
+                return _c(
+                  "div",
+                  {
+                    key: frm.id,
+                    staticClass: "col-md-2 col-sm-6 col-12",
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#classTimetable"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.setTimetable(frm)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-success ",
+                        domProps: { textContent: _vm._s(_vm.getAbbr(4, frm)) }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content " }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v("410")
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "modal fade",
+          attrs: {
+            id: "classTimetable",
+            tabindex: "-1",
+            role: "dialog",
+            "aria-labelledby": "classTimetable",
+            "aria-hidden": "true"
+          }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "modal-dialog modal-dialog-centered modal-xl",
+              attrs: { role: "document" }
+            },
+            [
+              _c("div", { staticClass: "modal-content" }, [
+                _c("div", { staticClass: "modal-header" }, [
+                  _c(
+                    "h5",
+                    {
+                      staticClass: "modal-title",
+                      attrs: { id: "classTimetableTitle" }
+                    },
+                    [_vm._v(_vm._s(_vm.currTable.name))]
+                  ),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ]),
+                _vm._v(" "),
+                _vm._m(3)
+              ])
+            ]
+          )
+        ]
+      )
     ])
   ])
 }
@@ -49101,69 +49599,73 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-body" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-2 col-sm-6 col-12" }, [
-          _c("div", { staticClass: "info-box" }, [
-            _c("span", { staticClass: "info-box-icon bg-danger" }, [
-              _c("i", { staticClass: "far fa-star" })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "info-box-content" }, [
-              _c("span", { staticClass: "info-box-text" }, [_vm._v("Form 1")]),
-              _vm._v(" "),
-              _c("span", { staticClass: "info-box-number" }, [_vm._v("93,139")])
-            ])
-          ])
-        ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", {}, [
+      _c("div", { staticClass: "day time" }, [
+        _c("div", { staticClass: "day_title" }, [_vm._v("Time")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("8:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("9:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("10:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("11:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("12:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("13:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("14:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("15:00")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "hour" }, [_vm._v("16:00")])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-2 col-sm-6 col-12" }, [
-          _c("div", { staticClass: "info-box" }, [
-            _c("span", { staticClass: "info-box-icon bg-warning" }, [
-              _c("i", { staticClass: "far fa-copy" })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "info-box-content" }, [
-              _c("span", { staticClass: "info-box-text" }, [_vm._v("Form 2")]),
-              _vm._v(" "),
-              _c("span", { staticClass: "info-box-number" }, [_vm._v("13,648")])
-            ])
-          ])
-        ])
+      _c("div", { staticClass: "day monday" }, [
+        _c("div", { staticClass: "day_title" }, [_vm._v("Monday")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "class ",
+            attrs: { "data-tooltip": "English Literature" }
+          },
+          [_vm._v("2ELI1 [C1]")]
+        )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-2 col-sm-6 col-12" }, [
-          _c("div", { staticClass: "info-box" }, [
-            _c("span", { staticClass: "info-box-icon bg-info" }, [
-              _c("i", { staticClass: "far fa-envelope" })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "info-box-content" }, [
-              _c("span", { staticClass: "info-box-text" }, [_vm._v("Form 3")]),
-              _vm._v(" "),
-              _c("span", { staticClass: "info-box-number" }, [_vm._v("1,410")])
-            ])
-          ])
-        ])
+      _c("div", { staticClass: "day tuesday" }, [
+        _c("div", { staticClass: "day_title" }, [_vm._v("Tuesday")])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-2 col-sm-6 col-12" }, [
-          _c("div", { staticClass: "info-box" }, [
-            _c("span", { staticClass: "info-box-icon bg-success" }, [
-              _c("i", { staticClass: "far fa-flag" })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "info-box-content" }, [
-              _c("span", { staticClass: "info-box-text" }, [_vm._v("Form 4")]),
-              _vm._v(" "),
-              _c("span", { staticClass: "info-box-number" }, [_vm._v("410")])
-            ])
-          ])
-        ])
+      _c("div", { staticClass: "day wednesday" }, [
+        _c("div", { staticClass: "day_title" }, [_vm._v("Wednesday")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "day thursday" }, [
+        _c("div", { staticClass: "day_title" }, [_vm._v("Thursday")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "day friday" }, [
+        _c("div", { staticClass: "day_title" }, [_vm._v("Friday")])
       ])
     ])
   }
@@ -65521,9 +66023,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Timetables.vue?vue&type=template&id=641c271d& */ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&");
+/* harmony import */ var _Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Timetables.vue?vue&type=template&id=641c271d&scoped=true& */ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&");
 /* harmony import */ var _Timetables_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Timetables.vue?vue&type=script&lang=js& */ "./resources/js/components/Timetables.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& */ "./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -65531,13 +66035,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Timetables_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "641c271d",
   null
   
 )
@@ -65563,19 +66067,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/Timetables.vue?vue&type=template&id=641c271d& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& ***!
+  \*********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true& ***!
+  \*******************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=template&id=641c271d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=template&id=641c271d&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

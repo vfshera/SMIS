@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Timetable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TimetableResource extends JsonResource
@@ -14,14 +15,20 @@ class TimetableResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
-            'classData' => new ClassroomResource($this->class_id),
-            'duty' => new DutyResource($this->duty_id),
-            'term' => new TermResource($this->term_id),
+            'classData' => new ClassroomResource($this->classroom),
+            'duty' => [
+                 'id' => $this->duty->id,
+                 'teacher' => new TeachersResource($this->duty->teacher),
+                 'subject' => $this->duty->subject
+                ],
+            'term' => $this->term,
             'day' => $this->day,
             'time' => $this->time,
             'created_at' => date('dS F  Y', strtotime($this->created_at)),
         ];
     }
+
 }

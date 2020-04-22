@@ -18888,7 +18888,7 @@ html.maximized-card {
 
 .info-box .info-box-number {
   display: block;
-  font-weight: 700;
+  /* font-weight: 200; */
 }
 
 .info-box .progress-description,
@@ -18897,6 +18897,7 @@ html.maximized-card {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 700;
 }
 
 .info-box .info-box .bg-primary,

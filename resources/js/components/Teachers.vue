@@ -482,7 +482,7 @@
                 })
                     .then(function (response) {
                         Fire.$emit('UpdateTeachers');
-                         $('#addTeacherDetails').modal('hide');
+                         $('#addTeachersDetails').modal('hide');
                          $('body').removeClass('modal-open');
                          $('.modal-backdrop').remove();
                         Toast.fire({

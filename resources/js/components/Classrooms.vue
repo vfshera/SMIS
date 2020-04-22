@@ -245,7 +245,7 @@
         computed:{
              searchedForm:function (){
                      return this.classes.filter(cls => {
-                        return cls.form.toLowerCase().match(this.search.toLowerCase()) || cls.stream.toLowerCase().match(this.search.toLowerCase());
+                        return cls.form.name.toLowerCase().match(this.search.toLowerCase()) || cls.stream.name.toLowerCase().match(this.search.toLowerCase());
                     });
              }
         },
