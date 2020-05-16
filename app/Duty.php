@@ -19,4 +19,5 @@ class Duty extends Model
     public function timetables(){
         return $this->hasMany(\App\Timetable::class);
     }
+
 }

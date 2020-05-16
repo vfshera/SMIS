@@ -17,6 +17,11 @@ class TimetablesController extends Controller
         return TimetableResource::collection($timetables);
     }
 
+    public function classSubjects($id){
+        $sub = Timetable::where('class_id', $id)->orderBy('created_at' , 'DESC')->get();
+        return TimetableResource::collection( $sub);
+    }
+
     public function store(Request $request)
     {
         $data = request()->validate([

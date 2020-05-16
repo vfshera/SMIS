@@ -163,7 +163,6 @@
 
                             <div class="day monday">
                                 <div class="day_title">Monday</div>
-                                <div class="class " data-tooltip="English Literature">2ELI1 [C1]</div>
                             </div>
 
                             <div class="day tuesday">
@@ -253,15 +252,70 @@
                         this.currTable.name = name;
                     }
                 })
+
+                this.buildTimetable();
             },
-            buidTimetable(){
+            buildTimetable(){
                 const monday = document.querySelector('.monday');
+                const tuesday = document.querySelector('.tuesday');
+                const wednesday = document.querySelector('.wednesday');
+                const thursday = document.querySelector('.thursday');
+                const friday = document.querySelector('.friday');
+
                 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+                const divs = [monday,tuesday,wednesday,thursday,friday];
+                const classTime =["8:00 AM","8:40 AM","9:20 AM","10:25 AM","11:05 AM","11:50 AM","12:30 PM","14:00 PM","14:40 PM","15:20 PM"];
 
                 this.currTable.fields.forEach(fld =>{
-                    if(fld.day === days[0])
+                    let dayIndex = 0;
+                    let divIndex = 0;
+                    let timeIndex = 0;
+
+                    if(fld.day === days[dayIndex])
                     {
-                        monday.innerHTML = `<div class="class " data-tooltip="English Literature">2ELI1 [C1]</div>`;
+                        if(fld.time === classTime[timeIndex])
+                        {
+                            let sub = fld.duty.subject.abbreviation;
+                            let tip =  fld.duty.subject.title;
+
+                            console.log(fld.time + " == " + classTime[timeIndex]);
+
+                            const row = document.createElement("div");
+                            row.innerHTML = `<div class="class" data-tooltip="${tip}">${sub}</div>`
+                            divs[divIndex].appendChild(row);
+                            console.log("Row Added");
+
+                            if(classTime.length !== timeIndex + 1)
+                            {
+                                console.log(" Time index is  " + timeIndex);
+                                timeIndex++;
+                                console.log(classTime.length + " Not Equal To " + timeIndex+1);
+                                console.log("New Time index is  " + timeIndex);
+                            }else{
+                                console.log(classTime.length + " Equal To " + timeIndex + 1);
+                                console.log(" Day index is  " + dayIndex + " i.e " + days[dayIndex]+ "so we go to the next day");
+                                dayIndex++
+                                console.log("The next  Day  is  " + dayIndex + " i.e " + days[dayIndex]);
+                                console.log(" And reset time from " + classTime[timeIndex]);
+                                timeIndex = 0;
+                                console.log(" To " + classTime[timeIndex]);
+                            }
+                        } else if(fld.day !== days[dayIndex]){
+                            console.log(fld.day + " !=== " + days[dayIndex])
+                            const row = document.createElement("div");
+                            row.innerHTML = `<div class="class" data-tooltip=""></div>`
+                            divs[divIndex].appendChild(row);
+
+                            timeIndex++;
+                            if(classTime.length !== timeIndex + 1)
+                            {
+                                timeIndex++;
+                            }else{
+                                dayIndex++
+                                timeIndex = 0;
+                            }
+                        }
+
                     }
                 })
             },
@@ -289,20 +343,16 @@
                     if(t.classData.form.math_rep === "1")
                     {
                         this.classCategories.formOne.push(t);
-                        console.log(" Form 1 " + t.classData.name);
                     } else if(t.classData.form.math_rep === "2")
                     {
                         this.classCategories.formTwo.push(t);
-                        console.log(" Form 2 " + t.classData.name);
                     }else if(t.classData.form.math_rep === "3")
                     {
                         this.classCategories.formThree.push(t);
-                        console.log(" Form 3 " + t.classData.name);
 
                     }else if(t.classData.form.math_rep === "4")
                     {
                         this.classCategories.formFour.push(t);
-                        console.log(" Form 3 " + t.classData.name);
                     }
                 })
 
@@ -422,14 +472,7 @@
             }
         },
         computed:{
-            // classNames:function(){
-            //     let names = [];
-            //     this.timetables.forEach(tbl => {
-            //         names.push(tbl.classData.name);
-            //     });
-            //         let unique = [...new Set(names)];
-            //     return unique;
-            // },
+
              allowedTerms:function(){
                      return this.terms.filter(trm => {
                         return trm.status === 1;
@@ -441,6 +484,11 @@
 
         },
         mounted() {
+            $('#classTimetable').on('hidden.bs.modal', (e)=>{
+                // this.currTable.fields = [];
+                // this.currTable.name = '';
+                this.$router.push('/timetables');
+            })
 
             this.fetcthData();
             Fire.$on('TimetableAdded',()=>{

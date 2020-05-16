@@ -7,6 +7,9 @@ import Classrooms from './components/Classrooms.vue'
 import Classlist from './components/Classlist.vue'
 import Timetables from './components/Timetables.vue'
 import Form from './components/Form.vue'
+import MyClasses from './components/teacherpages/MyClasses.vue'
+import Exams from './components/teacherpages/Exams.vue'
+import TeacheSchedule from './components/teacherpages/MySchedule.vue'
 import Term from './components/Terms.vue'
 import formStream from './components/stream.vue'
 
@@ -66,6 +69,23 @@ export const routes = [
         name: 'classList',
         props:true,
         component: Classlist
+    },
+    {
+        path:'/myclasses',
+        name: 'myclasses',
+        component: MyClasses
+    }
+    ,
+    {
+        path:'/exams',
+        name: 'exams',
+        component: Exams
+    }
+    ,
+    {
+        path:'/myschedule',
+        name: 'myschedule',
+        component: TeacheSchedule
     }
 
 ]

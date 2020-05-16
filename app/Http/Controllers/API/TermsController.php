@@ -27,19 +27,14 @@ class TermsController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'beginning_on' =>'required|date',
-            'ending_on' =>'required|date'
+            'ending_on' =>'required|date',
+            'status' => 'required|boolean'
         ]);
 
         if($request->has('id')){
-            $updata = request()->validate([
-                'name' => 'required',
-                'beginning_on' =>'required|date',
-                'ending_on' =>'required|date',
-                'status' => 'required|boolean'
-            ]);
             $trm =  Term::findOrFail($request->input('id'));
 
-            $trm->update($updata);
+            $trm->update($data);
 
             return json_encode("Term Updated Successfully");
 

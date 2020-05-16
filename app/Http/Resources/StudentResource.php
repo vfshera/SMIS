@@ -27,6 +27,7 @@ class StudentResource extends JsonResource
                 'address' => $this->address,
                 'town' => $this->town,
                 'county' => $this->county,
+                'subjects_taken' => StudyResource::collection($this->studies),
                 'joined'=> date('dS F  Y', strtotime($this->created_at)),
             ];
     }

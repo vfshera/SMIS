@@ -19,4 +19,8 @@ class Timetable extends Model
     public function term(){
         return $this->belongsTo(\App\Term::class);
     }
+
+    public function studies(){
+        return $this->hasMany(\App\Study::class);
+    }
 }

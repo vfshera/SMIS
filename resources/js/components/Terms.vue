@@ -124,7 +124,7 @@
                     name: '',
                     begin: '',
                     end: '',
-                    status: '',
+                    status: 0,
                 },
                 search: '',
                 validationErrors: [],
@@ -139,12 +139,12 @@
                 this.term.end = term.ending_raw;
                 this.term.status = term.status;
             },
-            resetTerm(term){
+            resetTerm(){
                 this.term.id = '';
                 this.term.name = '';
                 this.term.begin = '';
                 this.term.end = '';
-                this.term.status = '';
+                this.term.status = 0;
             },
             fetcthData(){
                    axios.get('/api/terms')
@@ -172,7 +172,9 @@
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Term Updated successfully'
-                                })
+                                });
+
+                            this.resetTerm();
                         })
                         .catch(error =>{
                             this.validationErrors = error.response.data.errors;
@@ -215,14 +217,17 @@
                 axios.post('/api/add-term', {
                     name:this.term.name,
                     beginning_on:this.term.begin,
-                    ending_on:this.term.end
+                    ending_on:this.term.end,
+                    status : this.term.status,
                 })
                     .then((response) => {
                          Fire.$emit('TermUpdated');
                          Toast.fire({
                             icon: 'success',
                             title: 'Term Added successfully'
-                            })
+                            });
+
+                         this.resetTerm();
                     })
                     .catch(error =>{
                            this.validationErrors = error.response.data.errors;
