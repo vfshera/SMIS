@@ -13,6 +13,6 @@ class Study extends Model
     }
 
     public function timetable(){
-        return $this->hasOne(\App\Timetable::class , 'id');
+        return $this->belongsTo(\App\Timetable::class, 'timetable_id');
     }
 }

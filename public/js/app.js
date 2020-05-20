@@ -2912,13 +2912,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'sidebar',
   data: function data() {
@@ -4621,27 +4614,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Timetables',
   data: function data() {
@@ -4675,10 +4647,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       duties: [],
       timetables: [],
       view: true,
+      showTimetable: false,
       currTable: {
         name: '',
         fields: []
       },
+      displayTime: ["8:00 AM", "8:40 AM", "9:20 AM", "BREAK", "10:25 AM", "S.BREAK", "11:50 AM", "12:30 PM", "LUNCH", "14:00 PM", "14:40 PM", "15:20 PM"],
       tmtable: {
         classroom_id: '',
         term_id: '',
@@ -4695,6 +4669,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     setTimetable: function setTimetable(name) {
       var _this = this;
 
+      this.currTable.fields = [];
+      this.destroyTimetable();
       this.timetables.forEach(function (tbl) {
         if (tbl.classData.name === name) {
           _this.currTable.fields.push(tbl);
@@ -4703,6 +4679,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
       });
       this.buildTimetable();
+      this.toggleForm();
+    },
+    destroyTimetable: function destroyTimetable() {
+      var fields = _toConsumableArray(document.querySelectorAll('.dy-data'));
+
+      fields.forEach(function (fld) {
+        fld.getParentNode().removeChild(fld);
+      });
     },
     buildTimetable: function buildTimetable() {
       var monday = document.querySelector('.monday');
@@ -4713,43 +4697,30 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
       var divs = [monday, tuesday, wednesday, thursday, friday];
       var classTime = ["8:00 AM", "8:40 AM", "9:20 AM", "10:25 AM", "11:05 AM", "11:50 AM", "12:30 PM", "14:00 PM", "14:40 PM", "15:20 PM"];
+      var dayIndex = 0;
+      var divIndex = 0;
+      var timeIndex = 0;
       this.currTable.fields.forEach(function (fld) {
-        var dayIndex = 0;
-        var divIndex = 0;
-        var timeIndex = 0;
-
         if (fld.day === days[dayIndex]) {
           if (fld.time === classTime[timeIndex]) {
             var sub = fld.duty.subject.abbreviation;
             var tip = fld.duty.subject.title;
-            console.log(fld.time + " == " + classTime[timeIndex]);
             var row = document.createElement("div");
-            row.innerHTML = "<div class=\"class\" data-tooltip=\"".concat(tip, "\">").concat(sub, "</div>");
+            row.innerHTML = "<div class=\"class dy-data\" data-tooltip=\"".concat(tip, "\">").concat(sub, "</div>");
             divs[divIndex].appendChild(row);
             console.log("Row Added");
 
             if (classTime.length !== timeIndex + 1) {
-              console.log(" Time index is  " + timeIndex);
               timeIndex++;
-              console.log(classTime.length + " Not Equal To " + timeIndex + 1);
-              console.log("New Time index is  " + timeIndex);
             } else {
-              console.log(classTime.length + " Equal To " + timeIndex + 1);
-              console.log(" Day index is  " + dayIndex + " i.e " + days[dayIndex] + "so we go to the next day");
               dayIndex++;
-              console.log("The next  Day  is  " + dayIndex + " i.e " + days[dayIndex]);
-              console.log(" And reset time from " + classTime[timeIndex]);
               timeIndex = 0;
-              console.log(" To " + classTime[timeIndex]);
             }
-          } else if (fld.day !== days[dayIndex]) {
-            console.log(fld.day + " !=== " + days[dayIndex]);
-
+          } else {
             var _row = document.createElement("div");
 
-            _row.innerHTML = "<div class=\"class\" data-tooltip=\"\"></div>";
+            _row.innerHTML = "<div class=\"class dy-data\" style=\"color:black;text-align:center;font-size: 2.5vw;vertical-align: center;margin-bottom: 25px;\" data-tooltip=\"\">NOMA</div>";
             divs[divIndex].appendChild(_row);
-            timeIndex++;
 
             if (classTime.length !== timeIndex + 1) {
               timeIndex++;
@@ -4758,6 +4729,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               timeIndex = 0;
             }
           }
+        } else if (fld.day !== days[dayIndex] && days.length !== dayIndex + 1) {
+          dayIndex++;
+          timeIndex = 0;
         }
       });
     },
@@ -4831,6 +4805,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
     toggleForm: function toggleForm() {
       this.view = !this.view;
+      this.showTimetable = !this.showTimetable;
     },
     resetTmtbl: function resetTmtbl() {
       this.tmtable.classroom_id = '';
@@ -4900,16 +4875,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       });
     },
     toggleText: function toggleText() {
-      return this.view ? 'Hide Form' : 'Show Form';
+      return this.view ? 'Hide Form' : 'BACK TO GRID VIEW';
     }
   },
   mounted: function mounted() {
     var _this5 = this;
 
-    $('#classTimetable').on('hidden.bs.modal', function (e) {
-      // this.currTable.fields = [];
+    $('#classTimetable').on('hidden.bs.modal', function (e) {// this.currTable.fields = [];
       // this.currTable.name = '';
-      _this5.$router.push('/timetables');
     });
     this.fetcthData();
     Fire.$on('TimetableAdded', function () {
@@ -5194,33 +5167,86 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'Classlist',
+  name: 'MyClasses',
   data: function data() {
     return {
-      className: '',
-      classId: '',
-      students: [],
-      search: '',
-      validationErrors: []
+      timetables: [],
+      levels: {
+        one: [],
+        two: [],
+        three: [],
+        four: []
+      }
     };
   },
-  props: ['id'],
   methods: {
+    getAbbr: function getAbbr(num, name) {
+      var index = name.indexOf(" ") + 1;
+      var abbr = name.charAt(index).toUpperCase();
+      return num + abbr;
+    },
     fetcthData: function fetcthData() {
       var _this = this;
 
-      axios.get('').then(function (response) {
-        _this.className = response.data.data.name;
-        _this.classId = response.data.data.id;
-        _this.students = response.data.data.students;
+      axios.get('/api/myclasses').then(function (response) {
+        _this.timetables = response.data.data;
+
+        _this.timetables.forEach(function (tbl) {
+          tbl.teaches.forEach(function (cls) {
+            if (cls.classData.form.math_rep === "1") {
+              _this.levels.one.push(cls);
+            } else if (cls.classData.form.math_rep === "2") {
+              _this.levels.two.push(cls);
+            } else if (cls.classData.form.math_rep === "3") {
+              _this.levels.three.push(cls);
+            } else if (cls.classData.form.math_rep === "4") {
+              _this.levels.four.push(cls);
+            }
+          });
+        });
       }).then(console.log(this.students))["catch"](function (err) {
         console.log(err);
       });
     }
   },
   computed: {},
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.fetcthData();
+  }
 });
 
 /***/ }),
@@ -9894,7 +9920,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml[data-v-641c271d], body[data-v-641c271d] { height: 100%; margin: 0;\n}\nbody[data-v-641c271d] {\nfont-family: 'Open Sans', sans-serif;\ncolor: #efefef;\noverflow: hidden;\n}\n.day[data-v-641c271d] {\nwidth: 18%;\nheight: 100vh;\nfloat: left;\nbackground-color: #fff;\nbackground-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);\nbackground-size: 1px 20%;\n}\n.day.time[data-v-641c271d] { width: 10%;\n}\n.day_title[data-v-641c271d] {\nheight: 10%;\nbackground-color: #34495e;\nfont-size: 20px;\nfont-weight: 600;\ntext-transform: uppercase;\ntext-align: center;\nline-height: 10vh;\ncolor:white;\n}\n.hour[data-v-641c271d] {\nheight: 10%;\nbackground-color: rgba(52, 73, 94,0.9);\nfont-size: 16px;\ncolor:white;\nfont-weight: 400;\ntext-align: center;\nline-height: 10vh;\n}\n.class[data-v-641c271d] {\nwidth: 100%;\nheight: 10vh; /*90min*/\nline-height: 15vh;\nfont-size: 2vw;\nfont-weight: 300;\npadding-left: 10px;\n}\n.class.short[data-v-641c271d] { height: 7.5vh; line-height: 7.5vh;\n} /* 45min class */\n.class.b5[data-v-641c271d] { margin-top: 2.5vh;\n} /* after 5 min break */\n.class.b25[data-v-641c271d] { margin-top: 7.5vh;\n} /* after 25 min break */\n.navy[data-v-641c271d] { background-color: #34495e;\n}\n.grey[data-v-641c271d] { background-color: #bdc3c7; color: #202020;\n}\n.gray[data-v-641c271d] { background-color: #7f8c8d;\n}\n.red[data-v-641c271d] { background-color: #e74c3c;\n}\n.spacing[data-v-641c271d] { background-color: transparent;\n}\n\n\n\n/* Add this attribute to the element that needs a tooltip */\n[data-tooltip][data-v-641c271d] {\nposition: relative;\nz-index: 2;\ncursor: pointer;\nwidth: initial;\n}\n\n/* Hide the tooltip content by default */\n[data-tooltip][data-v-641c271d]:before,\n[data-tooltip][data-v-641c271d]:after {\nvisibility: hidden;\npointer-events: none;\n}\n\n/* Position tooltip above the element */\n[data-tooltip][data-v-641c271d]:before {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-bottom: 10px;\nmargin-left: -75px;\npadding: 7px 5px;\nwidth: 140px;\nbackground-color: black;\ncolor: #fff;\ncontent: attr(data-tooltip);\ntext-align: center;\nfont-size: 14px;\nline-height: 1.2;\n}\n\n/* Triangle hack to make tooltip look like a speech bubble */\n[data-tooltip][data-v-641c271d]:after {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-left: -7px;\nmargin-bottom: 3px;\nwidth: 0;\nborder-top: 7px solid black;\nborder-right: 7px solid transparent;\nborder-left: 7px solid transparent;\ncontent: \" \";\nfont-size: 0;\nline-height: 0;\n}\n\n/* Show tooltip content on hover */\n[data-tooltip][data-v-641c271d]:hover:before,\n[data-tooltip][data-v-641c271d]:hover:after {\nvisibility: visible;\nbottom: 90%;\n}\n", ""]);
+exports.push([module.i, "\nhtml[data-v-641c271d], body[data-v-641c271d] { height: 100%; margin: 0;\n}\nbody[data-v-641c271d] {\nfont-family: 'Open Sans', sans-serif;\ncolor: #efefef;\noverflow: hidden;\n}\n.tcard[data-v-641c271d]{\n    height: 1100px;\n}\n.day[data-v-641c271d] {\nwidth: 18%;\nheight: 100vh;\nfloat: left;\nbackground-color: #fff;\nbackground-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);\nbackground-size: 1px 20%;\n}\n.day.time[data-v-641c271d] { width: 10%;\n}\n.day_title[data-v-641c271d] {\nheight: 10%;\nbackground-color: #34495e;\nfont-size: 20px;\nfont-weight: 600;\ntext-transform: uppercase;\ntext-align: center;\nline-height: 10vh;\ncolor:white;\n}\n.hour[data-v-641c271d] {\nheight: 10%;\nbackground-color: rgba(52, 73, 94,0.9);\nfont-size: 16px;\ncolor:white;\nfont-weight: 400;\ntext-align: center;\nline-height: 10vh;\n}\n.class[data-v-641c271d] {\nwidth: 100%;\nalign-content: center;\nheight: 10vh; /*90min*/\nline-height: 15vh;\nfont-size: 25vw;\nfont-weight: 300;\npadding-left: 10px;\n}\n.class.short[data-v-641c271d] { height: 7.5vh; line-height: 7.5vh;\n} /* 45min class */\n.class.b5[data-v-641c271d] { margin-top: 2.5vh;\n} /* after 5 min break */\n.class.b25[data-v-641c271d] { margin-top: 7.5vh;\n} /* after 25 min break */\n.navy[data-v-641c271d] { background-color: #34495e;\n}\n.grey[data-v-641c271d] { background-color: #bdc3c7; color: #202020;\n}\n.gray[data-v-641c271d] { background-color: #7f8c8d;\n}\n.red[data-v-641c271d] { background-color: #e74c3c;\n}\n.spacing[data-v-641c271d] { background-color: transparent;\n}\n\n\n\n/* Add this attribute to the element that needs a tooltip */\n[data-tooltip][data-v-641c271d] {\nposition: relative;\nz-index: 2;\ncursor: pointer;\nwidth: initial;\n}\n\n/* Hide the tooltip content by default */\n[data-tooltip][data-v-641c271d]:before,\n[data-tooltip][data-v-641c271d]:after {\nvisibility: hidden;\npointer-events: none;\n}\n\n/* Position tooltip above the element */\n[data-tooltip][data-v-641c271d]:before {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-bottom: 10px;\nmargin-left: -75px;\npadding: 7px 5px;\nwidth: 140px;\nbackground-color: black;\ncolor: #fff;\ncontent: attr(data-tooltip);\ntext-align: center;\nfont-size: 14px;\nline-height: 1.2;\n}\n\n/* Triangle hack to make tooltip look like a speech bubble */\n[data-tooltip][data-v-641c271d]:after {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-left: -7px;\nmargin-bottom: 3px;\nwidth: 0;\nborder-top: 7px solid black;\nborder-right: 7px solid transparent;\nborder-left: 7px solid transparent;\ncontent: \" \";\nfont-size: 0;\nline-height: 0;\n}\n\n/* Show tooltip content on hover */\n[data-tooltip][data-v-641c271d]:hover:before,\n[data-tooltip][data-v-641c271d]:hover:after {\nvisibility: visible;\nbottom: 90%;\n}\n", ""]);
 
 // exports
 
@@ -49949,234 +49975,250 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _vm._m(1),
-        _vm._v(" "),
-        _c("span", {
-          staticClass: "float-right text-primary",
-          domProps: { textContent: _vm._s(_vm.toggleText) },
-          on: { click: _vm.toggleForm }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _vm.levels.one
-          ? _c(
-              "div",
-              { staticClass: "row" },
-              _vm._l(_vm.levels.one.list, function(frm) {
-                return _c(
-                  "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12",
-                    attrs: {
-                      "data-toggle": "modal",
-                      "data-target": "#classTimetable"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.setTimetable(frm)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-danger",
-                        domProps: { textContent: _vm._s(_vm.getAbbr(1, frm)) }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content" }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v("93,139")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.two
-          ? _c(
-              "div",
-              { staticClass: "row " },
-              _vm._l(_vm.levels.two.list, function(frm) {
-                return _c(
-                  "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12",
-                    attrs: {
-                      "data-toggle": "modal",
-                      "data-target": "#classTimetable"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.setTimetable(frm)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-warning",
-                        attrs: { "data-toggle": "modal" },
-                        domProps: { textContent: _vm._s(_vm.getAbbr(2, frm)) }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content" }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v("13,648")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.three
-          ? _c(
-              "div",
-              { staticClass: "row  " },
-              _vm._l(_vm.levels.three.list, function(frm) {
-                return _c(
-                  "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12 ",
-                    attrs: {
-                      "data-toggle": "modal",
-                      "data-target": "#classTimetable"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.setTimetable(frm)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-info ",
-                        attrs: { "data-toggle": "modal" },
-                        domProps: { textContent: _vm._s(_vm.getAbbr(3, frm)) }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content " }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v("1,410")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.four
-          ? _c(
-              "div",
-              { staticClass: "row  " },
-              _vm._l(_vm.levels.four.list, function(frm) {
-                return _c(
-                  "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12",
-                    attrs: {
-                      "data-toggle": "modal",
-                      "data-target": "#classTimetable"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.setTimetable(frm)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-success ",
-                        domProps: { textContent: _vm._s(_vm.getAbbr(4, frm)) }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content " }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v("410")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              }),
-              0
-            )
-          : _vm._e()
-      ]),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.view,
+              expression: "view"
+            }
+          ],
+          staticClass: "card-header"
+        },
+        [_vm._m(1)]
+      ),
       _vm._v(" "),
       _c(
         "div",
         {
-          staticClass: "modal fade",
-          attrs: {
-            id: "classTimetable",
-            tabindex: "-1",
-            role: "dialog",
-            "aria-labelledby": "classTimetable",
-            "aria-hidden": "true"
-          }
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.view,
+              expression: "view"
+            }
+          ],
+          staticClass: "card-body"
         },
         [
-          _c(
-            "div",
-            {
-              staticClass: "modal-dialog modal-dialog-centered modal-xl",
-              attrs: { role: "document" }
-            },
-            [
-              _c("div", { staticClass: "modal-content" }, [
-                _c("div", { staticClass: "modal-header" }, [
-                  _c(
-                    "h5",
+          _vm.levels.one
+            ? _c(
+                "div",
+                { staticClass: "row" },
+                _vm._l(_vm.levels.one.list, function(frm) {
+                  return _c(
+                    "div",
                     {
-                      staticClass: "modal-title",
-                      attrs: { id: "classTimetableTitle" }
+                      key: frm.id,
+                      staticClass: "col-md-2 col-sm-6 col-12",
+                      on: {
+                        click: function($event) {
+                          return _vm.setTimetable(frm)
+                        }
+                      }
                     },
-                    [_vm._v(_vm._s(_vm.currTable.name))]
-                  ),
-                  _vm._v(" "),
-                  _vm._m(2)
-                ]),
+                    [
+                      _c("div", { staticClass: "info-box" }, [
+                        _c("span", {
+                          staticClass: "info-box-icon bg-danger",
+                          domProps: { textContent: _vm._s(_vm.getAbbr(1, frm)) }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "info-box-content" }, [
+                          _c("span", { staticClass: "info-box-text" }, [
+                            _vm._v(_vm._s(frm))
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "info-box-number" }, [
+                            _vm._v("93,139")
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.levels.two
+            ? _c(
+                "div",
+                { staticClass: "row " },
+                _vm._l(_vm.levels.two.list, function(frm) {
+                  return _c(
+                    "div",
+                    {
+                      key: frm.id,
+                      staticClass: "col-md-2 col-sm-6 col-12",
+                      on: {
+                        click: function($event) {
+                          return _vm.setTimetable(frm)
+                        }
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "info-box" }, [
+                        _c("span", {
+                          staticClass: "info-box-icon bg-warning",
+                          attrs: { "data-toggle": "modal" },
+                          domProps: { textContent: _vm._s(_vm.getAbbr(2, frm)) }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "info-box-content" }, [
+                          _c("span", { staticClass: "info-box-text" }, [
+                            _vm._v(_vm._s(frm))
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "info-box-number" }, [
+                            _vm._v("13,648")
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.levels.three
+            ? _c(
+                "div",
+                { staticClass: "row  " },
+                _vm._l(_vm.levels.three.list, function(frm) {
+                  return _c(
+                    "div",
+                    {
+                      key: frm.id,
+                      staticClass: "col-md-2 col-sm-6 col-12 ",
+                      on: {
+                        click: function($event) {
+                          return _vm.setTimetable(frm)
+                        }
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "info-box" }, [
+                        _c("span", {
+                          staticClass: "info-box-icon bg-info ",
+                          attrs: { "data-toggle": "modal" },
+                          domProps: { textContent: _vm._s(_vm.getAbbr(3, frm)) }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "info-box-content " }, [
+                          _c("span", { staticClass: "info-box-text" }, [
+                            _vm._v(_vm._s(frm))
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "info-box-number" }, [
+                            _vm._v("1,410")
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.levels.four
+            ? _c(
+                "div",
+                { staticClass: "row  " },
+                _vm._l(_vm.levels.four.list, function(frm) {
+                  return _c(
+                    "div",
+                    {
+                      key: frm.id,
+                      staticClass: "col-md-2 col-sm-6 col-12",
+                      on: {
+                        click: function($event) {
+                          return _vm.setTimetable(frm)
+                        }
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "info-box" }, [
+                        _c("span", {
+                          staticClass: "info-box-icon bg-success ",
+                          domProps: { textContent: _vm._s(_vm.getAbbr(4, frm)) }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "info-box-content " }, [
+                          _c("span", { staticClass: "info-box-text" }, [
+                            _vm._v(_vm._s(frm))
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "info-box-number" }, [
+                            _vm._v("410")
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                }),
+                0
+              )
+            : _vm._e()
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showTimetable,
+              expression: "showTimetable"
+            }
+          ],
+          staticClass: "card tcard"
+        },
+        [
+          _c("div", { staticClass: "card-header tophead" }, [
+            _c("label", [_c("h3", [_vm._v(_vm._s(_vm.currTable.name))])]),
+            _vm._v(" "),
+            _c("span", {
+              staticClass: "float-right text-primary",
+              domProps: { textContent: _vm._s(_vm.toggleText) },
+              on: { click: _vm.toggleForm }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "div",
+              { staticClass: "day time" },
+              [
+                _c("div", { staticClass: "day_title" }, [_vm._v("Time")]),
                 _vm._v(" "),
-                _vm._m(3)
-              ])
-            ]
-          )
+                _vm._l(_vm.displayTime, function(time) {
+                  return _c("div", { staticClass: "hour" }, [
+                    _vm._v(_vm._s(time))
+                  ])
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3),
+            _vm._v(" "),
+            _vm._m(4),
+            _vm._v(" "),
+            _vm._m(5),
+            _vm._v(" "),
+            _vm._m(6)
+          ])
         ]
       )
     ])
@@ -50209,65 +50251,40 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close",
-        attrs: {
-          type: "button",
-          "data-dismiss": "modal",
-          "aria-label": "Close"
-        }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
+    return _c("div", { staticClass: "day monday" }, [
+      _c("div", { staticClass: "day_title" }, [_vm._v("Monday")])
+    ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", {}, [
-      _c("div", { staticClass: "day time" }, [
-        _c("div", { staticClass: "day_title" }, [_vm._v("Time")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("8:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("9:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("10:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("11:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("12:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("13:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("14:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("15:00")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "hour" }, [_vm._v("16:00")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "day monday" }, [
-        _c("div", { staticClass: "day_title" }, [_vm._v("Monday")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "day tuesday" }, [
-        _c("div", { staticClass: "day_title" }, [_vm._v("Tuesday")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "day wednesday" }, [
-        _c("div", { staticClass: "day_title" }, [_vm._v("Wednesday")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "day thursday" }, [
-        _c("div", { staticClass: "day_title" }, [_vm._v("Thursday")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "day friday" }, [
-        _c("div", { staticClass: "day_title" }, [_vm._v("Friday")])
-      ])
+    return _c("div", { staticClass: "day tuesday" }, [
+      _c("div", { staticClass: "day_title" }, [_vm._v("Tuesday")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "day wednesday" }, [
+      _c("div", { staticClass: "day_title" }, [_vm._v("Wednesday")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "day thursday" }, [
+      _c("div", { staticClass: "day_title" }, [_vm._v("Thursday")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "day friday" }, [
+      _c("div", { staticClass: "day_title" }, [_vm._v("Friday")])
     ])
   }
 ]
@@ -50608,61 +50625,170 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.search,
-              expression: "search"
-            }
-          ],
-          staticClass: "form-control col-md-5  d-inline ml-auto  float-right",
-          attrs: {
-            type: "search",
-            placeholder: "Search",
-            "aria-label": "Search"
-          },
-          domProps: { value: _vm.search },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.search = $event.target.value
-            }
-          }
-        })
-      ]),
+      _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
-        _c(
-          "table",
-          {
-            staticClass: "table table-bordered table-striped",
-            attrs: { id: "dt" }
-          },
-          [
-            _vm._m(1),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.searchedForm, function(studnt) {
-                return _c("tr", { key: studnt.id }, [
-                  _c("td"),
-                  _vm._v(" "),
-                  _c("td"),
-                  _vm._v(" "),
-                  _c("td")
-                ])
+        _vm.levels.one
+          ? _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.levels.one, function(frm) {
+                return _c(
+                  "div",
+                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-danger",
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.getAbbr(1, frm.classData.name)
+                          )
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content" }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.time))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.day))
+                        ])
+                      ])
+                    ])
+                  ]
+                )
               }),
               0
             )
-          ]
-        )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.levels.two
+          ? _c(
+              "div",
+              { staticClass: "row " },
+              _vm._l(_vm.levels.two, function(frm) {
+                return _c(
+                  "div",
+                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-warning",
+                        attrs: { "data-toggle": "modal" },
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.getAbbr(2, frm.classData.name)
+                          )
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content" }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.time))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.day))
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.levels.three
+          ? _c(
+              "div",
+              { staticClass: "row  " },
+              _vm._l(_vm.levels.three, function(frm) {
+                return _c(
+                  "div",
+                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12 " },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-info ",
+                        attrs: { "data-toggle": "modal" },
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.getAbbr(3, frm.classData.name)
+                          )
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content " }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.time))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.day))
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.levels.four
+          ? _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.levels.four, function(frm) {
+                return _c(
+                  "div",
+                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
+                  [
+                    _c("div", { staticClass: "info-box" }, [
+                      _c("span", {
+                        staticClass: "info-box-icon bg-success ",
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.getAbbr(4, frm.classData.name)
+                          )
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "info-box-content " }, [
+                        _c("span", { staticClass: "info-box-text" }, [
+                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.time))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-box-number" }, [
+                          _vm._v(_vm._s(frm.day))
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e()
       ])
     ])
   ])
@@ -50672,21 +50798,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("label", [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("My Classes")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Admission")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Date Joined")])
+    return _c("div", { staticClass: "card-header" }, [
+      _c("label", [
+        _c("h3", { staticClass: "card-title" }, [_vm._v("My Classes")])
       ])
     ])
   }

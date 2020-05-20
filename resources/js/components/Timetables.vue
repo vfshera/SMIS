@@ -1,7 +1,7 @@
 <template>
     <div>
-    <div class="card">
-         <form class="p-2" @submit.prevent="addDetails" v-show="view">
+                <div class="card">
+                     <form class="p-2" @submit.prevent="addDetails" v-show="view">
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="name">Duty</label>
@@ -55,39 +55,33 @@
                                     <button type="submit" class="btn btn-primary form-control " style="margin-top:30px">ADD</button>
                                 </div>
                             </div>
+                   </form>
+            </div>
 
+            <div class="card">
+                <div class="card-header" v-show="view">
+                      <label><h3 >Timetable</h3></label>
 
-
-                        </form>
-    </div>
-    <div class="card">
-        <div class="card-header">
-              <label><h3 >Timetable</h3></label>
-                <span @click="toggleForm" class="float-right text-primary" v-text="toggleText"></span>
-
-
-
-          </div>
-            <!-- /.card-header -->
-            <div class="card-body">
+                </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" v-show="view">
                       <div class="row" v-if="levels.one">
-                        <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.one.list" :key="frm.id" data-toggle="modal" data-target="#classTimetable" @click="setTimetable(frm)">
+                        <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.one.list" :key="frm.id" @click="setTimetable(frm)">
                             <div class="info-box">
                             <span class="info-box-icon bg-danger" v-text="getAbbr(1,frm)" ></span>
 
                             <div class="info-box-content">
-                                <span class="info-box-text">{{ frm }}</span>
+                                <span class="info-box-text" >{{ frm }}</span>
                                 <span class="info-box-number">93,139</span>
                             </div>
                             <!-- /.info-box-content -->
                             </div>
                             <!-- /.info-box -->
                         </div>
-
                       </div>
                       <div class="row " v-if="levels.two">
                         <!-- /.row -->
-                         <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.two.list" :key="frm.id" data-toggle="modal" data-target="#classTimetable" @click="setTimetable(frm)">
+                         <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.two.list" :key="frm.id"  @click="setTimetable(frm)">
                             <div class="info-box">
                             <span class="info-box-icon bg-warning" v-text="getAbbr(2,frm)" data-toggle="modal" ></span>
 
@@ -102,12 +96,12 @@
 
                       </div>
                       <div class="row  " v-if="levels.three" >
-                        <div class="col-md-2 col-sm-6 col-12 " v-for="frm in levels.three.list" :key="frm.id" data-toggle="modal" data-target="#classTimetable" @click="setTimetable(frm)">
+                        <div class="col-md-2 col-sm-6 col-12 " v-for="frm in levels.three.list" :key="frm.id"  @click="setTimetable(frm)">
                             <div class="info-box">
                             <span class="info-box-icon bg-info " v-text="getAbbr(3,frm)" data-toggle="modal"></span>
 
                             <div class="info-box-content ">
-                                <span class="info-box-text">{{ frm }}</span>
+                                <span class="info-box-text" >{{ frm }}</span>
                                 <span class="info-box-number">1,410</span>
                             </div>
                             <!-- /.info-box-content -->
@@ -117,12 +111,12 @@
                       </div>
                       <div class="row  " v-if="levels.four">
                         <!-- /.col -->
-                        <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.four.list" :key="frm.id" data-toggle="modal" data-target="#classTimetable" @click="setTimetable(frm)">
+                        <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.four.list" :key="frm.id"  @click="setTimetable(frm)">
                             <div class="info-box">
                             <span class="info-box-icon bg-success " v-text="getAbbr(4,frm)" ></span>
 
                             <div class="info-box-content ">
-                                <span class="info-box-text">{{ frm }}</span>
+                                <span class="info-box-text" >{{ frm }}</span>
                                 <span class="info-box-number">410</span>
                             </div>
                             <!-- /.info-box-content -->
@@ -134,61 +128,46 @@
 
 
             </div>
-            <!-- /.card-body -->
-
-            <div class="modal fade" id="classTimetable" tabindex="-1" role="dialog" aria-labelledby="classTimetable" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="classTimetableTitle">{{ currTable.name}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <!-- Modal -->          <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="">
 
 
-                              <div class="day time">
-                                <div class="day_title">Time</div>
-                                <div class="hour">8:00</div>
-                                <div class="hour">9:00</div>
-                                <div class="hour">10:00</div>
-                                <div class="hour">11:00</div>
-                                <div class="hour">12:00</div>
-                                <div class="hour">13:00</div>
-                                <div class="hour">14:00</div>
-                                <div class="hour">15:00</div>
-                                <div class="hour">16:00</div>
-                            </div>
-
-                            <div class="day monday">
-                                <div class="day_title">Monday</div>
-                            </div>
-
-                            <div class="day tuesday">
-                                <div class="day_title">Tuesday</div>
-                            </div>
-
-                            <div class="day wednesday">
-                                <div class="day_title">Wednesday</div>
-
-                            </div>
-
-                            <div class="day thursday">
-                                <div class="day_title">Thursday</div>
-                            </div>
-
-                            <div class="day friday">
-                            <div class="day_title">Friday</div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
+       <!--TIMETABLE POPUP-->
+        <div class="card tcard" v-show="showTimetable">
+            <div class="card-header tophead">
+                <label><h3 >{{ currTable.name }}</h3></label>
+                <span @click="toggleForm" class="float-right text-primary" v-text="toggleText"></span>
             </div>
-          </div>
-          <!-- /.card -->
+            <!-- /.card-header -->
+                <div >
+                    <div class="day time">
+                        <div class="day_title">Time</div>
+                        <div v-for="time in displayTime" class="hour">{{ time }}</div>
+                    </div>
+
+                    <div class="day monday">
+                        <div class="day_title">Monday</div>
+                    </div>
+
+                    <div class="day tuesday">
+                        <div class="day_title">Tuesday</div>
+                    </div>
+
+                    <div class="day wednesday">
+                        <div class="day_title">Wednesday</div>
+
+                    </div>
+
+                    <div class="day thursday">
+                        <div class="day_title">Thursday</div>
+                    </div>
+
+                    <div class="day friday">
+                        <div class="day_title">Friday</div>
+                    </div>
+
+                </div>
+        </div>
+
+            </div>
 
     </div>
 </template>
@@ -228,10 +207,12 @@
                 duties : [],
                 timetables: [],
                 view:true,
+                showTimetable:false,
                 currTable:{
                     name: '',
                     fields: [],
                 },
+                displayTime: ["8:00 AM","8:40 AM","9:20 AM","BREAK","10:25 AM","S.BREAK","11:50 AM","12:30 PM","LUNCH","14:00 PM","14:40 PM","15:20 PM"],
                 tmtable: {
                     classroom_id: '',
                     term_id: '',
@@ -246,6 +227,8 @@
         props:[],
         methods:{
             setTimetable(name){
+                this.currTable.fields = [];
+                this.destroyTimetable();
                 this.timetables.forEach(tbl =>{
                     if(tbl.classData.name === name){
                         this.currTable.fields.push(tbl);
@@ -254,6 +237,16 @@
                 })
 
                 this.buildTimetable();
+                this.toggleForm();
+            },
+            destroyTimetable(){
+
+                const fields = [...document.querySelectorAll('.dy-data')];
+
+                fields.forEach(fld =>{
+                  fld.getParentNode().removeChild(fld);
+                });
+
             },
             buildTimetable(){
                 const monday = document.querySelector('.monday');
@@ -264,49 +257,39 @@
 
                 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
                 const divs = [monday,tuesday,wednesday,thursday,friday];
-                const classTime =["8:00 AM","8:40 AM","9:20 AM","10:25 AM","11:05 AM","11:50 AM","12:30 PM","14:00 PM","14:40 PM","15:20 PM"];
+                const classTime = ["8:00 AM","8:40 AM","9:20 AM","10:25 AM","11:05 AM","11:50 AM","12:30 PM","14:00 PM","14:40 PM","15:20 PM"];
+
+                let dayIndex = 0;
+                let divIndex = 0;
+                let timeIndex = 0;
 
                 this.currTable.fields.forEach(fld =>{
-                    let dayIndex = 0;
-                    let divIndex = 0;
-                    let timeIndex = 0;
 
                     if(fld.day === days[dayIndex])
                     {
-                        if(fld.time === classTime[timeIndex])
-                        {
+                        if(fld.time === classTime[timeIndex]) {
                             let sub = fld.duty.subject.abbreviation;
-                            let tip =  fld.duty.subject.title;
+                            let tip = fld.duty.subject.title;
 
-                            console.log(fld.time + " == " + classTime[timeIndex]);
 
                             const row = document.createElement("div");
-                            row.innerHTML = `<div class="class" data-tooltip="${tip}">${sub}</div>`
+                            row.innerHTML = `<div class="class dy-data" data-tooltip="${tip}">${sub}</div>`
                             divs[divIndex].appendChild(row);
                             console.log("Row Added");
 
-                            if(classTime.length !== timeIndex + 1)
-                            {
-                                console.log(" Time index is  " + timeIndex);
+                            if (classTime.length !== timeIndex + 1) {
+
                                 timeIndex++;
-                                console.log(classTime.length + " Not Equal To " + timeIndex+1);
-                                console.log("New Time index is  " + timeIndex);
-                            }else{
-                                console.log(classTime.length + " Equal To " + timeIndex + 1);
-                                console.log(" Day index is  " + dayIndex + " i.e " + days[dayIndex]+ "so we go to the next day");
+
+                            } else {
                                 dayIndex++
-                                console.log("The next  Day  is  " + dayIndex + " i.e " + days[dayIndex]);
-                                console.log(" And reset time from " + classTime[timeIndex]);
                                 timeIndex = 0;
-                                console.log(" To " + classTime[timeIndex]);
                             }
-                        } else if(fld.day !== days[dayIndex]){
-                            console.log(fld.day + " !=== " + days[dayIndex])
+                        }else{
                             const row = document.createElement("div");
-                            row.innerHTML = `<div class="class" data-tooltip=""></div>`
+                            row.innerHTML = `<div class="class dy-data" style="color:black;text-align:center;font-size: 2.5vw;vertical-align: center;margin-bottom: 25px;" data-tooltip="">NOMA</div>`
                             divs[divIndex].appendChild(row);
 
-                            timeIndex++;
                             if(classTime.length !== timeIndex + 1)
                             {
                                 timeIndex++;
@@ -315,8 +298,12 @@
                                 timeIndex = 0;
                             }
                         }
-
+                    } else if(fld.day !== days[dayIndex] && days.length !== dayIndex + 1){
+                        dayIndex++
+                        timeIndex = 0;
                     }
+
+
                 })
             },
              getAbbr(num,name){
@@ -394,6 +381,7 @@
             },
             toggleForm(){
                 this.view = !this.view;
+                this.showTimetable = !this.showTimetable;
             },
             resetTmtbl(){
                    this.tmtable.classroom_id = '';
@@ -479,7 +467,7 @@
                     });
              },
             toggleText(){
-                return (this.view) ? 'Hide Form' : 'Show Form';
+                return (this.view) ? 'Hide Form' : 'BACK TO GRID VIEW';
             },
 
         },
@@ -487,7 +475,6 @@
             $('#classTimetable').on('hidden.bs.modal', (e)=>{
                 // this.currTable.fields = [];
                 // this.currTable.name = '';
-                this.$router.push('/timetables');
             })
 
             this.fetcthData();
@@ -508,6 +495,10 @@
         font-family: 'Open Sans', sans-serif;
         color: #efefef;
         overflow: hidden;
+        }
+
+        .tcard{
+            height: 1100px;
         }
 
         .day {
@@ -544,9 +535,10 @@
 
         .class {
         width: 100%;
+        align-content: center;
         height: 10vh; /*90min*/
         line-height: 15vh;
-        font-size: 2vw;
+        font-size: 25vw;
         font-weight: 300;
         padding-left: 10px;
         }

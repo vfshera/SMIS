@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ClassroomResource;
+use App\Http\Resources\MyClassesResource;
+use App\Http\Resources\StudentResource;
 use App\Http\Resources\TeachersResource;
 use App\Teacher;
 use Illuminate\Http\Request;
@@ -17,6 +20,15 @@ class TeachersController extends Controller
 
 
         return TeachersResource::collection($teachers);
+    }
+
+    public function myClasses(){
+
+        $teacherID = Teacher::where('user_id', auth()->user()->id)->pluck('id');
+
+        $classes = \App\Duty::where('teacher_id', $teacherID)->get();
+
+        return MyClassesResource::collection($classes);
     }
 
     public function store(Request $request)
