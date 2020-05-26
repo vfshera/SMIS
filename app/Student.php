@@ -14,8 +14,8 @@ class Student extends Model
     return $this->belongsTo(\App\User::class, 'user_id');
   }
 
-    public function studies(){
+  public function studies(){
         return $this->hasMany(\App\Study::class);
-    }
+  }
 
 }

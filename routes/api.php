@@ -58,7 +58,7 @@ Route::middleware('auth:api')->get('/loggedteachers', 'API\UserResourceControlle
 Route::middleware('auth:api')->post('/add-teacher-info', 'API\TeachersController@store');
 Route::middleware('auth:api')->delete('/delete-teacher/{id}', 'API\TeachersController@destroy');
 Route::middleware('auth:api')->get('/myclasses', 'API\TeachersController@myClasses');
-
+Route::middleware('auth:api')->get('/scoresheet/{classid}/{timetableid}', 'API\TeachersController@scoreSheet');
 
 
 //duties

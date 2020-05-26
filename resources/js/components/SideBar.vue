@@ -74,12 +74,6 @@
                                         </router-link>
                                     </li>
                                     <li class="nav-item">
-                                        <router-link :to="{ name:'myschedule'  }"  class="nav-link">
-                                        <i class="nav-icon fas fa-minus"></i>
-                                        <p>Schedule</p>
-                                        </router-link>
-                                    </li>
-                                    <li class="nav-item">
                                         <router-link :to="{ name:'exams' }"  class="nav-link">
                                         <i class="nav-icon fas fa-minus"></i>
                                         <p>Exams</p>

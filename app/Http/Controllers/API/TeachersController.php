@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassroomResource;
 use App\Http\Resources\MyClassesResource;
+use App\Http\Resources\RegisteredStudentsResource;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\TeachersResource;
 use App\Teacher;
@@ -29,6 +30,23 @@ class TeachersController extends Controller
         $classes = \App\Duty::where('teacher_id', $teacherID)->get();
 
         return MyClassesResource::collection($classes);
+    }
+
+    public function scoreSheet($classid ,$timetableid){
+        $students = \App\Student::where('class_id' , $classid)->get();
+
+        $regiseredStudents = [];
+
+            foreach ($students as $student){
+               foreach ($student->studies as $study) {
+                   if ($study->timetable->duty_id === $timetableid) {
+                        array_push($regiseredStudents ,$student);
+                   } else {
+                   }
+               }
+            }
+
+        return RegisteredStudentsResource::collection($regiseredStudents);
     }
 
     public function store(Request $request)
