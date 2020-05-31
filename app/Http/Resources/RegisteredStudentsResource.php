@@ -14,9 +14,11 @@ class RegisteredStudentsResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
-            'user' => $this->user
+            'user' => $this->user,
+            'marks' => $this->marks,
         ];
     }
 }

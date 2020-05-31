@@ -59,6 +59,8 @@ Route::middleware('auth:api')->post('/add-teacher-info', 'API\TeachersController
 Route::middleware('auth:api')->delete('/delete-teacher/{id}', 'API\TeachersController@destroy');
 Route::middleware('auth:api')->get('/myclasses', 'API\TeachersController@myClasses');
 Route::middleware('auth:api')->get('/scoresheet/{classid}/{timetableid}', 'API\TeachersController@scoreSheet');
+Route::middleware('auth:api')->post('/addmarks', 'API\MarksController@store');
+Route::middleware('auth:api')->delete('/deletemarks/{id}', 'API\MarksController@destroy');
 
 
 //duties

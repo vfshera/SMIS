@@ -40,7 +40,17 @@ class TeachersController extends Controller
             foreach ($students as $student){
                foreach ($student->studies as $study) {
                    if ($study->timetable->duty_id === $timetableid) {
-                        array_push($regiseredStudents ,$student);
+                       foreach($student->marks as $mark){
+                           if($mark->duty_id === $timetableid){
+                              $marksOb = json_decode(json_encode(['marks' => $mark->score]));
+
+//                               dd($marksOb);
+                           }elseif ($mark->duty_id != $timetableid){
+                               array_push($student, ['marks' => " - "]);
+                               dd($student);
+                           }
+                       }
+                           array_push($regiseredStudents ,$student);
                    } else {
                    }
                }

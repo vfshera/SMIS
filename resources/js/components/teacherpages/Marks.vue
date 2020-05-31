@@ -26,12 +26,13 @@
                  <tr v-for="student in searchedStudents" :key="student.id">
                      <td> {{ student.id}}  </td>
                      <td> {{ student.user.name }}  </td>
-                     <td> - </td>
+                     <td class="ml-3" v-if="student.marks"> {{ student.marks.score }}</td>
                      <td>
                         <div class="row">
-                            <input class="form-control col-md-8 mr-5" type="number"/>
-                            <i class="fas fa-pencil-alt col-md-1 text-center " style="margin-top: 7px"></i>|
-                            <i class=" far fa-trash-alt col-md-1 text-center " style="margin-top: 7px"></i>
+                            <input class="form-control col-md-8 mr-5 ml-2" type="number" v-model="score"/>
+                            <i class="fas fa-pencil-alt col-md-1 text-center " v-if="score" style="margin-top: 7px" @click="inputMarks(student.id)"></i>
+                            <span v-if="student.marks.id && score">|</span>
+                            <i class=" far fa-trash-alt col-md-1 text-center" v-if="student.marks.id" style="margin-top: 7px" @click="deleteMarks(student.marks.id)"></i>
                         </div>
                      </td>
 
@@ -57,14 +58,97 @@
             return{
                 students: [],
                 search: '',
+                score: '',
                 validationErrors: [],
             }
         },
         props:['classid','timetableid', 'className' , 'subject'],
         methods:{
+           inputMarks(studentid){
+               Swal.fire({
+                   title: 'Ovewrite the currents score?',
+                   text: "You won't be able to revert this!",
+                   icon: 'warning',
+                   showCancelButton: true,
+                   confirmButtonColor: '#3085d6',
+                   cancelButtonColor: '#d33',
+                   confirmButtonText: 'Yes!',
+               }).then((result) => {
+                   if (result.value) {
+                       axios.post('/api/addmarks/',
+                           {
+                               student_id: studentid,
+                               duty_id: this.timetableid,
+                               score: this.score,
+                           }).then(response => {
+                           this.score = '';
+                           Fire.$emit('UpdateStudentsMarks');
+                           Toast.fire({
+                               icon: 'success',
+                               title: 'Marks Added Successfully'
+                           })
+
+                       }).catch(err => {
+                           console.log(err);
+                       });
+                   }
+               })
+           },
+            deleteMarks(id){
+                Swal.fire({
+                    title: 'Delete Marks?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete('/api/deletemarks/'+id)
+                            .then(response =>{
+                                this.score = '';
+                                Fire.$emit('UpdateStudentsMarks');
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Marks Deleted Successfully'
+                                })
+                            })
+                            .catch(err =>{
+                                Swal.fire(
+                                    'Error!',
+                                    err,
+                                    'warning'
+                                )
+                            });
+
+
+                    }
+                })
+
+            },
             fetchData(){
                  axios.get('/api/scoresheet/'+ this.classid +"/"+this.timetableid).then(response =>{
-                        this.students = response.data.data
+
+                     this.students = response.data.data;
+                     this.students.forEach(stud => {
+                         stud.marks.forEach(mark => {
+                             if(mark.duty_id == this.timetableid){
+                                 stud.marks = {
+                                     id: mark.id,
+                                     duty_id: mark.duty_id,
+                                     score: mark.score
+                                 };
+                             }else {
+                                 stud.marks = {
+                                     id:'',
+                                     duty_id: '',
+                                     score: " - "
+                                 };
+                             }
+                         })
+                     })
+
                          })
                     .catch(err =>{
                             console.log(err);
@@ -97,6 +181,10 @@
         },
         mounted() {
             this.fetchData();
+            Fire.$on('UpdateStudentsMarks',()=>{
+                this.fetchData();
+            });
+
         }
     }
 

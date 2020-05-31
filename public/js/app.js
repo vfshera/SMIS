@@ -5259,22 +5259,98 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Marks',
   data: function data() {
     return {
       students: [],
       search: '',
+      score: '',
       validationErrors: []
     };
   },
   props: ['classid', 'timetableid', 'className', 'subject'],
   methods: {
-    fetchData: function fetchData() {
+    inputMarks: function inputMarks(studentid) {
       var _this = this;
 
+      Swal.fire({
+        title: 'Ovewrite the currents score?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!'
+      }).then(function (result) {
+        if (result.value) {
+          axios.post('/api/addmarks/', {
+            student_id: studentid,
+            duty_id: _this.timetableid,
+            score: _this.score
+          }).then(function (response) {
+            _this.score = '';
+            Fire.$emit('UpdateStudentsMarks');
+            Toast.fire({
+              icon: 'success',
+              title: 'Marks Added Successfully'
+            });
+          })["catch"](function (err) {
+            console.log(err);
+          });
+        }
+      });
+    },
+    deleteMarks: function deleteMarks(id) {
+      var _this2 = this;
+
+      Swal.fire({
+        title: 'Delete Marks?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]('/api/deletemarks/' + id).then(function (response) {
+            _this2.score = '';
+            Fire.$emit('UpdateStudentsMarks');
+            Toast.fire({
+              icon: 'success',
+              title: 'Marks Deleted Successfully'
+            });
+          })["catch"](function (err) {
+            Swal.fire('Error!', err, 'warning');
+          });
+        }
+      });
+    },
+    fetchData: function fetchData() {
+      var _this3 = this;
+
       axios.get('/api/scoresheet/' + this.classid + "/" + this.timetableid).then(function (response) {
-        _this.students = response.data.data;
+        _this3.students = response.data.data;
+
+        _this3.students.forEach(function (stud) {
+          stud.marks.forEach(function (mark) {
+            if (mark.duty_id == _this3.timetableid) {
+              stud.marks = {
+                id: mark.id,
+                duty_id: mark.duty_id,
+                score: mark.score
+              };
+            } else {
+              stud.marks = {
+                id: '',
+                duty_id: '',
+                score: " - "
+              };
+            }
+          });
+        });
       })["catch"](function (err) {
         console.log(err);
       });
@@ -5282,10 +5358,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     searchedStudents: function searchedStudents() {
-      var _this2 = this;
+      var _this4 = this;
 
       return this.students.filter(function (stdnt) {
-        return stdnt.user.name.toLowerCase().match(_this2.search.toLowerCase());
+        return stdnt.user.name.toLowerCase().match(_this4.search.toLowerCase());
       });
     },
     totalStudents: function totalStudents() {
@@ -5299,7 +5375,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    var _this5 = this;
+
     this.fetchData();
+    Fire.$on('UpdateStudentsMarks', function () {
+      _this5.fetchData();
+    });
   }
 });
 
@@ -50978,9 +51059,67 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", [_vm._v(" " + _vm._s(student.user.name) + "  ")]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(" - ")]),
+                  student.marks
+                    ? _c("td", { staticClass: "ml-3" }, [
+                        _vm._v(" " + _vm._s(student.marks.score))
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
-                  _vm._m(1, true)
+                  _c("td", [
+                    _c("div", { staticClass: "row" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.score,
+                            expression: "score"
+                          }
+                        ],
+                        staticClass: "form-control col-md-8 mr-5 ml-2",
+                        attrs: { type: "number" },
+                        domProps: { value: _vm.score },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.score = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.score
+                        ? _c("i", {
+                            staticClass:
+                              "fas fa-pencil-alt col-md-1 text-center ",
+                            staticStyle: { "margin-top": "7px" },
+                            on: {
+                              click: function($event) {
+                                return _vm.inputMarks(student.id)
+                              }
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      student.marks.id && _vm.score
+                        ? _c("span", [_vm._v("|")])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      student.marks.id
+                        ? _c("i", {
+                            staticClass:
+                              " far fa-trash-alt col-md-1 text-center",
+                            staticStyle: { "margin-top": "7px" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteMarks(student.marks.id)
+                              }
+                            }
+                          })
+                        : _vm._e()
+                    ])
+                  ])
                 ])
               }),
               0
@@ -51005,29 +51144,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Marks")]),
         _vm._v(" "),
         _c("th", [_vm._v("Allocate")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("div", { staticClass: "row" }, [
-        _c("input", {
-          staticClass: "form-control col-md-8 mr-5",
-          attrs: { type: "number" }
-        }),
-        _vm._v(" "),
-        _c("i", {
-          staticClass: "fas fa-pencil-alt col-md-1 text-center ",
-          staticStyle: { "margin-top": "7px" }
-        }),
-        _vm._v("|\n                        "),
-        _c("i", {
-          staticClass: " far fa-trash-alt col-md-1 text-center ",
-          staticStyle: { "margin-top": "7px" }
-        })
       ])
     ])
   }

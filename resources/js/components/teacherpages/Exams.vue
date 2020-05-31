@@ -114,14 +114,22 @@
                         this.timetables.forEach(tbl => {
                             tbl.teaches.forEach(cls => {
                                 if(cls.classData.form.math_rep === "1"){
-                                    this.levels.one.push(cls);
+
+                                            this.levels.one.push(cls);
+
                                 } else if(cls.classData.form.math_rep === "2"){
-                                    this.levels.two.push(cls);
+
+                                            this.levels.two.push(cls);
+
                                 } else if(cls.classData.form.math_rep === "3"){
-                                    this.levels.three.push(cls);
+
+                                            this.levels.three.push(cls);
+
                                 }
                                 else if(cls.classData.form.math_rep === "4"){
-                                    this.levels.four.push(cls);
+
+                                            this.levels.four.push(cls);
+
                                 }
                             })
                         });

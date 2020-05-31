@@ -18,4 +18,8 @@ class Student extends Model
         return $this->hasMany(\App\Study::class);
   }
 
+  public function marks(){
+        return $this->hasMany(\App\Mark::class);
+  }
+
 }
