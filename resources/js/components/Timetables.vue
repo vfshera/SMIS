@@ -72,7 +72,7 @@
 
                             <div class="info-box-content">
                                 <span class="info-box-text" >{{ frm }}</span>
-                                <span class="info-box-number">93,139</span>
+                                <span class="info-box-number" v-text="stdNo(frm)"></span>
                             </div>
                             <!-- /.info-box-content -->
                             </div>
@@ -87,7 +87,7 @@
 
                             <div class="info-box-content">
                                 <span class="info-box-text">{{ frm }}</span>
-                                <span class="info-box-number">13,648</span>
+                                <span class="info-box-number" v-text="stdNo(frm)"></span>
                             </div>
                             <!-- /.info-box-content -->
                             </div>
@@ -102,7 +102,7 @@
 
                             <div class="info-box-content ">
                                 <span class="info-box-text" >{{ frm }}</span>
-                                <span class="info-box-number">1,410</span>
+                                <span class="info-box-number" v-text="stdNo(frm)"></span>
                             </div>
                             <!-- /.info-box-content -->
                             </div>
@@ -117,7 +117,8 @@
 
                             <div class="info-box-content ">
                                 <span class="info-box-text" >{{ frm }}</span>
-                                <span class="info-box-number">410</span>
+                                <span class="info-box-number" v-text="stdNo(frm)"></span>
+
                             </div>
                             <!-- /.info-box-content -->
                             </div>
@@ -133,38 +134,30 @@
        <!--TIMETABLE POPUP-->
         <div class="card tcard" v-show="showTimetable">
             <div class="card-header tophead">
-                <label><h3 >{{ currTable.name }}</h3></label>
+                <label><h3 >{{ currTable.name }} </h3></label>
+                <span class="ml-3 d-inline ml-4 pl-2 pr-2 badge badge-primary"> {{ getStdNo(currTable.stdNum ) }} </span>
                 <span @click="toggleForm" class="float-right text-primary" v-text="toggleText"></span>
             </div>
-            <!-- /.card-header -->
-                <div >
-                    <div class="day time">
-                        <div class="day_title">Time</div>
-                        <div v-for="time in displayTime" class="hour">{{ time }}</div>
-                    </div>
 
-                    <div class="day monday">
-                        <div class="day_title">Monday</div>
-                    </div>
-
-                    <div class="day tuesday">
-                        <div class="day_title">Tuesday</div>
-                    </div>
-
-                    <div class="day wednesday">
-                        <div class="day_title">Wednesday</div>
-
-                    </div>
-
-                    <div class="day thursday">
-                        <div class="day_title">Thursday</div>
-                    </div>
-
-                    <div class="day friday">
-                        <div class="day_title">Friday</div>
-                    </div>
-
+            <div >
+                <div class="row col-md-12 tbl-head">
+                    <div class="col-md-2 time">TIME</div>
+                    <div class="col-md-2 mon">MONDAY</div>
+                    <div class="col-md-2 tue">TUESDAY</div>
+                    <div class="col-md-2 wed">WEDNESDAY</div>
+                    <div class="col-md-2 thur">THURSDAY</div>
+                    <div class="col-md-2 fri">FRIDAY</div>
                 </div>
+                <div class="row col-md-12 tbl-data" v-for="(tbl ,id) in currTable.fields" :key="id">
+                    <div class="col-md-2 time-data">{{tbl.time}}</div>
+                    <div class="col-md-2 mon-data" v-text="isToday('Monday',tbl)"></div>
+                    <div class="col-md-2 tue-data" v-text="isToday('Tuesday',tbl)"></div>
+                    <div class="col-md-2 wed-data" v-text="isToday('Wednesday',tbl)"></div>
+                    <div class="col-md-2 thur-data" v-text="isToday('Thursday',tbl)"></div>
+                    <div class="col-md-2 fri-data" v-text="isToday('Friday',tbl)"></div>
+                </div>
+            </div>
+
         </div>
 
             </div>
@@ -210,9 +203,10 @@
                 showTimetable:false,
                 currTable:{
                     name: '',
+                    stdNum: '',
                     fields: [],
                 },
-                displayTime: ["8:00 AM","8:40 AM","9:20 AM","BREAK","10:25 AM","S.BREAK","11:50 AM","12:30 PM","LUNCH","14:00 PM","14:40 PM","15:20 PM"],
+
                 tmtable: {
                     classroom_id: '',
                     term_id: '',
@@ -226,86 +220,48 @@
         },
         props:[],
         methods:{
+            isToday(day,tbl){
+                if(tbl.day === day){
+                    //TO DO get element and set hover to teacher
+                     return tbl.duty.subject.abbreviation
+                 }
+                },
+            stdNo(name){
+                let num;
+                this.timetables.forEach(tt =>{
+                    if(tt.classData.name === name){
+                        num = tt.noOfstudents;
+                    }
+                })
+
+                if(num == 1){
+                    return num + " Student";
+                }else {
+                    return num + " Students";
+                }
+            },
+            getStdNo(stnum){
+                if(stnum == 1){
+                    return stnum + " Student";
+                }else {
+                    return stnum + " Students";
+                }
+            },
             setTimetable(name){
                 this.currTable.fields = [];
-                this.destroyTimetable();
                 this.timetables.forEach(tbl =>{
                     if(tbl.classData.name === name){
                         this.currTable.fields.push(tbl);
                         this.currTable.name = name;
+                        this.currTable.stdNum = tbl.noOfstudents;
                     }
                 })
 
-                this.buildTimetable();
                 this.toggleForm();
             },
-            destroyTimetable(){
 
-                const fields = [...document.querySelectorAll('.dy-data')];
+            //     const classTime = ["8:00 AM","8:40 AM","9:20 AM","10:25 AM","11:05 AM","11:50 AM","12:30 PM","14:00 PM","14:40 PM","15:20 PM"];
 
-                fields.forEach(fld =>{
-                  fld.getParentNode().removeChild(fld);
-                });
-
-            },
-            buildTimetable(){
-                const monday = document.querySelector('.monday');
-                const tuesday = document.querySelector('.tuesday');
-                const wednesday = document.querySelector('.wednesday');
-                const thursday = document.querySelector('.thursday');
-                const friday = document.querySelector('.friday');
-
-                const days = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
-                const divs = [monday,tuesday,wednesday,thursday,friday];
-                const classTime = ["8:00 AM","8:40 AM","9:20 AM","10:25 AM","11:05 AM","11:50 AM","12:30 PM","14:00 PM","14:40 PM","15:20 PM"];
-
-                let dayIndex = 0;
-                let divIndex = 0;
-                let timeIndex = 0;
-
-                this.currTable.fields.forEach(fld =>{
-
-                    if(fld.day === days[dayIndex])
-                    {
-                        if(fld.time === classTime[timeIndex]) {
-                            let sub = fld.duty.subject.abbreviation;
-                            let tip = fld.duty.subject.title;
-
-
-                            const row = document.createElement("div");
-                            row.innerHTML = `<div class="class dy-data" data-tooltip="${tip}">${sub}</div>`
-                            divs[divIndex].appendChild(row);
-                            console.log("Row Added");
-
-                            if (classTime.length !== timeIndex + 1) {
-
-                                timeIndex++;
-
-                            } else {
-                                dayIndex++
-                                timeIndex = 0;
-                            }
-                        }else{
-                            const row = document.createElement("div");
-                            row.innerHTML = `<div class="class dy-data" style="color:black;text-align:center;font-size: 2.5vw;vertical-align: center;margin-bottom: 25px;" data-tooltip="">NOMA</div>`
-                            divs[divIndex].appendChild(row);
-
-                            if(classTime.length !== timeIndex + 1)
-                            {
-                                timeIndex++;
-                            }else{
-                                dayIndex++
-                                timeIndex = 0;
-                            }
-                        }
-                    } else if(fld.day !== days[dayIndex] && days.length !== dayIndex + 1){
-                        dayIndex++
-                        timeIndex = 0;
-                    }
-
-
-                })
-            },
              getAbbr(num,name){
                 let index = name.indexOf(" ") + 1;
                 let abbr = name.charAt(index).toUpperCase();
@@ -487,127 +443,15 @@
 
 </script>
 
-<style  scoped>
+<style>
+    .tbl-head{
+        background: #34495e;
+        color: white;
+        font-size: 26px;
+    }
 
-
-        html, body { height: 100%; margin: 0; }
-        body {
-        font-family: 'Open Sans', sans-serif;
-        color: #efefef;
-        overflow: hidden;
-        }
-
-        .tcard{
-            height: 1100px;
-        }
-
-        .day {
-        width: 18%;
-        height: 100vh;
-        float: left;
-        background-color: #fff;
-        background-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);
-        background-size: 1px 20%;
-        }
-
-        .day.time { width: 10%; }
-
-        .day_title {
-        height: 10%;
-        background-color: #34495e;
-        font-size: 20px;
-        font-weight: 600;
-        text-transform: uppercase;
-        text-align: center;
-        line-height: 10vh;
-        color:white;
-        }
-
-        .hour {
-        height: 10%;
-        background-color: rgba(52, 73, 94,0.9);
-        font-size: 16px;
-        color:white;
-        font-weight: 400;
-        text-align: center;
-        line-height: 10vh;
-        }
-
-        .class {
-        width: 100%;
-        align-content: center;
-        height: 10vh; /*90min*/
-        line-height: 15vh;
-        font-size: 25vw;
-        font-weight: 300;
-        padding-left: 10px;
-        }
-
-        .class.short { height: 7.5vh; line-height: 7.5vh; } /* 45min class */
-        .class.b5 { margin-top: 2.5vh; } /* after 5 min break */
-        .class.b25 { margin-top: 7.5vh; } /* after 25 min break */
-
-        .navy { background-color: #34495e; }
-        .grey { background-color: #bdc3c7; color: #202020; }
-        .gray { background-color: #7f8c8d; }
-        .red { background-color: #e74c3c; }
-
-        .spacing { background-color: transparent; }
-
-
-
-        /* Add this attribute to the element that needs a tooltip */
-        [data-tooltip] {
-        position: relative;
-        z-index: 2;
-        cursor: pointer;
-        width: initial;
-        }
-
-        /* Hide the tooltip content by default */
-        [data-tooltip]:before,
-        [data-tooltip]:after {
-        visibility: hidden;
-        pointer-events: none;
-        }
-
-        /* Position tooltip above the element */
-        [data-tooltip]:before {
-        position: absolute;
-        bottom: 110%;
-        left: 50%;
-        margin-bottom: 10px;
-        margin-left: -75px;
-        padding: 7px 5px;
-        width: 140px;
-        background-color: black;
-        color: #fff;
-        content: attr(data-tooltip);
-        text-align: center;
-        font-size: 14px;
-        line-height: 1.2;
-        }
-
-        /* Triangle hack to make tooltip look like a speech bubble */
-        [data-tooltip]:after {
-        position: absolute;
-        bottom: 110%;
-        left: 50%;
-        margin-left: -7px;
-        margin-bottom: 3px;
-        width: 0;
-        border-top: 7px solid black;
-        border-right: 7px solid transparent;
-        border-left: 7px solid transparent;
-        content: " ";
-        font-size: 0;
-        line-height: 0;
-        }
-
-        /* Show tooltip content on hover */
-        [data-tooltip]:hover:before,
-        [data-tooltip]:hover:after {
-        visibility: visible;
-        bottom: 90%;
-        }
+    .tbl-data{
+        font-size: 24px;
+        min-height: 40px;
+    }
 </style>

@@ -66,8 +66,8 @@
         methods:{
            inputMarks(studentid){
                Swal.fire({
-                   title: 'Ovewrite the currents score?',
-                   text: "You won't be able to revert this!",
+                   title: 'Add score?',
+                   text: "You are about to assign marks!",
                    icon: 'warning',
                    showCancelButton: true,
                    confirmButtonColor: '#3085d6',
@@ -174,7 +174,7 @@
                     return this.searchedStudents.length + " Student "
 
                 }else if(this.searchedStudents.length == 0){
-                        return ''
+                        return '0 Students'
                 }
             }
 

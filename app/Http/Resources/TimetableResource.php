@@ -19,6 +19,7 @@ class TimetableResource extends JsonResource
         return [
             'id' => $this->id,
             'classData' => new ClassroomResource($this->classroom),
+            'noOfstudents' => count($this->classroom->students),
             'duty' => [
                  'id' => $this->duty->id,
                  'teacher' => new TeachersResource($this->duty->teacher),

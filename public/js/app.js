@@ -4631,13 +4631,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Timetables',
   data: function data() {
@@ -4674,9 +4667,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       showTimetable: false,
       currTable: {
         name: '',
+        stdNum: '',
         fields: []
       },
-      displayTime: ["8:00 AM", "8:40 AM", "9:20 AM", "BREAK", "10:25 AM", "S.BREAK", "11:50 AM", "12:30 PM", "LUNCH", "14:00 PM", "14:40 PM", "15:20 PM"],
       tmtable: {
         classroom_id: '',
         term_id: '',
@@ -4690,75 +4683,48 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   },
   props: [],
   methods: {
+    isToday: function isToday(day, tbl) {
+      if (tbl.day === day) {
+        //TO DO get element and set hover to teacher
+        return tbl.duty.subject.abbreviation;
+      }
+    },
+    stdNo: function stdNo(name) {
+      var num;
+      this.timetables.forEach(function (tt) {
+        if (tt.classData.name === name) {
+          num = tt.noOfstudents;
+        }
+      });
+
+      if (num == 1) {
+        return num + " Student";
+      } else {
+        return num + " Students";
+      }
+    },
+    getStdNo: function getStdNo(stnum) {
+      if (stnum == 1) {
+        return stnum + " Student";
+      } else {
+        return stnum + " Students";
+      }
+    },
     setTimetable: function setTimetable(name) {
       var _this = this;
 
       this.currTable.fields = [];
-      this.destroyTimetable();
       this.timetables.forEach(function (tbl) {
         if (tbl.classData.name === name) {
           _this.currTable.fields.push(tbl);
 
           _this.currTable.name = name;
+          _this.currTable.stdNum = tbl.noOfstudents;
         }
       });
-      this.buildTimetable();
       this.toggleForm();
     },
-    destroyTimetable: function destroyTimetable() {
-      var fields = _toConsumableArray(document.querySelectorAll('.dy-data'));
-
-      fields.forEach(function (fld) {
-        fld.getParentNode().removeChild(fld);
-      });
-    },
-    buildTimetable: function buildTimetable() {
-      var monday = document.querySelector('.monday');
-      var tuesday = document.querySelector('.tuesday');
-      var wednesday = document.querySelector('.wednesday');
-      var thursday = document.querySelector('.thursday');
-      var friday = document.querySelector('.friday');
-      var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-      var divs = [monday, tuesday, wednesday, thursday, friday];
-      var classTime = ["8:00 AM", "8:40 AM", "9:20 AM", "10:25 AM", "11:05 AM", "11:50 AM", "12:30 PM", "14:00 PM", "14:40 PM", "15:20 PM"];
-      var dayIndex = 0;
-      var divIndex = 0;
-      var timeIndex = 0;
-      this.currTable.fields.forEach(function (fld) {
-        if (fld.day === days[dayIndex]) {
-          if (fld.time === classTime[timeIndex]) {
-            var sub = fld.duty.subject.abbreviation;
-            var tip = fld.duty.subject.title;
-            var row = document.createElement("div");
-            row.innerHTML = "<div class=\"class dy-data\" data-tooltip=\"".concat(tip, "\">").concat(sub, "</div>");
-            divs[divIndex].appendChild(row);
-            console.log("Row Added");
-
-            if (classTime.length !== timeIndex + 1) {
-              timeIndex++;
-            } else {
-              dayIndex++;
-              timeIndex = 0;
-            }
-          } else {
-            var _row = document.createElement("div");
-
-            _row.innerHTML = "<div class=\"class dy-data\" style=\"color:black;text-align:center;font-size: 2.5vw;vertical-align: center;margin-bottom: 25px;\" data-tooltip=\"\">NOMA</div>";
-            divs[divIndex].appendChild(_row);
-
-            if (classTime.length !== timeIndex + 1) {
-              timeIndex++;
-            } else {
-              dayIndex++;
-              timeIndex = 0;
-            }
-          }
-        } else if (fld.day !== days[dayIndex] && days.length !== dayIndex + 1) {
-          dayIndex++;
-          timeIndex = 0;
-        }
-      });
-    },
+    //     const classTime = ["8:00 AM","8:40 AM","9:20 AM","10:25 AM","11:05 AM","11:50 AM","12:30 PM","14:00 PM","14:40 PM","15:20 PM"];
     getAbbr: function getAbbr(num, name) {
       var index = name.indexOf(" ") + 1;
       var abbr = name.charAt(index).toUpperCase();
@@ -5132,11 +5098,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MyClasses',
   data: function data() {
@@ -5151,6 +5112,67 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    stdNo: function stdNo(num) {
+      if (num.noOfstudents == 1) {
+        return num.noOfstudents + " Student";
+      } else {
+        return num.noOfstudents + " Students";
+      }
+    },
+    singleFilter: function singleFilter() {
+      var filteredOne = [];
+      this.levels.one.forEach(function (lvlone) {
+        if (filteredOne.length) {
+          filteredOne.forEach(function (fltrd) {
+            if (fltrd.classData.id === lvlone.classData.id && fltrd.duty.id === lvlone.duty.id) {} else {
+              filteredOne.push(lvlone);
+            }
+          });
+        } else {
+          filteredOne.push(lvlone);
+        }
+      });
+      this.levels.one = filteredOne;
+      var filteredTwo = [];
+      this.levels.two.forEach(function (lvlone) {
+        if (filteredTwo.length) {
+          filteredTwo.forEach(function (fltrd) {
+            if (fltrd.classData.id === lvlone.classData.id && fltrd.duty.id === lvlone.duty.id) {} else {
+              filteredTwo.push(lvlone);
+            }
+          });
+        } else {
+          filteredTwo.push(lvlone);
+        }
+      });
+      this.levels.two = filteredTwo;
+      var filteredThree = [];
+      this.levels.three.forEach(function (lvlone) {
+        if (filteredThree.length) {
+          filteredThree.forEach(function (fltrd) {
+            if (fltrd.classData.id === lvlone.classData.id && fltrd.duty.id === lvlone.duty.id) {} else {
+              filteredThree.push(lvlone);
+            }
+          });
+        } else {
+          filteredThree.push(lvlone);
+        }
+      });
+      this.levels.three = filteredThree;
+      var filteredFour = [];
+      this.levels.four.forEach(function (lvlone) {
+        if (filteredFour.length) {
+          filteredFour.forEach(function (fltrd) {
+            if (fltrd.classData.id === lvlone.classData.id && fltrd.duty.id === lvlone.duty.id) {} else {
+              filteredFour.push(lvlone);
+            }
+          });
+        } else {
+          filteredFour.push(lvlone);
+        }
+      });
+      this.levels.four = filteredFour;
+    },
     addMarks: function addMarks(className, classid, subject, timetableid) {
       this.$router.push({
         name: 'marks',
@@ -5186,8 +5208,10 @@ __webpack_require__.r(__webpack_exports__);
             }
           });
         });
+
+        _this.singleFilter();
       })["catch"](function (err) {
-        console.log(err);
+        alert(err);
       });
     }
   },
@@ -5276,8 +5300,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       Swal.fire({
-        title: 'Ovewrite the currents score?',
-        text: "You won't be able to revert this!",
+        title: 'Add score?',
+        text: "You are about to assign marks!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -5370,7 +5394,7 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.searchedStudents.length == 1) {
         return this.searchedStudents.length + " Student ";
       } else if (this.searchedStudents.length == 0) {
-        return '';
+        return '0 Students';
       }
     }
   },
@@ -5514,9 +5538,7 @@ __webpack_require__.r(__webpack_exports__);
             }
           });
         });
-      }).then(console.log(this.students))["catch"](function (err) {
-        console.log(err);
-      });
+      }).then(console.log(this.students))["catch"](function (err) {});
     }
   },
   computed: {},
@@ -10096,10 +10118,10 @@ exports.push([module.i, "\nsmall[data-v-7ae8801a]{\n    color:white;\n}\n", ""])
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&":
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10108,7 +10130,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml[data-v-641c271d], body[data-v-641c271d] { height: 100%; margin: 0;\n}\nbody[data-v-641c271d] {\nfont-family: 'Open Sans', sans-serif;\ncolor: #efefef;\noverflow: hidden;\n}\n.tcard[data-v-641c271d]{\n    height: 1100px;\n}\n.day[data-v-641c271d] {\nwidth: 18%;\nheight: 100vh;\nfloat: left;\nbackground-color: #fff;\nbackground-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);\nbackground-size: 1px 20%;\n}\n.day.time[data-v-641c271d] { width: 10%;\n}\n.day_title[data-v-641c271d] {\nheight: 10%;\nbackground-color: #34495e;\nfont-size: 20px;\nfont-weight: 600;\ntext-transform: uppercase;\ntext-align: center;\nline-height: 10vh;\ncolor:white;\n}\n.hour[data-v-641c271d] {\nheight: 10%;\nbackground-color: rgba(52, 73, 94,0.9);\nfont-size: 16px;\ncolor:white;\nfont-weight: 400;\ntext-align: center;\nline-height: 10vh;\n}\n.class[data-v-641c271d] {\nwidth: 100%;\nalign-content: center;\nheight: 10vh; /*90min*/\nline-height: 15vh;\nfont-size: 25vw;\nfont-weight: 300;\npadding-left: 10px;\n}\n.class.short[data-v-641c271d] { height: 7.5vh; line-height: 7.5vh;\n} /* 45min class */\n.class.b5[data-v-641c271d] { margin-top: 2.5vh;\n} /* after 5 min break */\n.class.b25[data-v-641c271d] { margin-top: 7.5vh;\n} /* after 25 min break */\n.navy[data-v-641c271d] { background-color: #34495e;\n}\n.grey[data-v-641c271d] { background-color: #bdc3c7; color: #202020;\n}\n.gray[data-v-641c271d] { background-color: #7f8c8d;\n}\n.red[data-v-641c271d] { background-color: #e74c3c;\n}\n.spacing[data-v-641c271d] { background-color: transparent;\n}\n\n\n\n/* Add this attribute to the element that needs a tooltip */\n[data-tooltip][data-v-641c271d] {\nposition: relative;\nz-index: 2;\ncursor: pointer;\nwidth: initial;\n}\n\n/* Hide the tooltip content by default */\n[data-tooltip][data-v-641c271d]:before,\n[data-tooltip][data-v-641c271d]:after {\nvisibility: hidden;\npointer-events: none;\n}\n\n/* Position tooltip above the element */\n[data-tooltip][data-v-641c271d]:before {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-bottom: 10px;\nmargin-left: -75px;\npadding: 7px 5px;\nwidth: 140px;\nbackground-color: black;\ncolor: #fff;\ncontent: attr(data-tooltip);\ntext-align: center;\nfont-size: 14px;\nline-height: 1.2;\n}\n\n/* Triangle hack to make tooltip look like a speech bubble */\n[data-tooltip][data-v-641c271d]:after {\nposition: absolute;\nbottom: 110%;\nleft: 50%;\nmargin-left: -7px;\nmargin-bottom: 3px;\nwidth: 0;\nborder-top: 7px solid black;\nborder-right: 7px solid transparent;\nborder-left: 7px solid transparent;\ncontent: \" \";\nfont-size: 0;\nline-height: 0;\n}\n\n/* Show tooltip content on hover */\n[data-tooltip][data-v-641c271d]:hover:before,\n[data-tooltip][data-v-641c271d]:hover:after {\nvisibility: visible;\nbottom: 90%;\n}\n", ""]);
+exports.push([module.i, "\n.tbl-head{\n    background: #34495e;\n    color: white;\n    font-size: 26px;\n}\n.tbl-data{\n    font-size: 24px;\n    min-height: 40px;\n}\n", ""]);
 
 // exports
 
@@ -40981,15 +41003,15 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&");
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -49828,10 +49850,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&":
-/*!*************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true& ***!
-  \*************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d& ***!
+  \*************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -50256,9 +50278,10 @@ var render = function() {
                             _vm._v(_vm._s(frm))
                           ]),
                           _vm._v(" "),
-                          _c("span", { staticClass: "info-box-number" }, [
-                            _vm._v("93,139")
-                          ])
+                          _c("span", {
+                            staticClass: "info-box-number",
+                            domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                          })
                         ])
                       ])
                     ]
@@ -50297,9 +50320,10 @@ var render = function() {
                             _vm._v(_vm._s(frm))
                           ]),
                           _vm._v(" "),
-                          _c("span", { staticClass: "info-box-number" }, [
-                            _vm._v("13,648")
-                          ])
+                          _c("span", {
+                            staticClass: "info-box-number",
+                            domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                          })
                         ])
                       ])
                     ]
@@ -50338,9 +50362,10 @@ var render = function() {
                             _vm._v(_vm._s(frm))
                           ]),
                           _vm._v(" "),
-                          _c("span", { staticClass: "info-box-number" }, [
-                            _vm._v("1,410")
-                          ])
+                          _c("span", {
+                            staticClass: "info-box-number",
+                            domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                          })
                         ])
                       ])
                     ]
@@ -50378,9 +50403,10 @@ var render = function() {
                             _vm._v(_vm._s(frm))
                           ]),
                           _vm._v(" "),
-                          _c("span", { staticClass: "info-box-number" }, [
-                            _vm._v("410")
-                          ])
+                          _c("span", {
+                            staticClass: "info-box-number",
+                            domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                          })
                         ])
                       ])
                     ]
@@ -50407,7 +50433,15 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "card-header tophead" }, [
-            _c("label", [_c("h3", [_vm._v(_vm._s(_vm.currTable.name))])]),
+            _c("label", [_c("h3", [_vm._v(_vm._s(_vm.currTable.name) + " ")])]),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                staticClass: "ml-3 d-inline ml-4 pl-2 pr-2 badge badge-primary"
+              },
+              [_vm._v(" " + _vm._s(_vm.getStdNo(_vm.currTable.stdNum)) + " ")]
+            ),
             _vm._v(" "),
             _c("span", {
               staticClass: "float-right text-primary",
@@ -50416,32 +50450,60 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _c("div", [
-            _c(
-              "div",
-              { staticClass: "day time" },
-              [
-                _c("div", { staticClass: "day_title" }, [_vm._v("Time")]),
-                _vm._v(" "),
-                _vm._l(_vm.displayTime, function(time) {
-                  return _c("div", { staticClass: "hour" }, [
-                    _vm._v(_vm._s(time))
-                  ])
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm._m(2),
-            _vm._v(" "),
-            _vm._m(3),
-            _vm._v(" "),
-            _vm._m(4),
-            _vm._v(" "),
-            _vm._m(5),
-            _vm._v(" "),
-            _vm._m(6)
-          ])
+          _c(
+            "div",
+            [
+              _vm._m(2),
+              _vm._v(" "),
+              _vm._l(_vm.currTable.fields, function(tbl, id) {
+                return _c(
+                  "div",
+                  { key: id, staticClass: "row col-md-12 tbl-data" },
+                  [
+                    _c("div", { staticClass: "col-md-2 time-data" }, [
+                      _vm._v(_vm._s(tbl.time))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "col-md-2 mon-data",
+                      domProps: {
+                        textContent: _vm._s(_vm.isToday("Monday", tbl))
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "col-md-2 tue-data",
+                      domProps: {
+                        textContent: _vm._s(_vm.isToday("Tuesday", tbl))
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "col-md-2 wed-data",
+                      domProps: {
+                        textContent: _vm._s(_vm.isToday("Wednesday", tbl))
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "col-md-2 thur-data",
+                      domProps: {
+                        textContent: _vm._s(_vm.isToday("Thursday", tbl))
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "col-md-2 fri-data",
+                      domProps: {
+                        textContent: _vm._s(_vm.isToday("Friday", tbl))
+                      }
+                    })
+                  ]
+                )
+              })
+            ],
+            2
+          )
         ]
       )
     ])
@@ -50474,40 +50536,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "day monday" }, [
-      _c("div", { staticClass: "day_title" }, [_vm._v("Monday")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "day tuesday" }, [
-      _c("div", { staticClass: "day_title" }, [_vm._v("Tuesday")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "day wednesday" }, [
-      _c("div", { staticClass: "day_title" }, [_vm._v("Wednesday")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "day thursday" }, [
-      _c("div", { staticClass: "day_title" }, [_vm._v("Thursday")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "day friday" }, [
-      _c("div", { staticClass: "day_title" }, [_vm._v("Friday")])
+    return _c("div", { staticClass: "row col-md-12 tbl-head" }, [
+      _c("div", { staticClass: "col-md-2 time" }, [_vm._v("TIME")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2 mon" }, [_vm._v("MONDAY")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2 tue" }, [_vm._v("TUESDAY")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2 wed" }, [_vm._v("WEDNESDAY")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2 thur" }, [_vm._v("THURSDAY")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2 fri" }, [_vm._v("FRIDAY")])
     ])
   }
 ]
@@ -50750,7 +50790,7 @@ var render = function() {
         _vm.levels.one
           ? _c(
               "div",
-              { staticClass: "row" },
+              { staticClass: "row mt-3" },
               _vm._l(_vm.levels.one, function(frm) {
                 return _c(
                   "div",
@@ -50784,13 +50824,10 @@ var render = function() {
                           _vm._v(_vm._s(frm.duty.subject.abbreviation))
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
-                        ])
+                        _c("span", {
+                          staticClass: "info-box-number",
+                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                        })
                       ])
                     ])
                   ]
@@ -50838,13 +50875,10 @@ var render = function() {
                           _vm._v(_vm._s(frm.duty.subject.abbreviation))
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
-                        ])
+                        _c("span", {
+                          staticClass: "info-box-number",
+                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                        })
                       ])
                     ])
                   ]
@@ -50892,13 +50926,10 @@ var render = function() {
                           _vm._v(_vm._s(frm.duty.subject.abbreviation))
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
-                        ])
+                        _c("span", {
+                          staticClass: "info-box-number",
+                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                        })
                       ])
                     ])
                   ]
@@ -50945,13 +50976,10 @@ var render = function() {
                           _vm._v(_vm._s(frm.duty.subject.abbreviation))
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
-                        ])
+                        _c("span", {
+                          staticClass: "info-box-number",
+                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                        })
                       ])
                     ])
                   ]
@@ -67565,9 +67593,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Timetables.vue?vue&type=template&id=641c271d&scoped=true& */ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&");
+/* harmony import */ var _Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Timetables.vue?vue&type=template&id=641c271d& */ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&");
 /* harmony import */ var _Timetables_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Timetables.vue?vue&type=script&lang=js& */ "./resources/js/components/Timetables.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& */ "./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Timetables.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -67579,11 +67607,11 @@ __webpack_require__.r(__webpack_exports__);
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Timetables_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  "641c271d",
+  null,
   null
   
 )
@@ -67609,35 +67637,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&":
-/*!*********************************************************************************************************!*\
-  !*** ./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& ***!
-  \*********************************************************************************************************/
+/***/ "./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&id=641c271d&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_id_641c271d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
-/***/ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&":
-/*!*******************************************************************************************!*\
-  !*** ./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true& ***!
-  \*******************************************************************************************/
+/***/ "./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/Timetables.vue?vue&type=template&id=641c271d& ***!
+  \*******************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=template&id=641c271d&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetables.vue?vue&type=template&id=641c271d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=template&id=641c271d&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetables_vue_vue_type_template_id_641c271d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -124,7 +124,6 @@
 
                          }).then(console.log(this.students))
                     .catch(err =>{
-                            console.log(err);
 
                     });
 
