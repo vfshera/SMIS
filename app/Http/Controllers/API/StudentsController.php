@@ -4,11 +4,47 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
+use App\Http\Resources\StudentInfoResource;
+use App\Http\Resources\TimetableResource;
+use App\Term;
+use App\Timetable;
 use Illuminate\Http\Request;
 use App\Student;
 
 class StudentsController extends Controller
 {
+    public function myInfo(){
+
+        return new StudentInfoResource(Student::where('user_id', auth()->user()->id)->first());
+
+    }
+
+    public function myTimetable(){
+
+        $stud = Student::where('user_id', auth()->user()->id)->first();
+
+        $timetables = Timetable::where('class_id' , $stud->class_id)->get();
+        $currentTables = [];
+        $currTerm = Term::where('status', '1')->first();
+
+            foreach ($timetables as $tble){
+
+                if($tble->term->id == $currTerm->id){
+                    array_push($currentTables,$tble);
+                }
+            }
+
+           if(!empty($currentTables)){
+               return TimetableResource::collection($currentTables);
+           } else {
+
+           }
+    }
+
+    public function myResults(){
+
+    }
+
     public function students(){
 
         $students = Student::orderBy('created_at', 'DESC')->paginate(10);

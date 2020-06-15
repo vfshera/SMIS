@@ -19,7 +19,7 @@ class UserTableSeeder extends Seeder
                 'email' => 'admin@admin.com',
                 'password' => Hash::make('Lucia'),
                 'access' => 0,
-                // Password Launch
+                // Password Lucia
             ]
         );
 
@@ -29,7 +29,7 @@ class UserTableSeeder extends Seeder
                 'email' => 'student@school.com',
                 'password' => Hash::make('abc123'),
                 'access' => 1,
-                // Password abcd
+                // Password abc123
             ]
         );
 

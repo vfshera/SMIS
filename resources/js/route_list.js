@@ -2,6 +2,11 @@ import Admin from './components/AdminIndex.vue'
 import Admins from './components/Admins.vue'
 import Teachers from './components/Teachers.vue'
 import Students from './components/Students.vue'
+import MyTimetable from './components/student/MyTimetable'
+import ExamResults from './components/student/Results'
+import MyProfile from './components/student/Account'
+import Notes from './components/student/Notes'
+import PastPapers from './components/student/PastPapers'
 import Subjects from './components/Subjects.vue'
 import Classrooms from './components/Classrooms.vue'
 import Classlist from './components/Classlist.vue'
@@ -33,6 +38,31 @@ export const routes = [
         path:'/students',
         name: 'allStudents',
         component: Students
+    },
+    {
+        path:'/mytimetable',
+        name: 'myTimetable',
+        component: MyTimetable
+    },
+    {
+        path:'/student-profile',
+        name: 'myProfile',
+        component: MyProfile
+    },
+    {
+        path:'/notes',
+        name: 'notes',
+        component: Notes
+    },
+    {
+        path:'/pastpapers',
+        name: 'pastPapers',
+        component: PastPapers
+    },
+    {
+        path:'/results',
+        name: 'myResults',
+        component: ExamResults
     },
     {
         path:'/form',

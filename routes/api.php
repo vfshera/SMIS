@@ -27,6 +27,10 @@ Route::middleware('auth:api')->get('/loggedstudents', 'API\UserResourceControlle
 Route::middleware('auth:api')->get('/students', 'API\StudentsController@students');
 Route::middleware('auth:api')->post('/add-student-info', 'API\StudentsController@store');
 Route::middleware('auth:api')->delete('/delete-student/{id}', 'API\StudentsController@destroy');
+
+Route::middleware('auth:api')->get('/myinfo', 'API\StudentsController@myInfo');
+Route::middleware('auth:api')->get('/mytimetable', 'API\StudentsController@myTimetable');
+
 //Student Study
 Route::middleware('auth:api')->get('/reload-study/{id}', 'API\StudiesController@getStudentStudy');
 Route::middleware('auth:api')->post('/add-study', 'API\StudiesController@store');
