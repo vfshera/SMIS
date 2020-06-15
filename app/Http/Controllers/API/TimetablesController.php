@@ -13,27 +13,23 @@ class TimetablesController extends Controller
 
     public function index()
     {
-        $timetables = Timetable::orderBy('created_at' , 'DESC')->get();
-
         $currTerm = Term::where('status', '1')->first();
-        $currentTables = [];
 
-        foreach ($timetables as $tble){
+       if(!empty($currTerm)){
+           $timetables = Timetable::where('term_id' , $currTerm->id)->orderBy('created_at' , 'DESC')->get();
 
-            if($tble->term->id == $currTerm->id){
-                array_push($currentTables,$tble);
-            }
         }
 
-        if(!empty($currentTables)){
-            return TimetableResource::collection($currentTables);
+        if(!empty($timetables)){
+            return TimetableResource::collection($timetables);
         } else {
 
         }
     }
 
     public function classSubjects($id){
-        $sub = Timetable::where('class_id', $id)->orderBy('created_at' , 'DESC')->get();
+        $currTerm = Term::where('status', '1')->first();
+        $sub = Timetable::where('class_id', $id)->where('term_id' , $currTerm->id)->orderBy('created_at' , 'DESC')->get();
         return TimetableResource::collection( $sub);
     }
 

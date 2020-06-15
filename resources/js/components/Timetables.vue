@@ -1,7 +1,7 @@
 <template>
     <div>
                 <div class="card">
-                     <form class="p-2" @submit.prevent="addDetails" v-show="view">
+                     <form class="p-2" @submit.prevent="addDetails" v-show="tbladd">
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="name">Duty</label>
@@ -160,7 +160,11 @@
 
         </div>
 
+
             </div>
+        <div class="card bg-danger  pl-2 pr-2" v-if="NoTables">
+            <h2 class="text-center mt-5 mb-5">It seems like there are no timetables for this term...</h2>
+        </div>
 
     </div>
 </template>
@@ -200,7 +204,9 @@
                 duties : [],
                 timetables: [],
                 view:true,
+                tbladd:true,
                 showTimetable:false,
+                NoTables:false,
                 currTable:{
                     name: '',
                     stdNum: '',
@@ -337,6 +343,7 @@
             },
             toggleForm(){
                 this.view = !this.view;
+                this.tbladd = !this.tbladd;
                 this.showTimetable = !this.showTimetable;
             },
             resetTmtbl(){
@@ -376,14 +383,23 @@
 
                     axios.get('/api/timetables')
                     .then(response =>{
-                       this.timetables = response.data.data;
+                        if(response.data.data){
+                            this.view = true;
+                            this.tbladd = true;
+                            this.timetables = response.data.data;
 
-                       this.levels.one.name = this.countLevels("1");
-                       this.levels.two.name = this.countLevels("2");
-                       this.levels.three.name = this.countLevels("3");
-                       this.levels.four.name = this.countLevels("4");
+                            this.levels.one.name = this.countLevels("1");
+                            this.levels.two.name = this.countLevels("2");
+                            this.levels.three.name = this.countLevels("3");
+                            this.levels.four.name = this.countLevels("4");
 
-                       this.buildCategories();
+                            this.buildCategories();
+                        }else {
+                            this.NoTables = true;
+                            this.view = false;
+                            this.showTimetable = false;
+                        }
+
                     })
                     .catch(err =>{
                             console.log(err);

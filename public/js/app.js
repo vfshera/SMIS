@@ -4681,6 +4681,10 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Timetables',
   data: function data() {
@@ -4714,7 +4718,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       duties: [],
       timetables: [],
       view: true,
+      tbladd: true,
       showTimetable: false,
+      NoTables: false,
       currTable: {
         name: '',
         stdNum: '',
@@ -4845,6 +4851,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
     toggleForm: function toggleForm() {
       this.view = !this.view;
+      this.tbladd = !this.tbladd;
       this.showTimetable = !this.showTimetable;
     },
     resetTmtbl: function resetTmtbl() {
@@ -4873,13 +4880,21 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         console.log(err);
       });
       axios.get('/api/timetables').then(function (response) {
-        _this3.timetables = response.data.data;
-        _this3.levels.one.name = _this3.countLevels("1");
-        _this3.levels.two.name = _this3.countLevels("2");
-        _this3.levels.three.name = _this3.countLevels("3");
-        _this3.levels.four.name = _this3.countLevels("4");
+        if (response.data.data) {
+          _this3.view = true;
+          _this3.tbladd = true;
+          _this3.timetables = response.data.data;
+          _this3.levels.one.name = _this3.countLevels("1");
+          _this3.levels.two.name = _this3.countLevels("2");
+          _this3.levels.three.name = _this3.countLevels("3");
+          _this3.levels.four.name = _this3.countLevels("4");
 
-        _this3.buildCategories();
+          _this3.buildCategories();
+        } else {
+          _this3.NoTables = true;
+          _this3.view = false;
+          _this3.showTimetable = false;
+        }
       })["catch"](function (err) {
         console.log(err);
       });
@@ -50327,8 +50342,8 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.view,
-              expression: "view"
+              value: _vm.tbladd,
+              expression: "tbladd"
             }
           ],
           staticClass: "p-2",
@@ -50959,7 +50974,15 @@ var render = function() {
           )
         ]
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _vm.NoTables
+      ? _c("div", { staticClass: "card bg-danger  pl-2 pr-2" }, [
+          _c("h2", { staticClass: "text-center mt-5 mb-5" }, [
+            _vm._v("It seems like there are no timetables for this term...")
+          ])
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = [

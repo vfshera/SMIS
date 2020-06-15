@@ -23,21 +23,13 @@ class StudentsController extends Controller
 
         $stud = Student::where('user_id', auth()->user()->id)->first();
 
-        $timetables = Timetable::where('class_id' , $stud->class_id)->get();
-        $currentTables = [];
         $currTerm = Term::where('status', '1')->first();
-
-            foreach ($timetables as $tble){
-
-                if($tble->term->id == $currTerm->id){
-                    array_push($currentTables,$tble);
-                }
+            if(!empty($currTerm)){
+                $timetables = Timetable::where('class_id' , $stud->class_id)->where('term_id' , $currTerm->id)->get();
             }
 
-           if(!empty($currentTables)){
-               return TimetableResource::collection($currentTables);
-           } else {
-
+           if(!empty($timetables)){
+               return TimetableResource::collection($timetables);
            }
     }
 
