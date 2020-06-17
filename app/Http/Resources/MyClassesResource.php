@@ -14,10 +14,22 @@ class MyClassesResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'teaches' => TimetableResource::collection($this->timetables),
-            'created_at'=> date('D, dS F  Y', strtotime($this->created_at)),
-        ];
+            $tt = TimetableResource::collection($this->timetables);
+            $tbls = [];
+            $currterm = \App\Term::where('status' , 1)->pluck('id')->first();
+
+            if($currterm){
+                foreach ($tt as $tble){
+                    if($tble->term->id === $currterm){
+                            array_push($tbls,$tble);
+                    }
+                }
+            }
+
+            return [
+                'id' => $this->id,
+                'teaches' => $tbls,
+                'created_at'=> date('D, dS F  Y', strtotime($this->created_at)),
+            ];
     }
 }

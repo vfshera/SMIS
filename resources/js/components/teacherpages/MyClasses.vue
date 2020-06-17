@@ -2,7 +2,7 @@
     <div>
     <div class="card">
         <div class="card-header">
-              <label><h3 class="card-title">My Classes</h3></label>
+              <label><h3 class="card-title">My Timetable</h3></label>
 
           </div>
             <!-- /.card-header -->

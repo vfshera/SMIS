@@ -120,7 +120,7 @@
                                     <li class="nav-item">
                                         <router-link :to="{ name: 'myclasses'  }"  class="nav-link">
                                         <i class="nav-icon fas fa-minus"></i>
-                                        <p>My Classes</p>
+                                        <p>My Timetable</p>
                                         </router-link>
                                     </li>
                                     <li class="nav-item">
