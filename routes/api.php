@@ -22,6 +22,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->get('/allusers', 'API\UserResourceController@allUsers');
 Route::middleware('auth:api')->get('/users', 'API\UserResourceController@root');
 
+
+//UPLOADS
+Route::middleware('auth:api')->post('/myuploads', 'API\UploadsController@store');
+Route::middleware('auth:api')->get('/uploads', 'API\UploadsController@uploads');
+Route::middleware('auth:api')->delete('/delete-upload/{id}', 'API\UploadsController@destroy');
+Route::middleware('auth:api')->get('/download-file/{id}', 'API\UploadsController@getFile');
+
+
 //students
 Route::middleware('auth:api')->get('/loggedstudents', 'API\UserResourceController@students');
 Route::middleware('auth:api')->get('/students', 'API\StudentsController@students');

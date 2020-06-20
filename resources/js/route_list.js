@@ -18,6 +18,7 @@ import Marks from './components/teacherpages/Marks.vue'
 import Term from './components/Terms.vue'
 import formStream from './components/stream.vue'
 import NotFoundPage from './components/NotFoundPage'
+import AddRevisionMaterials from "./components/AddRevisionMaterials";
 
 export const routes = [
     {
@@ -58,6 +59,12 @@ export const routes = [
         path:'/pastpapers',
         name: 'pastPapers',
         component: PastPapers
+    },
+
+    {
+        path:'/revision-materials',
+        name: 'revisionMaterials',
+        component: AddRevisionMaterials
     },
     {
         path:'/results',

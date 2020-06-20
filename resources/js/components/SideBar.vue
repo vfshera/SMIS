@@ -130,6 +130,13 @@
                                         </router-link>
                                     </li>
 
+                                    <li class="nav-item">
+                                        <router-link :to="{ name:'revisionMaterials' }"  class="nav-link">
+                                            <i class="nav-icon fas fa-minus"></i>
+                                            <p>Revision Materials</p>
+                                        </router-link>
+                                    </li>
+
                                 </ul>
                             </li>
                             <li class="nav-item"  v-if="currentUser.access === 0">
@@ -150,7 +157,12 @@
                                 <p>Timetable</p>
                                  </router-link>
                             </li>
-
+                        <li class="nav-item" v-if="currentUser.access === 0">
+                            <router-link :to="{ name:'revisionMaterials' }"  class="nav-link">
+                                <i class="nav-icon far fa-calendar-alt"></i>
+                                <p>Revision Materials</p>
+                            </router-link>
+                        </li>
 
 
                 <!-- /.sidebar-menu -->
