@@ -2893,6 +2893,144 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MailBox.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'MailBox',
+  data: function data() {
+    return {
+      conversations: [],
+      msg: {
+        conv_id: '',
+        message: ''
+      }
+    };
+  },
+  props: [],
+  methods: {
+    sendMsg: function sendMsg(id) {
+      var _this = this;
+
+      this.msg.conv_id = id;
+
+      if (this.msg.conv_id && this.msg.message) {
+        axios.post('/api/message', this.msg).then(function (response) {
+          _this.fetchData();
+        })["catch"](function (err) {});
+      } else {
+        alert("Error While trying to send your message!Please Try Again");
+      }
+    },
+    fetchData: function fetchData() {
+      var _this2 = this;
+
+      axios.get('/api/messages').then(function (response) {
+        _this2.conversations = response.data.data;
+      })["catch"](function (err) {});
+    }
+  },
+  mounted: function mounted() {
+    this.fetchData();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Messages.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Messages.vue?vue&type=script&lang=js& ***!
@@ -2966,7 +3104,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'sidebar',
+  name: 'Messages',
   data: function data() {
     return {};
   },
@@ -10738,6 +10876,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\nsmall[data-v-7ae8801a]{\n    color:white;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#message-view{\n    height: 640px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
 
 // exports
 
@@ -41678,6 +41835,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./MailBox.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css&":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetables.vue?vue&type=style&index=0&lang=css& ***!
@@ -46872,6 +47059,266 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=template&id=516c600e&":
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MailBox.vue?vue&type=template&id=516c600e& ***!
+  \**********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row " }, [
+    _c(
+      "div",
+      { staticClass: "col-md-9", attrs: { id: "chat" } },
+      _vm._l(_vm.conversations, function(dm) {
+        return _c(
+          "div",
+          {
+            key: dm.id,
+            staticClass: "card direct-chat direct-chat-primary",
+            attrs: { id: "message-view" }
+          },
+          [
+            _c("div", { staticClass: "card-header" }, [
+              _c("h3", { staticClass: "card-title" }, [
+                _vm._v(_vm._s(dm.title))
+              ]),
+              _vm._v(" "),
+              _vm._m(0, true)
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "card-body", attrs: { id: "msg-scroll" } },
+              _vm._l(dm.messages, function(msg) {
+                return dm.messages
+                  ? _c("div", [
+                      !msg.isYours
+                        ? _c(
+                            "div",
+                            { staticClass: "direct-chat-msg col-md-6" },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "direct-chat-infos clearfix" },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "direct-chat-name float-left ml-3"
+                                    },
+                                    [_vm._v(_vm._s(msg.sender.name))]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "direct-chat-text" }, [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(msg.message) +
+                                    "\n                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  staticClass:
+                                    "direct-chat-timestamp ml-5 float-left"
+                                },
+                                [_vm._v(_vm._s(msg.sent_at))]
+                              )
+                            ]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      msg.isYours
+                        ? _c(
+                            "div",
+                            {
+                              staticClass:
+                                "direct-chat-msg right ml-auto col-md-6"
+                            },
+                            [
+                              _vm._m(1, true),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "direct-chat-text" }, [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(msg.message) +
+                                    "\n                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  staticClass:
+                                    "direct-chat-timestamp float-right mr-5"
+                                },
+                                [_vm._v(_vm._s(msg.sent_at))]
+                              )
+                            ]
+                          )
+                        : _vm._e()
+                    ])
+                  : _vm._e()
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-footer" }, [
+              _c(
+                "form",
+                {
+                  attrs: { action: "#", method: "post" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.sendMsg(dm.id)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "input-group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.msg.message,
+                          expression: "msg.message"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "message",
+                        placeholder: "Type Message ...",
+                        required: ""
+                      },
+                      domProps: { value: _vm.msg.message },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.msg, "message", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(2, true)
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _vm.conversations.length == 0
+      ? _c("div", { staticClass: "card bg-warning mx-auto col-md-12 p-5" }, [
+          _c("h3", { staticClass: "text-center" }, [
+            _vm._v("Looks Like You Dont Have Messages")
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "col-md-3 card", attrs: { id: "conversations" } },
+      [
+        _c("div", { staticClass: "card-header text-bold text-center" }, [
+          _vm._v("\n                Your Conversations\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "div",
+            { attrs: { id: "conv-scroll" } },
+            _vm._l(_vm.conversations, function(dm) {
+              return _c("div", { key: dm.id, attrs: { id: "conv-holder" } }, [
+                _c("span", { staticClass: "username d-inline" }, [
+                  _vm._v(
+                    "\n                      " +
+                      _vm._s(dm.title) +
+                      "\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "text-muted float-right" }, [
+                  _vm._v(_vm._s(dm.messages[dm.messages.length - 1].sent_at))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "last-message" }, [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(dm.messages[dm.messages.length - 1].message) +
+                      "\n                        "
+                  )
+                ])
+              ])
+            }),
+            0
+          )
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-tools" }, [
+      _c("span", { staticClass: "badge badge-light" }, [_vm._v("3")]),
+      _vm._v("\n                    Messages\n                    "),
+      _c("span", { staticClass: "badge badge-primary ml-3" }, [_vm._v("3")]),
+      _vm._v("\n                    New\n                ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "direct-chat-infos clearfix" }, [
+      _c("span", { staticClass: "direct-chat-name float-right mr-3" }, [
+        _vm._v("Me")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Send")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Messages.vue?vue&type=template&id=62dade92&":
 /*!***********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Messages.vue?vue&type=template&id=62dade92& ***!
@@ -47252,11 +47699,33 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _vm.currentUser.access === 0 || _vm.currentUser.access === 2
-            ? _c("li", { staticClass: "nav-item" }, [_vm._m(0)])
+            ? _c(
+                "li",
+                { staticClass: "nav-item" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      staticClass: "nav-link",
+                      attrs: { to: { name: "mailbox" } }
+                    },
+                    [
+                      _c("i", { staticClass: "nav-icon far fa-envelope" }),
+                      _vm._v(" "),
+                      _c("p", [
+                        _vm._v(
+                          "\n                    Mailbox\n                "
+                        )
+                      ])
+                    ]
+                  )
+                ],
+                1
+              )
             : _vm._e(),
           _vm._v(" "),
           _vm.currentUser.access === 1
-            ? _c("li", { staticClass: "nav-item" }, [_vm._m(1)])
+            ? _c("li", { staticClass: "nav-item" }, [_vm._m(0)])
             : _vm._e(),
           _vm._v(" "),
           _c(
@@ -47307,7 +47776,7 @@ var render = function() {
           _vm._v(" "),
           _vm.currentUser.access === 1
             ? _c("li", { staticClass: "nav-item has-treeview" }, [
-                _vm._m(2),
+                _vm._m(1),
                 _vm._v(" "),
                 _c("ul", { staticClass: "nav nav-treeview ml-2" }, [
                   _c(
@@ -47417,7 +47886,7 @@ var render = function() {
           _vm._v(" "),
           _vm.currentUser.access === 0 || _vm.currentUser.access === 2
             ? _c("li", { staticClass: "nav-item has-treeview" }, [
-                _vm._m(3),
+                _vm._m(2),
                 _vm._v(" "),
                 _vm.currentUser.access === 0
                   ? _c("ul", { staticClass: "nav nav-treeview ml-2" }, [
@@ -47642,16 +48111,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-      _c("i", { staticClass: "nav-icon far fa-envelope" }),
-      _vm._v(" "),
-      _c("p", [_vm._v("\n                    Mailbox\n                ")])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -68818,6 +69277,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/MailBox.vue":
+/*!*********************************************!*\
+  !*** ./resources/js/components/MailBox.vue ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _MailBox_vue_vue_type_template_id_516c600e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MailBox.vue?vue&type=template&id=516c600e& */ "./resources/js/components/MailBox.vue?vue&type=template&id=516c600e&");
+/* harmony import */ var _MailBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MailBox.vue?vue&type=script&lang=js& */ "./resources/js/components/MailBox.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MailBox.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _MailBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _MailBox_vue_vue_type_template_id_516c600e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _MailBox_vue_vue_type_template_id_516c600e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/MailBox.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/MailBox.vue?vue&type=script&lang=js&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/MailBox.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./MailBox.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./MailBox.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/MailBox.vue?vue&type=template&id=516c600e&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/MailBox.vue?vue&type=template&id=516c600e& ***!
+  \****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_template_id_516c600e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./MailBox.vue?vue&type=template&id=516c600e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MailBox.vue?vue&type=template&id=516c600e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_template_id_516c600e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MailBox_vue_vue_type_template_id_516c600e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Messages.vue":
 /*!**********************************************!*\
   !*** ./resources/js/components/Messages.vue ***!
@@ -70178,6 +70724,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_stream_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./components/stream.vue */ "./resources/js/components/stream.vue");
 /* harmony import */ var _components_NotFoundPage__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./components/NotFoundPage */ "./resources/js/components/NotFoundPage.vue");
 /* harmony import */ var _components_AddRevisionMaterials__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./components/AddRevisionMaterials */ "./resources/js/components/AddRevisionMaterials.vue");
+/* harmony import */ var _components_MailBox__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./components/MailBox */ "./resources/js/components/MailBox.vue");
+
 
 
 
@@ -70222,6 +70770,10 @@ var routes = [{
   path: '/student-profile',
   name: 'myProfile',
   component: _components_student_Account__WEBPACK_IMPORTED_MODULE_6__["default"]
+}, {
+  path: '/mailbox',
+  name: 'mailbox',
+  component: _components_MailBox__WEBPACK_IMPORTED_MODULE_21__["default"]
 }, {
   path: '/notes',
   name: 'notes',

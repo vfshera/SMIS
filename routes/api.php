@@ -30,6 +30,11 @@ Route::middleware('auth:api')->delete('/delete-upload/{id}', 'API\UploadsControl
 Route::middleware('auth:api')->get('/download-file/{id}', 'API\UploadsController@getFile');
 
 
+//messages
+Route::middleware('auth:api')->get('/messages', 'API\MessagesController@index');
+Route::middleware('auth:api')->post('/message', 'API\MessagesController@sendMessage');
+
+
 //students
 Route::middleware('auth:api')->get('/loggedstudents', 'API\UserResourceController@students');
 Route::middleware('auth:api')->get('/students', 'API\StudentsController@students');

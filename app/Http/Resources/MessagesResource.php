@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class MessagesResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        $userOne = \App\User::findOrFail($this->sender);
+        $usertwo = \App\User::findOrFail($this->receiver);
+        return[
+                'id' => $this->id,
+                'sender' => [
+                                'id' =>  $this->sender,
+                                'name' =>  \App\User::where('id' , $this->sender)->pluck('name')[0],
+                             ],
+                'receiver' => [
+                                    'id' =>  $this->receiver,
+                                    'name' =>  \App\User::where('id' , $this->receiver)->pluck('name')[0],
+                                ],
+                'message' => $this->message,
+                'isYours' =>  (auth()->user()->id == $this->sender) ? true : false,
+                'read' => $this->read,
+                'sent_at' =>date('dS F  Y', strtotime($this->created_at)),
+            ];
+    }
+}

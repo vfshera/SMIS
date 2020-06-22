@@ -64,7 +64,7 @@
 <script>
 
     export default {
-        name: 'sidebar',
+        name: 'Messages',
         data(){
             return{
 
