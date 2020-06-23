@@ -2,20 +2,20 @@
         <div class="row "  >
             <div id ="chat" class="col-md-9">
                 <!-- DIRECT CHAT -->
-                <div id="message-view" class="card direct-chat direct-chat-primary" v-for="dm in conversations" :key="dm.id">
+                <div id="message-view" class="card direct-chat direct-chat-primary" v-if="current">
                     <div class="card-header">
-                        <h3 class="card-title">{{ dm.title }}</h3>
+                        <h3 class="card-title">{{ current.title }}</h3>
 
                         <div class="card-tools">
-                            <span  class="badge badge-light">3</span>
+                            <span  class="badge badge-light">{{ current.messages.length }}</span>
                             Messages
-                            <span  class="badge badge-primary ml-3">3</span>
+                            <span  class="badge badge-primary ml-3">{{ current.new }}</span>
                             New
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div id="msg-scroll" class="card-body" >
-                        <div  v-for="msg in dm.messages" v-if="dm.messages">
+                        <div  v-for="msg in current.messages" v-if="current.messages">
                             <!-- Message. Default to the left -->
                             <div class="direct-chat-msg col-md-6" v-if="!msg.isYours">
                                 <div class="direct-chat-infos clearfix">
@@ -24,7 +24,7 @@
                                 <div class="direct-chat-text">
                                     {{ msg.message }}
                                 </div>
-                                <span class="direct-chat-timestamp ml-5 float-left">{{ msg.sent_at}}</span>
+                                <span class="direct-chat-timestamp ml-5 float-left">{{ msg.sent_at.time}}</span>
                                 <!-- /.direct-chat-text -->
                             </div>
                             <!-- /.direct-chat-msg -->
@@ -37,7 +37,7 @@
                                 <div class="direct-chat-text">
                                     {{ msg.message }}
                                 </div>
-                                <span class="direct-chat-timestamp float-right mr-5">{{ msg.sent_at}}</span>
+                                <span class="direct-chat-timestamp float-right mr-5">{{ msg.sent_at.time}}</span>
                                 <!-- /.direct-chat-text -->
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                         <!--/.direct-chat-messages-->
                     <!-- /.card-body -->
                         <div class="card-footer">
-                            <form action="#" method="post" @submit.prevent="sendMsg(dm.id)">
+                            <form action="#" method="post" @submit.prevent="sendMsg(current.id)">
                                 <div class="input-group">
                                     <input type="text" name="message" v-model="msg.message" placeholder="Type Message ..." class="form-control" required>
                                     <span class="input-group-append">
@@ -58,25 +58,34 @@
                     </div>
                 </div>
               <!--/.direct-chat -->
-                <div class="card bg-warning mx-auto col-md-12 p-5" v-if="conversations.length == 0">
-                    <h3 class="text-center">Looks Like You Dont Have Messages</h3>
+
+
+                <div class="col-md-9 " v-if="NoMessages">
+                    <div class="card bg-warning mx-auto p-5">
+                        <h3 class="text-center">Looks Like You Dont Have Messages</h3>
+                    </div>
                 </div>
 
             <div id="conversations" class="col-md-3 card">
-                <div class="card-header text-bold text-center">
-                        Your Conversations
+                <div class="card-header ">
+                        <span class="d-inline float-left">+</span>
+                        <div  class=" text-bold text-center "> Your Conversations <span class="badge badge-primary">{{ conversations.length }}</span></div>
+
                 </div>
-                <div class="card-body" >
+                <div class="card-body" id="recent-chats">
                     <div id="conv-scroll" >
-                        <div id="conv-holder" v-for="dm in conversations" :key="dm.id" >
-                            <span class="username d-inline">
-                              {{ dm.title }}
-                            </span>
-                                <span class="text-muted float-right">{{ dm.messages[dm.messages.length-1].sent_at }}</span>
-                                <div class="last-message">
-                                    {{ dm.messages[dm.messages.length-1].message }}
-                                </div>
-                        </div>
+                            <div id="conv-holder" v-for="dm in conversations" :key="dm.id" >
+                                    <span class="text-bold  d-inline">
+                                      {{ dm.title }}
+                                    </span>
+                                    <span class="text-muted float-right">{{ dm.messages[dm.messages.length-1].sent_at.time}}</span>
+                                    <div class="last-message font-italic text-muted" style="">
+                                        {{ dm.messages[dm.messages.length-1].message.slice(0,130) }}
+                                        <span class="text-bold" v-if="dm.messages[dm.messages.length-1].message.length > 130">...</span>
+                                    </div>
+
+                            </div>
+
                     </div>
                 </div>
             </div>
@@ -95,8 +104,11 @@
                 conversations:[],
                 msg:{
                     conv_id:'',
+                    receiver_id:'',
                     message:'',
-                }
+                },
+                current: null,
+                NoMessages: false,
             }
         },
         props:[],
@@ -117,16 +129,55 @@
             },
             fetchData(){
                 axios.get('/api/messages')
-                    .then(response =>{
+                    .then(response => {
                         this.conversations = response.data.data;
+
+                        this.conversations.forEach(c =>{
+                            if(c.id == this.current.id){
+                                this.current = c;
+                                this.msg.message = '';
+                            }
+                        })
+                        if(this.current.new > 0){
+                            this.readMsgs(this.current.id)
+                        }
+                    })
+                    .catch(err => {
+
+                    })
+            },
+
+            startUp(){
+                axios.get('/api/messages')
+                    .then(response => {
+                        this.conversations = response.data.data;
+                        if (this.conversations[0]) {
+                            this.current = this.conversations[0];
+                        } else {
+                            this.NoMessages = true;
+                        }
+
                     })
                     .catch(err => {
 
                     })
             }
         },
+        setConv(index){
+            this.current = this.conversations[index];
+        },
+            readMsgs(id){
+
+                axios.post('/api/read'+ id)
+                    .then(response => {
+
+                    })
+                    .catch(err => {
+
+                    })
+            },
         mounted() {
-            this.fetchData();
+            this.startUp();
         }
     }
 
@@ -140,7 +191,14 @@
     }
     #message-view{
         height: 640px;
+    }
+    #recent-chats{
+        height: 593px;
+        padding: 5px 0 0 0 !important;
 
+    }
+    #conv-scroll{
+        height: 560px;
     }
     #msg-scroll,#conv-scroll{
         overflow-x: hidden;

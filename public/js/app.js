@@ -2990,6 +2990,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MailBox',
   data: function data() {
@@ -2997,8 +3006,11 @@ __webpack_require__.r(__webpack_exports__);
       conversations: [],
       msg: {
         conv_id: '',
+        receiver_id: '',
         message: ''
-      }
+      },
+      current: null,
+      NoMessages: false
     };
   },
   props: [],
@@ -3021,11 +3033,41 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/api/messages').then(function (response) {
         _this2.conversations = response.data.data;
+
+        _this2.conversations.forEach(function (c) {
+          if (c.id == _this2.current.id) {
+            _this2.current = c;
+            _this2.msg.message = '';
+          }
+        });
+
+        if (_this2.current["new"] > 0) {
+          _this2.readMsgs(_this2.current.id);
+        }
+      })["catch"](function (err) {});
+    },
+    startUp: function startUp() {
+      var _this3 = this;
+
+      axios.get('/api/messages').then(function (response) {
+        _this3.conversations = response.data.data;
+
+        if (_this3.conversations[0]) {
+          _this3.current = _this3.conversations[0];
+        } else {
+          _this3.NoMessages = true;
+        }
       })["catch"](function (err) {});
     }
   },
+  setConv: function setConv(index) {
+    this.current = this.conversations[index];
+  },
+  readMsgs: function readMsgs(id) {
+    axios.post('/api/read' + id).then(function (response) {})["catch"](function (err) {});
+  },
   mounted: function mounted() {
-    this.fetchData();
+    this.startUp();
   }
 });
 
@@ -10894,7 +10936,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#message-view{\n    height: 640px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
+exports.push([module.i, "\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#message-view{\n    height: 640px;\n}\n#recent-chats{\n    height: 593px;\n    padding: 5px 0 0 0 !important;\n}\n#conv-scroll{\n    height: 560px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
 
 // exports
 
@@ -47075,200 +47117,226 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row " }, [
-    _c(
-      "div",
-      { staticClass: "col-md-9", attrs: { id: "chat" } },
-      _vm._l(_vm.conversations, function(dm) {
-        return _c(
-          "div",
-          {
-            key: dm.id,
-            staticClass: "card direct-chat direct-chat-primary",
-            attrs: { id: "message-view" }
-          },
-          [
-            _c("div", { staticClass: "card-header" }, [
-              _c("h3", { staticClass: "card-title" }, [
-                _vm._v(_vm._s(dm.title))
+    _c("div", { staticClass: "col-md-9", attrs: { id: "chat" } }, [
+      _vm.current
+        ? _c(
+            "div",
+            {
+              staticClass: "card direct-chat direct-chat-primary",
+              attrs: { id: "message-view" }
+            },
+            [
+              _c("div", { staticClass: "card-header" }, [
+                _c("h3", { staticClass: "card-title" }, [
+                  _vm._v(_vm._s(_vm.current.title))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-tools" }, [
+                  _c("span", { staticClass: "badge badge-light" }, [
+                    _vm._v(_vm._s(_vm.current.messages.length))
+                  ]),
+                  _vm._v(
+                    "\n                    Messages\n                    "
+                  ),
+                  _c("span", { staticClass: "badge badge-primary ml-3" }, [
+                    _vm._v(_vm._s(_vm.current.new))
+                  ]),
+                  _vm._v("\n                    New\n                ")
+                ])
               ]),
               _vm._v(" "),
-              _vm._m(0, true)
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-body", attrs: { id: "msg-scroll" } },
-              _vm._l(dm.messages, function(msg) {
-                return dm.messages
-                  ? _c("div", [
-                      !msg.isYours
-                        ? _c(
-                            "div",
-                            { staticClass: "direct-chat-msg col-md-6" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "direct-chat-infos clearfix" },
-                                [
-                                  _c(
-                                    "span",
-                                    {
-                                      staticClass:
-                                        "direct-chat-name float-left ml-3"
-                                    },
-                                    [_vm._v(_vm._s(msg.sender.name))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "direct-chat-text" }, [
-                                _vm._v(
-                                  "\n                            " +
-                                    _vm._s(msg.message) +
-                                    "\n                        "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                {
-                                  staticClass:
-                                    "direct-chat-timestamp ml-5 float-left"
-                                },
-                                [_vm._v(_vm._s(msg.sent_at))]
-                              )
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      msg.isYours
-                        ? _c(
-                            "div",
-                            {
-                              staticClass:
-                                "direct-chat-msg right ml-auto col-md-6"
-                            },
-                            [
-                              _vm._m(1, true),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "direct-chat-text" }, [
-                                _vm._v(
-                                  "\n                            " +
-                                    _vm._s(msg.message) +
-                                    "\n                        "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                {
-                                  staticClass:
-                                    "direct-chat-timestamp float-right mr-5"
-                                },
-                                [_vm._v(_vm._s(msg.sent_at))]
-                              )
-                            ]
-                          )
-                        : _vm._e()
-                    ])
-                  : _vm._e()
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-footer" }, [
               _c(
-                "form",
-                {
-                  attrs: { action: "#", method: "post" },
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.sendMsg(dm.id)
-                    }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "input-group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.msg.message,
-                          expression: "msg.message"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        type: "text",
-                        name: "message",
-                        placeholder: "Type Message ...",
-                        required: ""
-                      },
-                      domProps: { value: _vm.msg.message },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.msg, "message", $event.target.value)
-                        }
+                "div",
+                { staticClass: "card-body", attrs: { id: "msg-scroll" } },
+                _vm._l(_vm.current.messages, function(msg) {
+                  return _vm.current.messages
+                    ? _c("div", [
+                        !msg.isYours
+                          ? _c(
+                              "div",
+                              { staticClass: "direct-chat-msg col-md-6" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "direct-chat-infos clearfix" },
+                                  [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass:
+                                          "direct-chat-name float-left ml-3"
+                                      },
+                                      [_vm._v(_vm._s(msg.sender.name))]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "direct-chat-text" }, [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(msg.message) +
+                                      "\n                        "
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass:
+                                      "direct-chat-timestamp ml-5 float-left"
+                                  },
+                                  [_vm._v(_vm._s(msg.sent_at.time))]
+                                )
+                              ]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        msg.isYours
+                          ? _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "direct-chat-msg right ml-auto col-md-6"
+                              },
+                              [
+                                _vm._m(0, true),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "direct-chat-text" }, [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(msg.message) +
+                                      "\n                        "
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass:
+                                      "direct-chat-timestamp float-right mr-5"
+                                  },
+                                  [_vm._v(_vm._s(msg.sent_at.time))]
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    : _vm._e()
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-footer" }, [
+                _c(
+                  "form",
+                  {
+                    attrs: { action: "#", method: "post" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.sendMsg(_vm.current.id)
                       }
-                    }),
-                    _vm._v(" "),
-                    _vm._m(2, true)
-                  ])
-                ]
-              )
-            ])
-          ]
-        )
-      }),
-      0
-    ),
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "input-group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.msg.message,
+                            expression: "msg.message"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "message",
+                          placeholder: "Type Message ...",
+                          required: ""
+                        },
+                        domProps: { value: _vm.msg.message },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.msg, "message", $event.target.value)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(1)
+                    ])
+                  ]
+                )
+              ])
+            ]
+          )
+        : _vm._e()
+    ]),
     _vm._v(" "),
-    _vm.conversations.length == 0
-      ? _c("div", { staticClass: "card bg-warning mx-auto col-md-12 p-5" }, [
-          _c("h3", { staticClass: "text-center" }, [
-            _vm._v("Looks Like You Dont Have Messages")
-          ])
-        ])
+    _vm.NoMessages
+      ? _c("div", { staticClass: "col-md-9 " }, [_vm._m(2)])
       : _vm._e(),
     _vm._v(" "),
     _c(
       "div",
       { staticClass: "col-md-3 card", attrs: { id: "conversations" } },
       [
-        _c("div", { staticClass: "card-header text-bold text-center" }, [
-          _vm._v("\n                Your Conversations\n        ")
+        _c("div", { staticClass: "card-header " }, [
+          _c("span", { staticClass: "d-inline float-left" }, [_vm._v("+")]),
+          _vm._v(" "),
+          _c("div", { staticClass: " text-bold text-center " }, [
+            _vm._v(" Your Conversations "),
+            _c("span", { staticClass: "badge badge-primary" }, [
+              _vm._v(_vm._s(_vm.conversations.length))
+            ])
+          ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "card-body", attrs: { id: "recent-chats" } }, [
           _c(
             "div",
             { attrs: { id: "conv-scroll" } },
             _vm._l(_vm.conversations, function(dm) {
               return _c("div", { key: dm.id, attrs: { id: "conv-holder" } }, [
-                _c("span", { staticClass: "username d-inline" }, [
+                _c("span", { staticClass: "text-bold  d-inline" }, [
                   _vm._v(
-                    "\n                      " +
+                    "\n                              " +
                       _vm._s(dm.title) +
-                      "\n                    "
+                      "\n                            "
                   )
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "text-muted float-right" }, [
-                  _vm._v(_vm._s(dm.messages[dm.messages.length - 1].sent_at))
+                  _vm._v(
+                    _vm._s(dm.messages[dm.messages.length - 1].sent_at.time)
+                  )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "last-message" }, [
-                  _vm._v(
-                    "\n                            " +
-                      _vm._s(dm.messages[dm.messages.length - 1].message) +
-                      "\n                        "
-                  )
-                ])
+                _c(
+                  "div",
+                  { staticClass: "last-message font-italic text-muted" },
+                  [
+                    _vm._v(
+                      "\n                                " +
+                        _vm._s(
+                          dm.messages[dm.messages.length - 1].message.slice(
+                            0,
+                            130
+                          )
+                        ) +
+                        "\n                                "
+                    ),
+                    dm.messages[dm.messages.length - 1].message.length > 130
+                      ? _c("span", { staticClass: "text-bold" }, [
+                          _vm._v("...")
+                        ])
+                      : _vm._e()
+                  ]
+                )
               ])
             }),
             0
@@ -47279,17 +47347,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-tools" }, [
-      _c("span", { staticClass: "badge badge-light" }, [_vm._v("3")]),
-      _vm._v("\n                    Messages\n                    "),
-      _c("span", { staticClass: "badge badge-primary ml-3" }, [_vm._v("3")]),
-      _vm._v("\n                    New\n                ")
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -47310,6 +47367,16 @@ var staticRenderFns = [
         { staticClass: "btn btn-primary", attrs: { type: "submit" } },
         [_vm._v("Send")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card bg-warning mx-auto p-5" }, [
+      _c("h3", { staticClass: "text-center" }, [
+        _vm._v("Looks Like You Dont Have Messages")
+      ])
     ])
   }
 ]

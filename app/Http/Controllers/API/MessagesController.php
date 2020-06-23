@@ -17,9 +17,21 @@ class MessagesController extends Controller
         return ConversationResource::collection($chats);
     }
 
+    public function read($id){
+        $chats = Conversation::findOrFail($id)->messages()->where('receiver' , auth()->user()->id)->get();
+
+        foreach ($chats as $chat){
+            $chat->update(['read' => true]);
+
+        }
+
+        return "Read";
+    }
+
     public function sendMessage(Request $request){
       $sender = auth()->user()->id;
-      $convID = ($request->conv_id) ? $request->conv_id : Conversation::create(['user1' => $sender ,'user2' => ''])->id;
+
+      $convID = ($request->conv_id) ? $request->conv_id : Conversation::create(['user1' => $sender ,'user2' => $request->receiver_id])->id;
       $msg = $request->message;
       $conv = Conversation::findOrFail($convID)->first();
       $receiver = ($conv->user1 == $sender) ? $conv->user2 : $conv->user1;

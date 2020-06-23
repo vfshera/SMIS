@@ -21,6 +21,7 @@ class ConversationResource extends JsonResource
             'id' => $this->id,
             'title' => (auth()->user()->id == $this->user1) ? $usertwo->name : $userOne->name,
             'messages' => MessagesResource::collection($this->messages),
+            'new' => count(\App\Message::where('read' , 0)->where('receiver', auth()->user()->id)->get()),
         ];
     }
 }

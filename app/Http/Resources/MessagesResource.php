@@ -29,7 +29,10 @@ class MessagesResource extends JsonResource
                 'message' => $this->message,
                 'isYours' =>  (auth()->user()->id == $this->sender) ? true : false,
                 'read' => $this->read,
-                'sent_at' =>date('dS F  Y', strtotime($this->created_at)),
+                'sent_at' => [
+                             'full_date' =>date('dS F  Y', strtotime($this->created_at)),
+                             'time' =>date('H:i a', strtotime($this->created_at)),
+                            ],
             ];
     }
 }
