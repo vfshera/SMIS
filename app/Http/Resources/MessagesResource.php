@@ -14,8 +14,6 @@ class MessagesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $userOne = \App\User::findOrFail($this->sender);
-        $usertwo = \App\User::findOrFail($this->receiver);
         return[
                 'id' => $this->id,
                 'sender' => [
@@ -32,6 +30,7 @@ class MessagesResource extends JsonResource
                 'sent_at' => [
                              'full_date' =>date('dS F  Y', strtotime($this->created_at)),
                              'time' =>date('H:i a', strtotime($this->created_at)),
+                                'norm_date' => date('Y-m-d', strtotime($this->created_at)),
                             ],
             ];
     }

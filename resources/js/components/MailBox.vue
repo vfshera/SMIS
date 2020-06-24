@@ -37,7 +37,8 @@
                                 <div class="direct-chat-text">
                                     {{ msg.message }}
                                 </div>
-                                <span class="direct-chat-timestamp float-right mr-5">{{ msg.sent_at.time}}</span>
+
+                                <span class="direct-chat-timestamp float-right mr-5 font-italic"><span class="mr-2">{{msg.sent_at.full_date}} </span> {{ msg.sent_at.time}}</span>
                                 <!-- /.direct-chat-text -->
                             </div>
                         </div>
@@ -58,7 +59,39 @@
                     </div>
                 </div>
               <!--/.direct-chat -->
-
+                    <!--   new chat-->
+            <div class="modal fade" id="newChat" tabindex="-1" role="dialog" aria-labelledby="newChat" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ml-2 text-bold" id="newChatTitle">Start Chat</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <!-- Modal -->          <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="p-2" @submit.prevent="sendMsg">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label>To</label>
+                                        <select class="form-control" v-model="new_chat.receiver_id" required>
+                                            <option  v-for="reciever in recipients" :key="reciever.id" :value="reciever.id"> {{ reciever.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label >Message</label>
+                                        <textarea type="text" v-model="new_chat.message" class="form-control" rows="5"/>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary float-right">SEND</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <!--  /new chat-->
 
                 <div class="col-md-9 " v-if="NoMessages">
                     <div class="card bg-warning mx-auto p-5">
@@ -68,18 +101,20 @@
 
             <div id="conversations" class="col-md-3 card">
                 <div class="card-header ">
-                        <span class="d-inline float-left">+</span>
+                        <span class="d-inline float-left">
+                            <i class="fa fa-paper-plane" data-toggle="modal" data-target="#newChat" aria-hidden="true" style="color:#0275d8"></i>
+                        </span>
                         <div  class=" text-bold text-center "> Your Conversations <span class="badge badge-primary">{{ conversations.length }}</span></div>
 
                 </div>
                 <div class="card-body" id="recent-chats">
                     <div id="conv-scroll" >
-                            <div id="conv-holder" v-for="dm in conversations" :key="dm.id" >
-                                    <span class="text-bold  d-inline">
+                            <div id="conv-holder" v-for="(dm,index) in conversations" :key="dm.id" @click="loadMessage(index)">
+                                    <span class="text-bold  d-inline ml-2">
                                       {{ dm.title }}
                                     </span>
-                                    <span class="text-muted float-right">{{ dm.messages[dm.messages.length-1].sent_at.time}}</span>
-                                    <div class="last-message font-italic text-muted" style="">
+                                    <span class="text-muted float-right mr-2">{{ dm.messages[dm.messages.length-1].sent_at.time}}</span>
+                                    <div class="last-message font-italic text-muted ml-2" style="">
                                         {{ dm.messages[dm.messages.length-1].message.slice(0,130) }}
                                         <span class="text-bold" v-if="dm.messages[dm.messages.length-1].message.length > 130">...</span>
                                     </div>
@@ -94,7 +129,12 @@
 
 
 </template>
-
+<script>
+    document.ready(function() {
+        document.querySelector("#msg-scroll").scrollTop(document.height());
+            alert("DOM READY")
+    })
+</script>
 <script>
 
     export default {
@@ -104,15 +144,22 @@
                 conversations:[],
                 msg:{
                     conv_id:'',
+                    message:'',
+                },
+                new_chat:{
                     receiver_id:'',
                     message:'',
                 },
+                recipients:[],
                 current: null,
                 NoMessages: false,
             }
         },
         props:[],
         methods:{
+            loadMessage(index){
+                this.current = this.conversations[index];
+            },
             sendMsg(id){
                 this.msg.conv_id = id;
                 if(this.msg.conv_id && this.msg.message){
@@ -123,15 +170,29 @@
                         .catch(err => {
 
                         })
+                }else if(this.new_chat.receiver_id && this.new_chat.message){
+                    axios.post('/api/message' , this.new_chat)
+                        .then(response =>{
+                            $(newChat).modal('hide');
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+
+                            this.conversations = [];
+                            this.fetchData();
+
+                            this.current = this.conversations[0];
+                        })
+                        .catch(err => {
+
+                        })
                 }else{
-                    alert("Error While trying to send your message!Please Try Again")
+                    alert("Ensure All Fields Are Filled!")
                 }
             },
             fetchData(){
                 axios.get('/api/messages')
                     .then(response => {
                         this.conversations = response.data.data;
-
                         this.conversations.forEach(c =>{
                             if(c.id == this.current.id){
                                 this.current = c;
@@ -141,6 +202,14 @@
                         if(this.current.new > 0){
                             this.readMsgs(this.current.id)
                         }
+                    })
+                    .catch(err => {
+
+                    })
+                axios.get('/api/recievers')
+                    .then(response => {
+                        this.recipients = response.data.data;
+
                     })
                     .catch(err => {
 
@@ -156,6 +225,15 @@
                         } else {
                             this.NoMessages = true;
                         }
+
+                    })
+                    .catch(err => {
+
+                    })
+
+                axios.get('/api/recievers')
+                    .then(response => {
+                        this.recipients = response.data.data;
 
                     })
                     .catch(err => {
@@ -189,12 +267,20 @@
     #conv-holder{
         border-bottom: .5px solid rgba(192,192,192,.6);
     }
+    #conv-holder:hover{
+        background: #F5F5F5;
+    }
     #message-view{
         height: 640px;
     }
+    #conversations{
+        padding: 0;
+    }
     #recent-chats{
+        margin-top: 0;
         height: 593px;
         padding: 5px 0 0 0 !important;
+        /*padding: 5px 0 0 0 !important;*/
 
     }
     #conv-scroll{

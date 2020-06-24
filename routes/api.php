@@ -33,6 +33,7 @@ Route::middleware('auth:api')->get('/download-file/{id}', 'API\UploadsController
 //messages
 Route::middleware('auth:api')->get('/messages', 'API\MessagesController@index');
 Route::middleware('auth:api')->post('/message', 'API\MessagesController@sendMessage');
+Route::middleware('auth:api')->get('/recievers', 'API\MessagesController@receivers');
 Route::middleware('auth:api')->post('/read/{id}', 'API\MessagesController@read');
 
 //students
