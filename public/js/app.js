@@ -3039,6 +3039,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MailBox',
   data: function data() {
@@ -3052,6 +3080,7 @@ __webpack_require__.r(__webpack_exports__);
         receiver_id: '',
         message: ''
       },
+      MsgEdit: [],
       recipients: [],
       current: null,
       NoMessages: false
@@ -3059,70 +3088,98 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   methods: {
+    setMsg: function setMsg(msg) {
+      this.MsgEdit = msg;
+    },
+    updateMsg: function updateMsg() {
+      var _this = this;
+
+      axios.post('/api/message', this.MsgEdit).then(function (response) {
+        $(editMsg).modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+
+        _this.fetchData();
+      })["catch"](function (err) {});
+    },
+    scrollChat: function scrollChat() {
+      $('#msg-scroll').scrollTop($('#msg-scroll').height);
+    },
     loadMessage: function loadMessage(index) {
       this.current = this.conversations[index];
     },
     sendMsg: function sendMsg(id) {
-      var _this = this;
+      var _this2 = this;
 
       this.msg.conv_id = id;
 
       if (this.msg.conv_id && this.msg.message) {
         axios.post('/api/message', this.msg).then(function (response) {
-          _this.fetchData();
+          _this2.fetchData();
         })["catch"](function (err) {});
       } else if (this.new_chat.receiver_id && this.new_chat.message) {
         axios.post('/api/message', this.new_chat).then(function (response) {
           $(newChat).modal('hide');
           $('body').removeClass('modal-open');
           $('.modal-backdrop').remove();
-          _this.conversations = [];
+          _this2.conversations = [];
 
-          _this.fetchData();
+          _this2.fetchData();
 
-          _this.current = _this.conversations[0];
+          _this2.current = _this2.conversations[0];
         })["catch"](function (err) {});
       } else {
         alert("Ensure All Fields Are Filled!");
       }
     },
     fetchData: function fetchData() {
-      var _this2 = this;
-
-      axios.get('/api/messages').then(function (response) {
-        _this2.conversations = response.data.data;
-
-        _this2.conversations.forEach(function (c) {
-          if (c.id == _this2.current.id) {
-            _this2.current = c;
-            _this2.msg.message = '';
-          }
-        });
-
-        if (_this2.current["new"] > 0) {
-          _this2.readMsgs(_this2.current.id);
-        }
-      })["catch"](function (err) {});
-      axios.get('/api/recievers').then(function (response) {
-        _this2.recipients = response.data.data;
-      })["catch"](function (err) {});
-    },
-    startUp: function startUp() {
       var _this3 = this;
 
       axios.get('/api/messages').then(function (response) {
         _this3.conversations = response.data.data;
 
-        if (_this3.conversations[0]) {
-          _this3.current = _this3.conversations[0];
-        } else {
-          _this3.NoMessages = true;
+        _this3.conversations.forEach(function (c) {
+          if (c.id == _this3.current.id) {
+            _this3.current = c;
+            _this3.msg.message = '';
+          }
+        });
+
+        if (_this3.current["new"] > 0) {
+          _this3.readMsgs(_this3.current.id);
         }
+
+        _this3.scrollChat();
       })["catch"](function (err) {});
       axios.get('/api/recievers').then(function (response) {
         _this3.recipients = response.data.data;
       })["catch"](function (err) {});
+    },
+    startUp: function startUp() {
+      var _this4 = this;
+
+      axios.get('/api/messages').then(function (response) {
+        _this4.conversations = response.data.data;
+
+        if (_this4.conversations[0]) {
+          _this4.current = _this4.conversations[0];
+        } else {
+          _this4.NoMessages = true;
+        }
+
+        _this4.scrollChat();
+      })["catch"](function (err) {});
+      axios.get('/api/recievers').then(function (response) {
+        _this4.recipients = response.data.data;
+      })["catch"](function (err) {});
     }
+  },
+  delMsg: function delMsg(id) {
+    var _this5 = this;
+
+    axios["delete"]('/api/delete-msg/' + id).then(function (response) {
+      _this5.fetchData();
+    })["catch"](function (err) {});
   },
   setConv: function setConv(index) {
     this.current = this.conversations[index];
@@ -11000,7 +11057,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#conv-holder:hover{\n    background: #F5F5F5;\n}\n#message-view{\n    height: 640px;\n}\n#conversations{\n    padding: 0;\n}\n#recent-chats{\n    margin-top: 0;\n    height: 593px;\n    padding: 5px 0 0 0 !important;\n    /*padding: 5px 0 0 0 !important;*/\n}\n#conv-scroll{\n    height: 560px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
+exports.push([module.i, "\n#msg-actions{\n    background: #F5F5F5;\n}\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#conv-holder:hover{\n    background: #F5F5F5;\n}\n#message-view{\n    height: 640px;\n}\n#conversations{\n    padding: 0;\n}\n#recent-chats{\n    margin-top: 0;\n    height: 593px;\n    padding: 5px 0 0 0 !important;\n    /*padding: 5px 0 0 0 !important;*/\n}\n#conv-scroll{\n    height: 560px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
 
 // exports
 
@@ -47280,12 +47337,49 @@ var render = function() {
                                       "direct-chat-timestamp float-right mr-5 font-italic"
                                   },
                                   [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass: "px-2 mr-2",
+                                        attrs: { id: "msg-actions" }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-pencil-alt mr-1",
+                                          attrs: {
+                                            "data-toggle": "modal",
+                                            "data-target": "#editMsg"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.setMsg(msg)
+                                            }
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("i", {
+                                          staticClass: "ml-3 far fa-trash-alt",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.delMsg(msg.id)
+                                            }
+                                          }
+                                        })
+                                      ]
+                                    ),
+                                    _vm._v(" "),
                                     _c("span", { staticClass: "mr-2" }, [
                                       _vm._v(
-                                        _vm._s(msg.sent_at.full_date) + " "
+                                        "\n                                " +
+                                          _vm._s(msg.sent_at.full_date) +
+                                          "\n                                "
                                       )
                                     ]),
-                                    _vm._v(" " + _vm._s(msg.sent_at.time))
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(msg.sent_at.time) +
+                                        "\n                        "
+                                    )
                                   ]
                                 )
                               ]
@@ -47485,8 +47579,93 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "editMsg",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "editMsg",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered modal-lg",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "p-2",
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.updateMsg($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group col-md-12" }, [
+                        _c("label", [_vm._v("Edit Message")]),
+                        _vm._v(" "),
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.MsgEdit.message,
+                              expression: "MsgEdit.message"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", rows: "5" },
+                          domProps: { value: _vm.MsgEdit.message },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.MsgEdit,
+                                "message",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary float-right",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Update")]
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
     _vm.NoMessages
-      ? _c("div", { staticClass: "col-md-9 " }, [_vm._m(3)])
+      ? _c("div", { staticClass: "col-md-9 " }, [_vm._m(4)])
       : _vm._e(),
     _vm._v(" "),
     _c(
@@ -47494,7 +47673,7 @@ var render = function() {
       { staticClass: "col-md-3 card", attrs: { id: "conversations" } },
       [
         _c("div", { staticClass: "card-header " }, [
-          _vm._m(4),
+          _vm._m(5),
           _vm._v(" "),
           _c("div", { staticClass: " text-bold text-center " }, [
             _vm._v(" Your Conversations "),
@@ -47616,6 +47795,23 @@ var staticRenderFns = [
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   },
   function() {
     var _vm = this
@@ -69681,7 +69877,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************************************************************!*\
   !*** ./resources/js/components/MailBox.vue?vue&type=template&id=516c600e& ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

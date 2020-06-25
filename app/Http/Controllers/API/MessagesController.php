@@ -53,29 +53,58 @@ class MessagesController extends Controller
     }
 
     public function sendMessage(Request $request){
-      $sender = auth()->user()->id;
+            if($request->id){
+                    $msg = Message::findOrFail($request->id);
 
-      $convID = ($request->conv_id) ? $request->conv_id : Conversation::create(['user1' => $sender ,'user2' => $request->receiver_id])->id;
-      $msg = $request->message;
-      $conv = Conversation::findOrFail($convID)->first();
+                    if($msg->sender == auth()->user()->id){
+                        $msg->update([
+                            'message' => $request->message,
+                            'read' => true
+                        ]);
 
-          if(($request->conv_id)){
-              $receiver = ($conv->user1 == $sender) ? $conv->user2 : $conv->user1;
-          }else{
-              $receiver = $request->receiver_id;
-          }
+                        return "Updated";
 
-      $created = Message::create([
-                  'sender' => $sender,
-                  'receiver' => $receiver,
-                  'message' => $msg,
-                  'conversation_id' => $convID
-              ]);
+                    }else{
+                        return "Unauthorised Action";
+                    }
 
-          if($created){
-              return "Message Created";
-          }else{
-              return "Unable To Create Message";
-          }
+            }else{
+                $sender = auth()->user()->id;
+
+                $convID = ($request->conv_id) ? $request->conv_id : Conversation::create(['user1' => $sender ,'user2' => $request->receiver_id])->id;
+                $msg = $request->message;
+                $conv = Conversation::findOrFail($convID)->first();
+
+                if(($request->conv_id)){
+                    $receiver = ($conv->user1 == $sender) ? $conv->user2 : $conv->user1;
+                }else{
+                    $receiver = $request->receiver_id;
+                }
+
+                $created = Message::create([
+                    'sender' => $sender,
+                    'receiver' => $receiver,
+                    'message' => $msg,
+                    'conversation_id' => $convID
+                ]);
+
+                if($created){
+                    return "Message Created";
+                }else{
+                    return "Unable To Create Message";
+                }
+            }
+    }
+
+    public function destroy($id)
+    {
+        $msg = Message::findOrFail($id);
+        if($msg->sender == auth()->user()->id) {
+            $msg->delete();
+
+            return "message deleted";
+        }else{
+            return "Unable to delete message";
+        }
     }
 }

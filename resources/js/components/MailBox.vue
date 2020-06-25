@@ -38,7 +38,16 @@
                                     {{ msg.message }}
                                 </div>
 
-                                <span class="direct-chat-timestamp float-right mr-5 font-italic"><span class="mr-2">{{msg.sent_at.full_date}} </span> {{ msg.sent_at.time}}</span>
+                                <span class="direct-chat-timestamp float-right mr-5 font-italic">
+                                    <span id="msg-actions" class="px-2 mr-2">
+                                        <i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editMsg" @click="setMsg(msg)"></i>
+                                        <i class="ml-3 far fa-trash-alt" @click="delMsg(msg.id)"></i>
+                                    </span>
+                                        <span class="mr-2">
+                                        {{msg.sent_at.full_date}}
+                                        </span>
+                                    {{ msg.sent_at.time}}
+                                </span>
                                 <!-- /.direct-chat-text -->
                             </div>
                         </div>
@@ -92,6 +101,30 @@
                 </div>
             </div>
                     <!--  /new chat-->
+            <!--   edit chat-->
+            <div class="modal fade" id="editMsg" tabindex="-1" role="dialog" aria-labelledby="editMsg" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <form class="p-2" @submit.prevent="updateMsg">
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label >Edit Message</label>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <textarea type="text" v-model="MsgEdit.message" class="form-control" rows="5"/>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary float-right">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  /edit chat-->
 
                 <div class="col-md-9 " v-if="NoMessages">
                     <div class="card bg-warning mx-auto p-5">
@@ -129,12 +162,7 @@
 
 
 </template>
-<script>
-    document.ready(function() {
-        document.querySelector("#msg-scroll").scrollTop(document.height());
-            alert("DOM READY")
-    })
-</script>
+
 <script>
 
     export default {
@@ -150,6 +178,7 @@
                     receiver_id:'',
                     message:'',
                 },
+                MsgEdit:[],
                 recipients:[],
                 current: null,
                 NoMessages: false,
@@ -157,6 +186,26 @@
         },
         props:[],
         methods:{
+            setMsg(msg){
+                this.MsgEdit = msg;
+            },
+            updateMsg(){
+                axios.post('/api/message' , this.MsgEdit)
+                    .then(response =>{
+                        $(editMsg).modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+
+                        this.fetchData();
+
+                    })
+                    .catch(err => {
+
+                    })
+            },
+            scrollChat(){
+               $('#msg-scroll').scrollTop($('#msg-scroll').height);
+            },
             loadMessage(index){
                 this.current = this.conversations[index];
             },
@@ -202,6 +251,8 @@
                         if(this.current.new > 0){
                             this.readMsgs(this.current.id)
                         }
+
+                        this.scrollChat()
                     })
                     .catch(err => {
 
@@ -225,7 +276,7 @@
                         } else {
                             this.NoMessages = true;
                         }
-
+                        this.scrollChat();
                     })
                     .catch(err => {
 
@@ -240,6 +291,15 @@
 
                     })
             }
+        },
+        delMsg(id){
+            axios.delete('/api/delete-msg/'+ id)
+                .then(response => {
+                    this.fetchData();
+                })
+                .catch(err => {
+
+                })
         },
         setConv(index){
             this.current = this.conversations[index];
@@ -263,8 +323,10 @@
 </script>
 
 <style>
-
-    #conv-holder{
+    #msg-actions{
+        background: #F5F5F5;
+    }
+      #conv-holder{
         border-bottom: .5px solid rgba(192,192,192,.6);
     }
     #conv-holder:hover{
@@ -291,6 +353,7 @@
         overflow-y: auto;
         scrollbar-width: thin;
         scrollbar-color: grey white;
+
     }
 
     ::-webkit-scrollbar{
