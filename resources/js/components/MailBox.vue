@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <!-- /.card-header -->
-                    <div id="msg-scroll" class="card-body" >
+                    <div id="msg-scroll" class="card-body">
                         <div  v-for="msg in current.messages" v-if="current.messages">
                             <!-- Message. Default to the left -->
                             <div class="direct-chat-msg col-md-6" v-if="!msg.isYours">
@@ -54,7 +54,7 @@
                     </div>
                         <!--/.direct-chat-messages-->
                     <!-- /.card-body -->
-                        <div class="card-footer">
+                        <div class="card-footer" id="msg-send-section">
                             <form action="#" method="post" @submit.prevent="sendMsg(current.id)">
                                 <div class="input-group">
                                     <input type="text" name="message" v-model="msg.message" placeholder="Type Message ..." class="form-control" required>
@@ -204,7 +204,11 @@
                     })
             },
             scrollChat(){
-               $('#msg-scroll').scrollTop($('#msg-scroll').height);
+                const scrl = document.querySelector('#msg-scroll');
+
+                                  scrl.scrollTop = scrl.scrollHeight;
+
+
             },
             loadMessage(index){
                 this.current = this.conversations[index];
@@ -252,7 +256,9 @@
                             this.readMsgs(this.current.id)
                         }
 
-                        this.scrollChat()
+                      setTimeout(()=>{
+                          this.scrollChat()
+                      },100)
                     })
                     .catch(err => {
 
@@ -276,7 +282,9 @@
                         } else {
                             this.NoMessages = true;
                         }
-                        this.scrollChat();
+                        setTimeout(()=>{
+                            this.scrollChat()
+                        },150)
                     })
                     .catch(err => {
 
@@ -337,7 +345,10 @@
 </script>
 
 <style>
-    #msg-actions{
+    #msg-send-section{
+        background: white;
+    }
+    #msg-scroll{
         background: #F5F5F5;
     }
       #conv-holder{

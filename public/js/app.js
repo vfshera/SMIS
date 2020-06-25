@@ -3103,7 +3103,8 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {});
     },
     scrollChat: function scrollChat() {
-      $('#msg-scroll').scrollTop($('#msg-scroll').height);
+      var scrl = document.querySelector('#msg-scroll');
+      scrl.scrollTop = scrl.scrollHeight;
     },
     loadMessage: function loadMessage(index) {
       this.current = this.conversations[index];
@@ -3149,7 +3150,9 @@ __webpack_require__.r(__webpack_exports__);
           _this3.readMsgs(_this3.current.id);
         }
 
-        _this3.scrollChat();
+        setTimeout(function () {
+          _this3.scrollChat();
+        }, 100);
       })["catch"](function (err) {});
       axios.get('/api/recievers').then(function (response) {
         _this3.recipients = response.data.data;
@@ -3167,7 +3170,9 @@ __webpack_require__.r(__webpack_exports__);
           _this4.NoMessages = true;
         }
 
-        _this4.scrollChat();
+        setTimeout(function () {
+          _this4.scrollChat();
+        }, 150);
       })["catch"](function (err) {});
       axios.get('/api/recievers').then(function (response) {
         _this4.recipients = response.data.data;
@@ -11069,7 +11074,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#msg-actions{\n    background: #F5F5F5;\n}\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#conv-holder:hover{\n    background: #F5F5F5;\n}\n#message-view{\n    height: 640px;\n}\n#conversations{\n    padding: 0;\n}\n#recent-chats{\n    margin-top: 0;\n    height: 593px;\n    padding: 5px 0 0 0 !important;\n    /*padding: 5px 0 0 0 !important;*/\n}\n#conv-scroll{\n    height: 560px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
+exports.push([module.i, "\n#msg-send-section{\n    background: white;\n}\n#msg-scroll{\n    background: #F5F5F5;\n}\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#conv-holder:hover{\n    background: #F5F5F5;\n}\n#message-view{\n    height: 640px;\n}\n#conversations{\n    padding: 0;\n}\n#recent-chats{\n    margin-top: 0;\n    height: 593px;\n    padding: 5px 0 0 0 !important;\n    /*padding: 5px 0 0 0 !important;*/\n}\n#conv-scroll{\n    height: 560px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
 
 // exports
 
@@ -47403,52 +47408,59 @@ var render = function() {
                 0
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "card-footer" }, [
-                _c(
-                  "form",
-                  {
-                    attrs: { action: "#", method: "post" },
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.sendMsg(_vm.current.id)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "input-group" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.msg.message,
-                            expression: "msg.message"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name: "message",
-                          placeholder: "Type Message ...",
-                          required: ""
-                        },
-                        domProps: { value: _vm.msg.message },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.msg, "message", $event.target.value)
-                          }
+              _c(
+                "div",
+                {
+                  staticClass: "card-footer",
+                  attrs: { id: "msg-send-section" }
+                },
+                [
+                  _c(
+                    "form",
+                    {
+                      attrs: { action: "#", method: "post" },
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.sendMsg(_vm.current.id)
                         }
-                      }),
-                      _vm._v(" "),
-                      _vm._m(1)
-                    ])
-                  ]
-                )
-              ])
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "input-group" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.msg.message,
+                              expression: "msg.message"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            name: "message",
+                            placeholder: "Type Message ...",
+                            required: ""
+                          },
+                          domProps: { value: _vm.msg.message },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.msg, "message", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm._m(1)
+                      ])
+                    ]
+                  )
+                ]
+              )
             ]
           )
         : _vm._e()
