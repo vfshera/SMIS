@@ -3172,20 +3172,32 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/recievers').then(function (response) {
         _this4.recipients = response.data.data;
       })["catch"](function (err) {});
-    }
-  },
-  delMsg: function delMsg(id) {
-    var _this5 = this;
+    },
+    delMsg: function delMsg(id) {
+      var _this5 = this;
 
-    axios["delete"]('/api/delete-msg/' + id).then(function (response) {
-      _this5.fetchData();
-    })["catch"](function (err) {});
-  },
-  setConv: function setConv(index) {
-    this.current = this.conversations[index];
-  },
-  readMsgs: function readMsgs(id) {
-    axios.post('/api/read' + id).then(function (response) {})["catch"](function (err) {});
+      Swal.fire({
+        title: 'Delete Message?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]('/api/delete-msg/' + id).then(function (response) {
+            _this5.fetchData();
+          })["catch"](function (err) {});
+        }
+      });
+    },
+    setConv: function setConv(index) {
+      this.current = this.conversations[index];
+    },
+    readMsgs: function readMsgs(id) {
+      axios.post('/api/read' + id).then(function (response) {})["catch"](function (err) {});
+    }
   },
   mounted: function mounted() {
     this.startUp();

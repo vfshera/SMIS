@@ -290,20 +290,31 @@
                     .catch(err => {
 
                     })
-            }
-        },
-        delMsg(id){
-            axios.delete('/api/delete-msg/'+ id)
-                .then(response => {
-                    this.fetchData();
-                })
-                .catch(err => {
+            },
+            delMsg(id){
+                Swal.fire({
+                    title: 'Delete Message?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                        if (result.value) {
+                            axios.delete('/api/delete-msg/'+ id)
+                                .then(response => {
+                                    this.fetchData();
+                                })
+                                .catch(err => {
 
+                                })
+                        }
                 })
-        },
-        setConv(index){
-            this.current = this.conversations[index];
-        },
+            },
+            setConv(index){
+                this.current = this.conversations[index];
+            },
             readMsgs(id){
 
                 axios.post('/api/read'+ id)
@@ -313,10 +324,13 @@
                     .catch(err => {
 
                     })
-            },
+            }
+        },
+
         mounted() {
             this.startUp();
         }
+
     }
 
 
