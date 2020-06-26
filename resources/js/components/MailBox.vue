@@ -39,7 +39,7 @@
                                 </div>
 
                                 <span class="direct-chat-timestamp float-right mr-5 font-italic">
-                                    <span id="msg-actions" class="px-2 mr-2">
+                                    <span id="msg-actions" class="px-2 mr-2" v-if="msg.sender.access == 0">
                                         <i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editMsg" @click="setMsg(msg)"></i>
                                         <i class="ml-3 far fa-trash-alt" @click="delMsg(msg.id)"></i>
                                     </span>
@@ -206,12 +206,15 @@
             scrollChat(){
                 const scrl = document.querySelector('#msg-scroll');
 
-                                  scrl.scrollTop = scrl.scrollHeight;
-
+                                  scrl.scrollTop =  scrl.scrollHeight;
 
             },
             loadMessage(index){
                 this.current = this.conversations[index];
+                setTimeout(() => {
+                            this.fetchData()
+                        }, 50)
+
             },
             sendMsg(id){
                 this.msg.conv_id = id;
@@ -242,6 +245,11 @@
                     alert("Ensure All Fields Are Filled!")
                 }
             },
+            reloader(){
+                setTimeout(() =>{
+                    this.fetchData()
+                },20000)
+            },
             fetchData(){
                 axios.get('/api/messages')
                     .then(response => {
@@ -258,6 +266,7 @@
 
                       setTimeout(()=>{
                           this.scrollChat()
+                          this.reloader()
                       },100)
                     })
                     .catch(err => {
@@ -284,6 +293,7 @@
                         }
                         setTimeout(()=>{
                             this.scrollChat()
+                            this.reloader()
                         },150)
                     })
                     .catch(err => {
@@ -324,10 +334,9 @@
                 this.current = this.conversations[index];
             },
             readMsgs(id){
-
-                axios.post('/api/read'+ id)
+                axios.post('/api/read/'+ id)
                     .then(response => {
-
+                        this.fetchData()
                     })
                     .catch(err => {
 

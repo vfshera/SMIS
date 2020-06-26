@@ -16,10 +16,7 @@ class MessagesResource extends JsonResource
     {
         return[
                 'id' => $this->id,
-                'sender' => [
-                                'id' =>  $this->sender,
-                                'name' =>  \App\User::where('id' , $this->sender)->pluck('name')[0],
-                             ],
+                'sender'  =>  \App\User::where('id' , $this->sender)->get()->first(),
                 'receiver' => [
                                     'id' =>  $this->receiver,
                                     'name' =>  \App\User::where('id' , $this->receiver)->pluck('name')[0],

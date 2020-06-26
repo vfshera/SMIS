@@ -3107,79 +3107,95 @@ __webpack_require__.r(__webpack_exports__);
       scrl.scrollTop = scrl.scrollHeight;
     },
     loadMessage: function loadMessage(index) {
+      var _this2 = this;
+
       this.current = this.conversations[index];
+      setTimeout(function () {
+        _this2.fetchData();
+      }, 50);
     },
     sendMsg: function sendMsg(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.msg.conv_id = id;
 
       if (this.msg.conv_id && this.msg.message) {
         axios.post('/api/message', this.msg).then(function (response) {
-          _this2.fetchData();
+          _this3.fetchData();
         })["catch"](function (err) {});
       } else if (this.new_chat.receiver_id && this.new_chat.message) {
         axios.post('/api/message', this.new_chat).then(function (response) {
           $(newChat).modal('hide');
           $('body').removeClass('modal-open');
           $('.modal-backdrop').remove();
-          _this2.conversations = [];
+          _this3.conversations = [];
 
-          _this2.fetchData();
+          _this3.fetchData();
 
-          _this2.current = _this2.conversations[0];
+          _this3.current = _this3.conversations[0];
         })["catch"](function (err) {});
       } else {
         alert("Ensure All Fields Are Filled!");
       }
     },
+    reloader: function reloader() {
+      var _this4 = this;
+
+      setTimeout(function () {
+        _this4.fetchData();
+      }, 20000);
+    },
     fetchData: function fetchData() {
-      var _this3 = this;
+      var _this5 = this;
 
       axios.get('/api/messages').then(function (response) {
-        _this3.conversations = response.data.data;
+        _this5.conversations = response.data.data;
 
-        _this3.conversations.forEach(function (c) {
-          if (c.id == _this3.current.id) {
-            _this3.current = c;
-            _this3.msg.message = '';
+        _this5.conversations.forEach(function (c) {
+          if (c.id == _this5.current.id) {
+            _this5.current = c;
+            _this5.msg.message = '';
           }
         });
 
-        if (_this3.current["new"] > 0) {
-          _this3.readMsgs(_this3.current.id);
+        if (_this5.current["new"] > 0) {
+          _this5.readMsgs(_this5.current.id);
         }
 
         setTimeout(function () {
-          _this3.scrollChat();
+          _this5.scrollChat();
+
+          _this5.reloader();
         }, 100);
       })["catch"](function (err) {});
       axios.get('/api/recievers').then(function (response) {
-        _this3.recipients = response.data.data;
+        _this5.recipients = response.data.data;
       })["catch"](function (err) {});
     },
     startUp: function startUp() {
-      var _this4 = this;
+      var _this6 = this;
 
       axios.get('/api/messages').then(function (response) {
-        _this4.conversations = response.data.data;
+        _this6.conversations = response.data.data;
 
-        if (_this4.conversations[0]) {
-          _this4.current = _this4.conversations[0];
+        if (_this6.conversations[0]) {
+          _this6.current = _this6.conversations[0];
         } else {
-          _this4.NoMessages = true;
+          _this6.NoMessages = true;
         }
 
         setTimeout(function () {
-          _this4.scrollChat();
+          _this6.scrollChat();
+
+          _this6.reloader();
         }, 150);
       })["catch"](function (err) {});
       axios.get('/api/recievers').then(function (response) {
-        _this4.recipients = response.data.data;
+        _this6.recipients = response.data.data;
       })["catch"](function (err) {});
     },
     delMsg: function delMsg(id) {
-      var _this5 = this;
+      var _this7 = this;
 
       Swal.fire({
         title: 'Delete Message?',
@@ -3192,7 +3208,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           axios["delete"]('/api/delete-msg/' + id).then(function (response) {
-            _this5.fetchData();
+            _this7.fetchData();
           })["catch"](function (err) {});
         }
       });
@@ -3201,7 +3217,11 @@ __webpack_require__.r(__webpack_exports__);
       this.current = this.conversations[index];
     },
     readMsgs: function readMsgs(id) {
-      axios.post('/api/read' + id).then(function (response) {})["catch"](function (err) {});
+      var _this8 = this;
+
+      axios.post('/api/read/' + id).then(function (response) {
+        _this8.fetchData();
+      })["catch"](function (err) {});
     }
   },
   mounted: function mounted() {
@@ -47354,36 +47374,40 @@ var render = function() {
                                       "direct-chat-timestamp float-right mr-5 font-italic"
                                   },
                                   [
-                                    _c(
-                                      "span",
-                                      {
-                                        staticClass: "px-2 mr-2",
-                                        attrs: { id: "msg-actions" }
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass: "fas fa-pencil-alt mr-1",
-                                          attrs: {
-                                            "data-toggle": "modal",
-                                            "data-target": "#editMsg"
+                                    msg.sender.access == 0
+                                      ? _c(
+                                          "span",
+                                          {
+                                            staticClass: "px-2 mr-2",
+                                            attrs: { id: "msg-actions" }
                                           },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.setMsg(msg)
-                                            }
-                                          }
-                                        }),
-                                        _vm._v(" "),
-                                        _c("i", {
-                                          staticClass: "ml-3 far fa-trash-alt",
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.delMsg(msg.id)
-                                            }
-                                          }
-                                        })
-                                      ]
-                                    ),
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "fas fa-pencil-alt mr-1",
+                                              attrs: {
+                                                "data-toggle": "modal",
+                                                "data-target": "#editMsg"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.setMsg(msg)
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("i", {
+                                              staticClass:
+                                                "ml-3 far fa-trash-alt",
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.delMsg(msg.id)
+                                                }
+                                              }
+                                            })
+                                          ]
+                                        )
+                                      : _vm._e(),
                                     _vm._v(" "),
                                     _c("span", { staticClass: "mr-2" }, [
                                       _vm._v(
