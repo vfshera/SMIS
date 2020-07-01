@@ -173,6 +173,8 @@
 
 <script>
 
+    import axios from "axios";
+
     export default {
         name: 'sidebar',
         data(){
@@ -185,14 +187,18 @@
 
         },
         mounted() {
-            axios.get('/api/user')
-                    .then(response =>{
-                       this.currentUser = response.data;
 
-                    })
-                    .catch(err =>{
-                           alert(err);
-                    });
+
+        },
+        created() {
+            axios.get('/api/user')
+                .then(res=> {
+                    this.currentUser = res.data;
+                })
+                 .catch(err =>{
+
+                 })
+
         }
     }
 

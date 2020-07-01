@@ -7,6 +7,9 @@ import VueRouter from 'vue-router';
 import Vue from 'vue';
 import Swal from 'sweetalert2'
 
+
+
+
 window.Swal = Swal;
 
 require('./bootstrap');
@@ -38,6 +41,8 @@ import {routes} from './route_list.js';
 
 Vue.use(VueRouter);
 
+import store from './store';
+
 const router = new VueRouter({
   routes,
    mode:'history'
@@ -51,5 +56,6 @@ Vue.component('messages', require('./components/Messages.vue').default);
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    store
 });

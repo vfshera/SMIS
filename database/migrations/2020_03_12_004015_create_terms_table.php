@@ -19,6 +19,7 @@ class CreateTermsTable extends Migration
             $table->string('year');
             $table->dateTime('beginning_on');
             $table->dateTime('ending_on');
+            $table->boolean('submissions')->default(false);
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

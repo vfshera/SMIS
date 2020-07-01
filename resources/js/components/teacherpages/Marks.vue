@@ -30,7 +30,7 @@
                      <td>
                         <div class="row">
                             <input class="form-control col-md-8 mr-5 ml-2" type="number" v-model="score"/>
-                            <i class="fas fa-pencil-alt col-md-1 text-center " v-if="score" style="margin-top: 7px" @click="inputMarks(student.id)"></i>
+                            <i class="fa fa-check col-md-1 text-center primary" v-if="score" style="margin-top: 7px" @click="inputMarks(student.id)"></i>
                             <span v-if="student.marks.id && score">|</span>
                             <i class=" far fa-trash-alt col-md-1 text-center" v-if="student.marks.id" style="margin-top: 7px" @click="deleteMarks(student.marks.id)"></i>
                         </div>
@@ -190,3 +190,8 @@
 
 
 </script>
+<style>
+    .fa fa-check{
+        color: blue;
+    }
+</style>

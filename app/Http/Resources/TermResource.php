@@ -21,7 +21,8 @@ class TermResource extends JsonResource
             'ending_on' => date('dS F  Y', strtotime($this->ending_on)),
             'begin_raw' => date('Y-m-d', strtotime($this->beginning_on)),
             'ending_raw' => date('Y-m-d', strtotime($this->ending_on)),
-            'status' =>$this->status,
+            'submissions' => $this->submissions,
+            'status' => $this->status,
         ];
     }
 }

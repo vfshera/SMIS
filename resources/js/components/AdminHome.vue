@@ -28,6 +28,9 @@
         },
         mounted() {
 
+        },
+      created() {
+            this.$store.dispatch('fetchUser');
         }
     }
 </script>

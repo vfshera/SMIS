@@ -245,11 +245,6 @@
                     alert("Ensure All Fields Are Filled!")
                 }
             },
-            reloader(){
-                setTimeout(() =>{
-                    this.fetchData()
-                },20000)
-            },
             fetchData(){
                 axios.get('/api/messages')
                     .then(response => {
@@ -264,10 +259,10 @@
                             this.readMsgs(this.current.id)
                         }
 
-                      setTimeout(()=>{
-                          this.scrollChat()
-                          this.reloader()
-                      },100)
+                        var today = new Date();
+                        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                        console.log("FetchData @ " + time)
+
                     })
                     .catch(err => {
 
@@ -293,8 +288,13 @@
                         }
                         setTimeout(()=>{
                             this.scrollChat()
-                            this.reloader()
                         },150)
+
+                        console.log("STARTUP FUNCTION")
+                        setInterval(() =>{
+                            this.fetchData()
+                        },15000)
+
                     })
                     .catch(err => {
 
@@ -336,7 +336,7 @@
             readMsgs(id){
                 axios.post('/api/read/'+ id)
                     .then(response => {
-                        this.fetchData()
+
                     })
                     .catch(err => {
 

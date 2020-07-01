@@ -28,7 +28,8 @@ class TermsController extends Controller
             'name' => 'required',
             'beginning_on' =>'required|date',
             'ending_on' =>'required|date',
-            'status' => 'required|boolean'
+            'status' => 'required|boolean',
+            'submissions' => 'required|boolean'
         ]);
 
         if($request->has('id')){

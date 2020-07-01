@@ -44,6 +44,8 @@
                   <th>Name</th>
                   <th>Beginning Date</th>
                   <th>Ending Date</th>
+                    <th>Submissions</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,6 +57,10 @@
                      </td>
                   <td>{{ term.beginning_on}}</td>
                   <td>{{ term.ending_on }}</td>
+                     <td>
+                         <span v-if="term.submissions === 1" class="text-primary" >Allowed</span>
+                         <span v-else class="text-muted " ><del>Not Allowed</del></span>
+                     </td>
                     <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editTerm" @click="setTerm(term)"></i> <i class="ml-1 far fa-trash-alt" @click="deleteTerm(term.id)"></i></td>
                  </tr>
 
@@ -82,6 +88,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="name">Name</label>
+
                                         <div class="custom-control custom-switch float-right">
                                             <input type="checkbox" v-model="term.status" class="custom-control-input" id="semSwitch">
                                             <label class="custom-control-label" for="semSwitch" v-text="switchText"></label>
@@ -101,7 +108,10 @@
                                     <input type="date" class="form-control"  v-model="term.end"  placeholder="Enter Term End  Date">
                                 </div>
                             </div>
-
+                            <div class="custom-control custom-switch float-left">
+                                <input type="checkbox" v-model="term.submissions" class="custom-control-input" id="submissions">
+                                <label class="custom-control-label" for="submissions" v-text="switchSubmissions"></label>
+                            </div>
                             <button type="submit" class="btn btn-primary float-right">UPDATE</button>
                         </form>
                     </div>
@@ -125,6 +135,7 @@
                     begin: '',
                     end: '',
                     status: 0,
+                    submissions: 0,
                 },
                 search: '',
                 validationErrors: [],
@@ -138,6 +149,7 @@
                 this.term.begin = term.begin_raw;
                 this.term.end = term.ending_raw;
                 this.term.status = term.status;
+                this.term.submissions = term.submissions;
             },
             resetTerm(){
                 this.term.id = '';
@@ -145,6 +157,7 @@
                 this.term.begin = '';
                 this.term.end = '';
                 this.term.status = 0;
+                this.term.submissions = 0;
             },
             fetcthData(){
                    axios.get('/api/terms')
@@ -162,6 +175,7 @@
                     name:this.term.name,
                     beginning_on:this.term.begin,
                     ending_on:this.term.end,
+                     submissions:this.term.submissions,
                     status:this.term.status
                     })
                         .then((response) => {
@@ -242,6 +256,9 @@
              },
              switchText(){
                 return (this.term.status) ? 'Ongoing' : 'Closed';
+            },
+            switchSubmissions(){
+                return (this.term.submissions) ? 'Submissions Allowed' : 'Submissions Not Allowed';
             }
         },
         mounted() {

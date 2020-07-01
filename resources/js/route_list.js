@@ -21,6 +21,7 @@ import NotFoundPage from './components/NotFoundPage'
 import AddRevisionMaterials from "./components/AddRevisionMaterials";
 import MailBox from "./components/MailBox";
 
+
 export const routes = [
     {
         path:'/home',
@@ -30,26 +31,27 @@ export const routes = [
         path:'/root-users',
         name: 'admins',
         component: Admins,
+
     },
     {
         path:'/teachers',
         name: 'allTeachers',
-        component: Teachers
+        component: Teachers,
     },
     {
         path:'/students',
         name: 'allStudents',
-        component: Students
+        component: Students,
     },
     {
         path:'/mytimetable',
         name: 'myTimetable',
-        component: MyTimetable
+        component: MyTimetable,
     },
     {
         path:'/student-profile',
         name: 'myProfile',
-        component: MyProfile
+        component: MyProfile,
     },
     {
         path:'/mailbox',
@@ -75,62 +77,62 @@ export const routes = [
     {
         path:'/results',
         name: 'myResults',
-        component: ExamResults
+        component: ExamResults,
     },
     {
         path:'/form',
         name: 'addForm',
-        component: Form
+        component: Form,
     },
     {
         path:'/stream',
         name: 'addStream',
-        component: formStream
+        component: formStream,
     },
     {
         path:'/classes',
         name: 'addClass',
-        component: Classrooms
+        component: Classrooms,
     },
     {
         path:'/subjects',
         name: 'addSubject',
-        component: Subjects
+        component: Subjects,
     },
     {
         path:'/timetables',
         name: 'timeTables',
-        component: Timetables
+        component: Timetables,
     },
     {
         path:'/term',
         name: 'term',
-        component: Term
+        component: Term,
     },
 
     {
         path:'/classlist/:id',
         name: 'classList',
         props:true,
-        component: Classlist
+        component: Classlist,
     },
     {
         path:'/myclasses',
         name: 'myclasses',
-        component: MyClasses
+        component: MyClasses,
     }
     ,
     {
         path:'/exams',
         name: 'exams',
-        component: Exams
+        component: Exams,
     }
     ,
     {
         path:'/marks/:classid/:timetableid',
         name: 'marks',
         props: true,
-        component: Marks
+        component: Marks,
     }
     ,
     {
