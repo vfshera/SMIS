@@ -51295,18 +51295,20 @@ var render = function() {
                                   _vm._s(sb.abbr.toLowerCase()) +
                                   "\n                                            "
                               ),
-                              _c(
-                                "span",
-                                {
-                                  staticClass: "text-danger ml-1",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.deleteDuty(sb.duty_id)
-                                    }
-                                  }
-                                },
-                                [_vm._v("×")]
-                              )
+                              !sb.assigned
+                                ? _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-danger ml-1",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteDuty(sb.duty_id)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("×")]
+                                  )
+                                : _vm._e()
                             ]
                           )
                         ])

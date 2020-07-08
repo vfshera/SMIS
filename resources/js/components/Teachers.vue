@@ -112,7 +112,7 @@
                                             {{ sb.name }}
                                             <span class="d-block text-muted pl-1" style="border:1px solid grey;border-radius:5px">
                                                 {{ sb.abbr.toLowerCase() }}
-                                                <span class="text-danger ml-1" @click="deleteDuty(sb.duty_id)">&times;</span>
+                                                <span class="text-danger ml-1" @click="deleteDuty(sb.duty_id)" v-if="!sb.assigned">&times;</span>
                                             </span>
                                     </p>
                             </div>
