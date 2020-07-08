@@ -6,11 +6,13 @@ import 'aos/dist/aos.css';
 import VueRouter from 'vue-router';
 import Vue from 'vue';
 import Swal from 'sweetalert2'
+import Counties from './counties'
 
 
 
 
 window.Swal = Swal;
+window.Counties = Counties;
 
 require('./bootstrap');
 

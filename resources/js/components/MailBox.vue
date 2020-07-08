@@ -2,7 +2,7 @@
         <div class="row "  >
             <div id ="chat" class="col-md-9">
                 <!-- DIRECT CHAT -->
-                <div id="message-view" class="card direct-chat direct-chat-primary" v-if="current">
+                <div id="message-view" class="card direct-chat direct-chat-primary" v-if="current != null">
                     <div class="card-header">
                         <h3 class="card-title">{{ current.title }}</h3>
 
@@ -15,7 +15,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div id="msg-scroll" class="card-body">
-                        <div  v-for="msg in current.messages" v-if="current.messages">
+                        <div  v-for="msg in current.messages" v-show="!NoMessages">
                             <!-- Message. Default to the left -->
                             <div class="direct-chat-msg col-md-6" v-if="!msg.isYours">
                                 <div class="direct-chat-infos clearfix">
@@ -126,7 +126,7 @@
             </div>
             <!--  /edit chat-->
 
-                <div class="col-md-9 " v-if="NoMessages">
+                <div id="noMsg" class="col-md-9 " v-show="NoMessages">
                     <div class="card bg-warning mx-auto p-5">
                         <h3 class="text-center">Looks Like You Dont Have Messages</h3>
                     </div>
@@ -221,7 +221,11 @@
                 if(this.msg.conv_id && this.msg.message){
                     axios.post('/api/message' , this.msg)
                         .then(response =>{
-                            this.fetchData();
+                            this.startUp();
+                            this.current = this.conversations[0];
+
+                            this.msg.conv_id = ''
+                            this.msg.message = ''
                         })
                         .catch(err => {
 
@@ -234,9 +238,12 @@
                             $('.modal-backdrop').remove();
 
                             this.conversations = [];
-                            this.fetchData();
+                            this.startUp();
 
                             this.current = this.conversations[0];
+
+                            this.new_chat.receiver_id = ''
+                            this.new_chat.message = ''
                         })
                         .catch(err => {
 
@@ -246,22 +253,24 @@
                 }
             },
             fetchData(){
-                axios.get('/api/messages')
+                    axios.get('/api/messages')
                     .then(response => {
                         this.conversations = response.data.data;
                         this.conversations.forEach(c =>{
                             if(c.id == this.current.id){
                                 this.current = c;
                                 this.msg.message = '';
+                            }else {
+                                this.NoMessages = false;
+                                this.current = this.conversations[0];
                             }
                         })
+
                         if(this.current.new > 0){
                             this.readMsgs(this.current.id)
                         }
 
-                        var today = new Date();
-                        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                        console.log("FetchData @ " + time)
+
 
                     })
                     .catch(err => {
@@ -283,14 +292,15 @@
                         this.conversations = response.data.data;
                         if (this.conversations[0]) {
                             this.current = this.conversations[0];
+
                         } else {
                             this.NoMessages = true;
                         }
+
                         setTimeout(()=>{
                             this.scrollChat()
                         },150)
 
-                        console.log("STARTUP FUNCTION")
                         setInterval(() =>{
                             this.fetchData()
                         },15000)
@@ -323,6 +333,7 @@
                             axios.delete('/api/delete-msg/'+ id)
                                 .then(response => {
                                     this.fetchData();
+                                    // this.current.messages = []
                                 })
                                 .catch(err => {
 
@@ -343,7 +354,21 @@
                     })
             }
         },
+        computed:{
+             function () {
+                   this.NoMessages = (this.conversations.length > 0) ?  (this.conversations[0].messages.length < 1) : true;
 
+                   //  const chatBox = document.querySelector('#message-view');
+                   //  const noMsgBox = document.querySelector('#noMsg');
+                   // if(this.NoMessages){
+                   //      chatBox.style.display = 'none'
+                   //     noMsgBox.style.display = 'inherit'
+                   // }else{
+                   //     chatBox.style.display = 'inherit'
+                   //     noMsgBox.style.display = 'none'
+                   // }
+            }
+        },
         mounted() {
             this.startUp();
         }

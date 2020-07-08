@@ -139,6 +139,10 @@
         },
         props:[],
         methods:{
+            resetClass(){
+               this.aclass.form_id = '';
+               this.aclass.stream_id = '';
+            },
             setCurr(classrm){
                 this.classUpdate.class_id = classrm.id;
                 this.classUpdate.form_name = classrm.form;
@@ -253,6 +257,7 @@
 
             this.fetcthData();
             Fire.$on('ClasslistChanged',()=>{
+                this.resetClass();
                 this.fetcthData();
             });
         }

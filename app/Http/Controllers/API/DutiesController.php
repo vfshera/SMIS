@@ -14,6 +14,11 @@ class DutiesController extends Controller
          return SubjectsResource::collection( $duties);
     }
 
+    public function duty($id){
+        $duty = Duty::findOrFail($id);
+        return new SubjectsResource( $duty);
+    }
+
     public function getTeacherDuties($teacherID){
         $tduties = Duty::where('teacher_id', $teacherID)->get();
          return SubjectsResource::collection( $tduties);

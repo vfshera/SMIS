@@ -16,7 +16,6 @@ class CreateTermsTable extends Migration
         Schema::create('terms', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('year');
             $table->dateTime('beginning_on');
             $table->dateTime('ending_on');
             $table->boolean('submissions')->default(false);

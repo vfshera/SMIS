@@ -2,7 +2,7 @@
     <div>
     <div class="card">
         <div class="card-header">
-              <label><h3 class="card-title text-bold d-inline">{{ this.subject }} MARKS  - FORM {{ this.className.toUpperCase() }} </h3>
+              <label><h3 class="card-title text-bold d-inline">{{ this.duty.name }} MARKS  - FORM {{ this.classs.name.toUpperCase() }} </h3>
                   <span class="d-inline ml-2 badge badge-primary" v-text="totalStudents"></span>
               </label>
 
@@ -27,14 +27,18 @@
                      <td> {{ student.id}}  </td>
                      <td> {{ student.user.name }}  </td>
                      <td class="ml-3" v-if="student.marks"> {{ student.marks.score }}</td>
-                     <td>
-                        <div class="row">
+                     <td >
+                        <div class="row" v-if="term.submissions === 1">
                             <input class="form-control col-md-8 mr-5 ml-2" type="number" v-model="score"/>
                             <i class="fa fa-check col-md-1 text-center primary" v-if="score" style="margin-top: 7px" @click="inputMarks(student.id)"></i>
                             <span v-if="student.marks.id && score">|</span>
                             <i class=" far fa-trash-alt col-md-1 text-center" v-if="student.marks.id" style="margin-top: 7px" @click="deleteMarks(student.marks.id)"></i>
                         </div>
+                         <div v-if="term.submissions === 0">
+                             <h4>Submissions Are Currently Not Allowed</h4>
+                         </div>
                      </td>
+
 
                 </tr>
 
@@ -60,6 +64,9 @@
                 search: '',
                 score: '',
                 validationErrors: [],
+                term:'',
+                duty:'',
+                classs: ''
             }
         },
         props:['classid','timetableid', 'className' , 'subject'],
@@ -128,6 +135,32 @@
 
             },
             fetchData(){
+                axios.get('/api/duty/'+ this.timetableid)
+                    .then(response =>{
+                        this.duty = response.data.data;
+                    })
+                    .catch(err =>{
+                        console.log(err);
+
+                    });
+                axios.get('/api/classes/'+ this.classid)
+                    .then(response =>{
+                        this.classs = response.data.data;
+                    })
+                    .catch(err =>{
+                        console.log(err);
+
+                    });
+
+                axios.get('/api/active-term')
+                    .then(response =>{
+                        this.term = response.data.data;
+                    })
+                    .catch(err =>{
+                        console.log(err);
+
+                    });
+
                  axios.get('/api/scoresheet/'+ this.classid +"/"+this.timetableid).then(response =>{
 
                      this.students = response.data.data;

@@ -68,7 +68,8 @@ Route::middleware('auth:api')->post('/add-class', 'API\ClassroomsController@stor
 //terms
 Route::middleware('auth:api')->post('/add-term', 'API\TermsController@store');
 Route::middleware('auth:api')->get('/terms', 'API\TermsController@index');
-Route::middleware('auth:api')->get('/delete-term/{id}', 'API\TermsController@destroy');
+Route::middleware('auth:api')->get('/active-term', 'API\TermsController@active');
+Route::middleware('auth:api')->delete('/delete-term/{id}', 'API\TermsController@destroy');
 
 
 //teachers
@@ -87,12 +88,13 @@ Route::middleware('auth:api')->post('/add-duty', 'API\DutiesController@store');
 Route::middleware('auth:api')->delete('/delete-duty/{id}', 'API\DutiesController@destroy');
 Route::middleware('auth:api')->get('/reload-duty/{id}', 'API\DutiesController@getTeacherDuties');
 Route::middleware('auth:api')->get('/duties', 'API\DutiesController@getDuties');
+Route::middleware('auth:api')->get('/duty/{id}', 'API\DutiesController@duty');
 
 
 //timetable
 Route::middleware('auth:api')->post('/add-timetable', 'API\TimetablesController@store');
 Route::middleware('auth:api')->get('/timetables', 'API\TimetablesController@index');
-Route::middleware('auth:api')->get('/timetables/{id}', 'API\TimetablesController@classSubjects');
+Route::middleware('auth:api')->get('/timetables/{cid}/{sid}', 'API\TimetablesController@classSubjects');
 
 //subjects
 Route::middleware('auth:api')->get('/subjects', 'API\SubjectsController@allsubjects');

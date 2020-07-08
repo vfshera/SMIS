@@ -21,6 +21,12 @@ class TermsController extends Controller
         return TermResource::collection($terms);
     }
 
+    public function active()
+    {
+        $term = Term::where('status' ,1)->get()->first();
+
+        return new TermResource($term);
+    }
 
     public function store(Request $request)
     {

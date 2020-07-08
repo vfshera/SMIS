@@ -88,7 +88,7 @@ class StudentsController extends Controller
                     $matching = Student::where('user_id', request()->input('user_id'))->first();
                         if($matching)
                         {
-                            return json_encode('Cant Insert');
+
 
                         }else{
                         $st = new Student();
@@ -102,6 +102,8 @@ class StudentsController extends Controller
                         $st->county = request()->input('county');
 
                         $st->save();
+
+                        return json_encode("Student Created!");
                     }
 
             }

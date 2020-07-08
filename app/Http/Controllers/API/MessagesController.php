@@ -99,12 +99,22 @@ class MessagesController extends Controller
     public function destroy($id)
     {
         $msg = Message::findOrFail($id);
-        if($msg->sender == auth()->user()->id) {
-            $msg->delete();
+        $conv_id = $msg->conversation_id;
 
-            return "message deleted";
-        }else{
-            return "Unable to delete message";
-        }
+            if($msg->sender == auth()->user()->id) {
+
+                $msg->delete();
+
+                $messages = Message::where('conversation_id' ,  $conv_id)->get();
+
+                    if($messages->count() == 0){
+                        Conversation::findOrFail($conv_id)->delete();
+                    }
+
+                return "message deleted";
+
+            }else{
+                return "Unable to delete message";
+            }
     }
 }

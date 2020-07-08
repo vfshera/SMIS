@@ -6,7 +6,7 @@
 
                     <input class="form-control col-md-6  d-inline " style="margin-left:200px" type="search" placeholder="Search" v-model="search" aria-label="Search">
 
-              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#StudentClasses"><i class="far fa-address-card mr-3"></i>ADD DETAILS</span>
+              <span class="btn btn-primary float-right " data-toggle="modal" data-target="#addStudent"><i class="far fa-address-card mr-3" @click="resetStudent()"></i>ADD DETAILS</span>
           </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -77,11 +77,11 @@
                             <div class="col-md-6">
                                 <label for="" class="mb-0 pb-0">Available Subjects <span class="ml-1 badge-dark badge-pill">{{ student.availableSubjects.length }}</span></label>
                                 <hr>
-                                <p v-for="sb in student.availableSubjects" :key="sb.id">
+                                <p v-for="sb in student.availableSubjects" :key="sb.id" :class="{ 'text-muted': !sTaken(sb.id) , 'choosen-sub': !sTaken(sb.id) }">
                                         {{ sb.duty.subject.title }}
                                         <span class="ml-2 mr-2 text-bold"> By </span>
-                                        <span class="text-blue text-bold">{{ sb.duty.teacher.name }}</span>
-                                        <i class="ml-2 fa fa-check" @click="addStudy(sb.id)"></i>
+                                        <span class="text-bold" :class="{ 'text-blue': sTaken(sb.id) }">{{ sb.duty.teacher.name }}</span>
+                                        <i class="ml-2 fa fa-check" @click="addStudy(sb.id)" v-if="sTaken(sb.id)"></i>
                                </p>
                             </div>
                         </div>
@@ -94,33 +94,45 @@
             </div>
 
 <!--            STUDENT CLASSES BEGINN-->
-
-                <div class="modal fade" id="StudentClasses" tabindex="-1" role="dialog" aria-labelledby="StudentClasses" aria-hidden="true">
+<!--                ADD STUDENT DETAILS-->
+                <div class="modal fade" id="addStudent" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title ml-2" id="StudentClassesTitle">ADD TEACHERS DETAILS</h5>
+                                <h5 class="modal-title ml-2" id="addSudentDetailsTitle">ADD STUDENT DETAILS</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <!-- Modal -->          <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="p-2" @submit.prevent="addStudent">
+                                <form class="p-2" @submit.prevent="addDetails">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="name">For</label>
-                                            <select class="form-control" v-model="student.uid">
-                                                <option  v-for="tcher in logged" :key="tcher.id" :value="tcher.id"> {{ tcher.name }}</option>
+                                            <select v-model="student.id" class="form-control">
+                                                <option v-for="stu in logged" :key="stu.id" :value="stu.id">{{ stu.name }}</option>
                                             </select>
-                                            <span v-if="validationErrors.id" class="text-danger">{{ validationErrors.id[0] }}</span>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label for="classroom">TSC Number</label>
-                                            <input type="text" v-model="student.tsc" class="form-control" id="address">
-                                            <span v-if="validationErrors.tsc" class="text-danger">@{{ validationErrors.tsc[0] }}</span>
+                                            <label for="classroom">Class</label>
+                                            <select v-model="student.class_id" class="form-control">
+                                                <option v-for="cl in classes" :key="cl.id" :value="cl.id"> {{ cl.form.name + " " + cl.stream.name }}</option>
+                                            </select>
+                                            <span v-if="validationErrors.class_id" class="text-danger">@{{ validationErrors.class_id[0] }}</span>
                                         </div>
                                     </div>
-
+                                    <div class="form-row">
+                                        <div class="form-group  col-md-6">
+                                            <label for="pfirstname">Parent / Guardian First Name</label>
+                                            <input type="text" class="form-control" v-model="student.parents_fname" id="pfirstname" placeholder="Parent or Guardian First Name">
+                                            <span v-if="validationErrors.parents_fname" class="text-danger">@The parents first name field is required</span>
+                                        </div>
+                                        <div class="form-group  col-md-6">
+                                            <label for="psecname">Parent / Guardian Second Name</label>
+                                            <input type="text" class="form-control" v-model="student.parents_sname" id="psecname" placeholder="Parent or Guardian Second Name">
+                                            <span v-if="validationErrors.parents_sname" class="text-danger">@The parents second name field is required.</span>
+                                        </div>
+                                    </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="address">Address</label>
@@ -128,9 +140,9 @@
                                             <span v-if="validationErrors.address" class="text-danger">@{{ validationErrors.address[0] }}</span>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label for="tel">Telephone</label>
-                                            <input type="text" v-model="student.tel" class="form-control" id="tel">
-                                            <span v-if="validationErrors.tel" class="text-danger">@{{ validationErrors.tel[0] }}</span>
+                                            <label for="tel">Telephone (Parent)</label>
+                                            <input type="text" v-model="student.parents_tel" class="form-control" id="tel">
+                                            <span v-if="validationErrors.parents_tel" class="text-danger">@{{ validationErrors.parents_tel[0] }}</span>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -141,20 +153,14 @@
                                         </div>
                                         <div class="form-group  col-md-6">
                                             <label for="county">County</label>
-                                            <select id="county" v-model="student.county" class="form-control">
-                                                <option selected>Choose...</option>
-                                                <option>Nairobi</option>
-                                                <option>Mombasa</option>
-                                                <option>Kisumu</option>
-                                                <option>Nakuru</option>
-                                                <option>Lamu</option>
-                                                <option>Vihiga</option>
+                                            <select id="county" v-model="student.county" class="form-control" >
+                                                <option selected disabled>Choose...</option>
+                                                 <option v-for="(county , index) in counties" :key="index" :value="county.name"> {{ county.name }}</option>
                                             </select>
                                             <span v-if="validationErrors.county" class="text-danger">@{{ validationErrors.county[0] }}</span>
                                         </div>
                                     </div>
-
-                                    <button type="submit" class="btn btn-primary float-right">SUBMIT</button>
+                                    <button type="submit" class="btn btn-primary float-right">UPDATE</button>
                                 </form>
                             </div>
                         </div>
@@ -184,7 +190,7 @@
                                 <label for="classroom">Class</label>
                                 <select v-model="student.class_id" class="form-control">
                                     <option :value="student.class_id">{{ student.className }}</option>
-                                    <option v-for="cl in classes" :key="cl.id" :value="student.class_id"> {{ cl.form.name + " " + cl.stream.name }}</option>
+                                    <option v-for="cl in classes" :key="cl.id" :value="cl.id"> {{ cl.form.name + " " + cl.stream.name }}</option>
                                 </select>
                                 <span v-if="validationErrors.class_id" class="text-danger">@{{ validationErrors.class_id[0] }}</span>
                                 </div>
@@ -221,14 +227,9 @@
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label for="county">County</label>
-                                    <select id="county" v-model="student.county" class="form-control">
-                                        <option selected>Choose...</option>
-                                        <option>Nairobi</option>
-                                        <option>Mombasa</option>
-                                        <option>Kisumu</option>
-                                        <option>Nakuru</option>
-                                        <option>Lamu</option>
-                                        <option>Vihiga</option>
+                                    <select id="county" v-model="student.county" class="form-control" >
+                                        <option selected >{{ student.county }}</option>
+                                        <option v-for="(county , index) in counties" :key="index" :value="county.name"> {{ county.name }}</option>
                                     </select>
                                     <span v-if="validationErrors.county" class="text-danger">@{{ validationErrors.county[0] }}</span>
                                 </div>
@@ -245,7 +246,6 @@
 </template>
 
 <script>
-
     export default {
         name: 'Students',
         data(){
@@ -253,6 +253,7 @@
                 logged : [],
                 students : [],
                 classes: [],
+                counties: window.Counties,
                 student: {
                     id: '',
                     name: '',
@@ -273,6 +274,30 @@
         },
         props:[],
         methods:{
+            sTaken(id){
+                let visible = true
+                this.student.subjects_taken.forEach((st) =>{
+                    if(st.unit.duty.id == id){
+                       visible = false;
+                    }
+                })
+
+                return visible;
+            },
+            resetStudent(){
+                     this.student.id = ''
+                    this.student.name = ''
+                    this.student.parents_fname = ''
+                    this.student.parents_sname = ''
+                    this.student.parents_tel = ''
+                    this.student.class_id  = ''
+                    this.student.className  = ''
+                    this.student.address = ''
+                    this.student.county =''
+                    this.student.town  = ''
+                    this.student.joined  = ''
+                    this.student.subjects_taken = []
+            },
             setStudent(student){
                     this.student.id = student.id,
                     this.student.name = student.name,
@@ -287,13 +312,14 @@
                     this.student.joined  = student.joined,
                     this.student.subjects_taken  = student.subjects_taken,
 
-                    axios.get('/api/timetables/'+ this.student.class_id)
+                    axios.get('/api/timetables/'+ this.student.class_id+'/'+student.id)
                         .then(response =>{
                             this.student.availableSubjects = response.data.data;
                         })
                         .catch(err =>{
                             console.log(err);
                         });
+
              },
             openClasses(close,open){
                 $(close).modal('hide');
@@ -319,16 +345,16 @@
                                 console.log("Error from Reload --- " + err)
                             });
 
-                        axios.get('/api/timetables/'+ this.student.class_id)
+                        axios.get('/api/timetables/'+ this.student.class_id+"/"+this.student.id)
                             .then(response =>{
                                 this.student.availableSubjects = response.data.data;
                             })
                             .catch(err =>{
                                 console.log(err);
                             });
+
                 })
                     .catch(err =>{
-                        console.log("Error from Add Study --- " + err)
                     });
             },
             deleteStudy(id){
@@ -349,7 +375,6 @@
                                         this.student.subjects_taken = response.data.data;
                                     })
                                     .catch(err =>{
-                                        console.log("Error from Reload --- " + err)
                                     });
                                 Fire.$emit('UpdateStudents');
                                 Toast.fire({
@@ -358,7 +383,6 @@
                                 })
                             })
                             .catch(err =>{
-                                console.log("Error from Delete Study --- " + err)
                                 // Swal.fire(
                                 //     'Error!',
                                 //     err,
@@ -383,7 +407,7 @@
                         if (result.value) {
                             axios.delete('/api/delete-student/'+id)
                             .then(response =>{
-                                Fire.$emit('StudentAdded');
+                                Fire.$emit('UpdateStudents');
                                 Toast.fire({
                                     icon: 'success',
                                     title: 'Student Deleted Successfully'
@@ -444,7 +468,7 @@
                     county:this.student.county,
                     town :this.student.town,
                 }).then(function (response) {
-                        Fire.$emit('StudentAdded');
+                        Fire.$emit('UpdateStudents');
                          $('#editStudent').modal('hide');
                          $('body').removeClass('modal-open');
                          $('.modal-backdrop').remove();
@@ -477,10 +501,12 @@
                     county:this.student.county,
                     town :this.student.town,
                 }).then(function (response) {
-                        Fire.$emit('StudentAdded');
-                         $('#StudentClasses').modal('hide');
+                        Fire.$emit('UpdateStudents');
+                         $('#addStudent').modal('hide');
                          $('body').removeClass('modal-open');
                          $('.modal-backdrop').remove();
+                         this.resetStudent()
+
                         Toast.fire({
                             icon: 'success',
                             title: 'Student Added successfully'
@@ -502,11 +528,17 @@
         mounted() {
 
                this.fetchStudents();
-               Fire.$on('StudentAdded',()=>{
+               Fire.$on('UpdateStudents',()=>{
                    this.fetchStudents();
                });
+
         }
     }
 
 
 </script>
+<style>
+    .choosen-sub{
+        text-decoration: line-through;
+    }
+</style>

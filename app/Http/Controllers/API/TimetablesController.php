@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TimetableResource;
+use App\Study;
 use App\Term;
 use App\Timetable;
 use Illuminate\Http\Request;
@@ -27,9 +28,12 @@ class TimetablesController extends Controller
         }
     }
 
-    public function classSubjects($id){
+    public function classSubjects($cid,$sid){
         $currTerm = Term::where('status', '1')->first();
-        $sub = Timetable::where('class_id', $id)->where('term_id' , $currTerm->id)->orderBy('created_at' , 'DESC')->get();
+        $already = Study::where('student_id', $sid)->pluck('timetable_id');
+
+        $sub = Timetable::where('class_id', $cid)->where('term_id' , $currTerm->id)->orderBy('created_at' , 'DESC')->get();
+
         return TimetableResource::collection( $sub);
     }
 

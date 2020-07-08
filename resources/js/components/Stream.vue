@@ -77,6 +77,10 @@
         },
         props:[],
         methods:{
+            resetForm(){
+                this.stream.name = '';
+                this.stream.rep = '';
+            },
             fetcthData(){
                    axios.get('/api/streams')
                     .then(response =>{
@@ -112,6 +116,7 @@
 
             this.fetcthData();
             Fire.$on('StreamAdded',()=>{
+                this.resetForm();
                 this.fetcthData();
             });
         }

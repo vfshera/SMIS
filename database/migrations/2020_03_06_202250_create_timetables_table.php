@@ -17,6 +17,7 @@ class CreateTimetablesTable extends Migration
             $table->bigIncrements('id');
             $table->string('class_id');
             $table->string('duty_id');
+            $table->string('day');
             $table->string('term_id');
             $table->string('time');
             $table->timestamps();

@@ -77,6 +77,10 @@
         },
         props:[],
         methods:{
+            resetForm(){
+                this.form.name = '';
+                 this.form.rep = '';
+            },
             fetcthData(){
                    axios.get('/api/forms')
                     .then(response =>{
@@ -95,6 +99,7 @@
                 })
                     .then(function (response) {
                          Fire.$emit('FormAdded');
+
                          Toast.fire({
                             icon: 'success',
                             title: 'Form Added successfully'
@@ -116,6 +121,7 @@
 
             this.fetcthData();
             Fire.$on('FormAdded',()=>{
+                this.resetForm()
                 this.fetcthData();
             });
         }

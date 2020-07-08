@@ -159,7 +159,7 @@
                 this.term.status = 0;
                 this.term.submissions = 0;
             },
-            fetcthData(){
+            fetchData(){
                    axios.get('/api/terms')
                     .then(response =>{
                        this.terms = response.data.data;
@@ -187,8 +187,6 @@
                                 icon: 'success',
                                 title: 'Term Updated successfully'
                                 });
-
-                            this.resetTerm();
                         })
                         .catch(error =>{
                             this.validationErrors = error.response.data.errors;
@@ -233,6 +231,7 @@
                     beginning_on:this.term.begin,
                     ending_on:this.term.end,
                     status : this.term.status,
+                    submissions : this.term.submissions,
                 })
                     .then((response) => {
                          Fire.$emit('TermUpdated');
@@ -241,7 +240,6 @@
                             title: 'Term Added successfully'
                             });
 
-                         this.resetTerm();
                     })
                     .catch(error =>{
                            this.validationErrors = error.response.data.errors;
@@ -262,10 +260,11 @@
             }
         },
         mounted() {
-
-            this.fetcthData();
+            this.fetchData();
             Fire.$on('TermUpdated',()=>{
-                this.fetcthData();
+
+                this.resetTerm();
+                this.fetchData();
             });
         }
     }

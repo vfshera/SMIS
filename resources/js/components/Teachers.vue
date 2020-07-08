@@ -172,15 +172,10 @@
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label for="county">County</label>
-                                    <select id="county" v-model="teacher.county" class="form-control">
-                                        <option selected>Choose...</option>
-                                        <option>Nairobi</option>
-                                        <option>Mombasa</option>
-                                        <option>Kisumu</option>
-                                        <option>Nakuru</option>
-                                        <option>Lamu</option>
-                                        <option>Vihiga</option>
-                                    </select>
+                                        <select id="county" v-model="teacher.county" class="form-control">
+                                            <option selected disabled>Choose...</option>
+                                            <option v-for="(county , index) in counties" :key="index" :value="county.name"> {{ county.name }}</option>
+                                        </select>
                                     <span v-if="validationErrors.county" class="text-danger">@{{ validationErrors.county[0] }}</span>
                                 </div>
                             </div>
@@ -237,13 +232,8 @@
                                 <div class="form-group  col-md-6">
                                     <label for="county">County</label>
                                     <select id="county" v-model="teacher.county" class="form-control">
-                                        <option selected>Choose...</option>
-                                        <option>Nairobi</option>
-                                        <option>Mombasa</option>
-                                        <option>Kisumu</option>
-                                        <option>Nakuru</option>
-                                        <option>Lamu</option>
-                                        <option>Vihiga</option>
+                                        <option selected >{{teacher.county}}</option>
+                                        <option v-for="(county , index) in counties" :key="index" :value="county.name"> {{ county.name }}</option>
                                     </select>
                                     <span v-if="validationErrors.county" class="text-danger">@{{ validationErrors.county[0] }}</span>
                                 </div>
@@ -267,6 +257,7 @@
                 logged : [],
                 teachers : [],
                 subjects: [],
+                counties: window.Counties,
                 teacher: {
                     newduty:'',
                     id: '',
