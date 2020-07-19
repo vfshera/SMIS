@@ -51,6 +51,10 @@ class TimetablesController extends Controller
             return json_encode("Timetable Created Successfully");
     }
 
+    public  function update($id){
+        $tbl = Timetable::findOrFail($id);
+        $tbl->update(['duty_id' => \request()->dutyId]);
+    }
     public function destroy($id)
     {
         //

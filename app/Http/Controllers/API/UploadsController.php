@@ -16,6 +16,18 @@ class UploadsController extends Controller
         return RevisionMaterialResource::collection($uploads);
     }
 
+    public function notes(){
+        $uploads = Material::where('doc_type' , 'notes')->orderBy('created_at', 'DESC')->paginate(12);
+
+        return RevisionMaterialResource::collection($uploads);
+    }
+
+    public function papers(){
+        $uploads = Material::where('doc_type' , 'papers')->orderBy('created_at', 'DESC')->paginate(12);
+
+        return RevisionMaterialResource::collection($uploads);
+    }
+
     public function store(Request $request){
         $request->validate([
             'mydoc' => 'required|file|mimes:zip,rar,doc,docx,pdf,pptx|max:20480',

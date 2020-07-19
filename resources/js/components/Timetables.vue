@@ -130,6 +130,34 @@
 
             </div>
 
+                <div class="modal fade" id="changeDuty" tabindex="-1" role="dialog" aria-labelledby="changeDuty" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title ml-2" id="changeDutyTitle">Change Subject</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <!-- Modal -->          <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="p-2">
+                                    <label for="classroom">Subject</label>
+                                    <div class="row">
+                                        <div class="form-group col-md-10">
+                                            <select v-model="changeSub.newDuty" class="form-control">
+                                                <option disabled> Change Subject</option>
+                                                <option v-for="duty in duties" :key="duty.duty_id" :value="duty.duty_id" placeholder="Choose A Subject"> {{ duty.abbr }} - {{ duty.teacher }}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" @click="changeDuty" class=" btn btn-primary float-right">ASSIGN</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
        <!--TIMETABLE POPUP-->
         <div class="card tcard" v-show="showTimetable">
@@ -150,11 +178,11 @@
                 </div>
                 <div class="row col-md-12 tbl-data" v-for="(tbl ,id) in currTable.fields" :key="id">
                     <div class="col-md-2 time-data">{{tbl.time}}</div>
-                    <div class="col-md-2 mon-data" v-text="isToday('Monday',tbl)"></div>
-                    <div class="col-md-2 tue-data" v-text="isToday('Tuesday',tbl)"></div>
-                    <div class="col-md-2 wed-data" v-text="isToday('Wednesday',tbl)"></div>
-                    <div class="col-md-2 thur-data" v-text="isToday('Thursday',tbl)"></div>
-                    <div class="col-md-2 fri-data" v-text="isToday('Friday',tbl)"></div>
+                    <div @click="editTblTeacher('Monday',tbl)" class="col-md-2 mon-data" v-text="isToday('Monday',tbl)"></div>
+                    <div @click="editTblTeacher('Tuesday',tbl)" class="col-md-2 tue-data" v-text="isToday('Tuesday',tbl)"></div>
+                    <div @click="editTblTeacher('Wednesday',tbl)" class="col-md-2 wed-data" v-text="isToday('Wednesday',tbl)"></div>
+                    <div @click="editTblTeacher('Thursday',tbl)" class="col-md-2 thur-data" v-text="isToday('Thursday',tbl)"></div>
+                    <div @click="editTblTeacher('Friday',tbl)" class="col-md-2 fri-data" v-text="isToday('Friday',tbl)"></div>
                 </div>
             </div>
 
@@ -176,6 +204,10 @@
         data(){
             return{
                 classes : [],
+                changeSub:{
+                    newDuty: '',
+                    timetableID: '',
+                },
                 levels:{
                     one: {
                         name: '',
@@ -226,6 +258,37 @@
         },
         props:[],
         methods:{
+            changeDuty(){
+                axios.post('/api/change-duty/'+ this.changeSub.timetableID,{ dutyId : this.changeSub.newDuty} )
+                    .then((response) => {
+                       this.fetcthData();
+                        this.view = false;
+                        this.tbladd = false;
+                        this.showTimetable = true
+
+                        $('#changeDuty').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+
+                        location.reload();
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Subject Updated successfully'
+                        })
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                    });
+            },
+          editTblTeacher(day,tbl){
+                  if(tbl.day === day) {
+                      $('#changeDuty').modal('show');
+                      this.changeSub.timetableID = tbl.id;
+                  }else{
+
+                  }
+              },
             isToday(day,tbl){
                 if(tbl.day === day){
                     //TO DO get element and set hover to teacher

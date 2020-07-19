@@ -75,7 +75,7 @@
                                     </p>
                                 </div>
                             <div class="col-md-6">
-                                <label for="" class="mb-0 pb-0">Available Subjects <span class="ml-1 badge-dark badge-pill">{{ student.availableSubjects.length }}</span></label>
+                                <label  class="mb-0 pb-0">Available Subjects <span class="ml-1 badge-dark badge-pill">{{ student.availableSubjects.length }}</span></label>
                                 <hr>
                                 <p v-for="sb in student.availableSubjects" :key="sb.id" :class="{ 'text-muted': !sTaken(sb.id) , 'choosen-sub': !sTaken(sb.id) }">
                                         {{ sb.duty.subject.title }}
@@ -278,6 +278,7 @@
                 let visible = true
                 this.student.subjects_taken.forEach((st) =>{
                     if(st.unit.duty.id == id){
+
                        visible = false;
                     }
                 })
@@ -440,7 +441,6 @@
                 axios.get('/api/classes')
                             .then(response =>{
                             this.classes = response.data.data;
-                            console.log(this.classes);
 
                             })
                             .catch(err =>{

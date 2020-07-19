@@ -87,6 +87,7 @@
                                student_id: studentid,
                                duty_id: this.timetableid,
                                score: this.score,
+                               term_id: this.term.id,
                            }).then(response => {
                            this.score = '';
                            Fire.$emit('UpdateStudentsMarks');

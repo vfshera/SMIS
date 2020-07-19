@@ -18,6 +18,7 @@ class CreateMarksTable extends Migration
             $table->string('student_id');
             $table->string('duty_id');
             $table->string('score');
+            $table->string('term_id');
             $table->timestamps();
         });
     }

@@ -26,6 +26,8 @@ Route::middleware('auth:api')->get('/users', 'API\UserResourceController@root');
 //UPLOADS
 Route::middleware('auth:api')->post('/myuploads', 'API\UploadsController@store');
 Route::middleware('auth:api')->get('/uploads', 'API\UploadsController@uploads');
+Route::middleware('auth:api')->get('/papers', 'API\UploadsController@papers');
+Route::middleware('auth:api')->get('/notes', 'API\UploadsController@notes');
 Route::middleware('auth:api')->delete('/delete-upload/{id}', 'API\UploadsController@destroy');
 Route::middleware('auth:api')->get('/download-file/{id}', 'API\UploadsController@getFile');
 
@@ -44,6 +46,7 @@ Route::middleware('auth:api')->post('/add-student-info', 'API\StudentsController
 Route::middleware('auth:api')->delete('/delete-student/{id}', 'API\StudentsController@destroy');
 
 Route::middleware('auth:api')->get('/myinfo', 'API\StudentsController@myInfo');
+Route::middleware('auth:api')->get('/myresults', 'API\MarksController@results');
 Route::middleware('auth:api')->get('/mytimetable', 'API\StudentsController@myTimetable');
 
 //Student Study
@@ -93,6 +96,7 @@ Route::middleware('auth:api')->get('/duty/{id}', 'API\DutiesController@duty');
 
 //timetable
 Route::middleware('auth:api')->post('/add-timetable', 'API\TimetablesController@store');
+Route::middleware('auth:api')->post('/change-duty/{id}', 'API\TimetablesController@update');
 Route::middleware('auth:api')->get('/timetables', 'API\TimetablesController@index');
 Route::middleware('auth:api')->get('/timetables/{cid}/{sid}', 'API\TimetablesController@classSubjects');
 

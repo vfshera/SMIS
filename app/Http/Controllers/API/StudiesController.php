@@ -19,10 +19,14 @@ class StudiesController extends Controller
             'student_id' => 'required',
             'timetable_id' => 'required',
         ]);
+            $match = Study::where('student_id', $request->student_id)->where('timetable_id', $request->timetable_id)->get();
 
-          Study::create($data);
-            return json_encode("Study Created Successfully");
-
+            if($match->count() > 0){
+                return json_encode("Duplicate Subject Choosen");
+            }else{
+                Study::create($data);
+                return json_encode("Study Created Successfully");
+            }
     }
 
     public function destroy($id){

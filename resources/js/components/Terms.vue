@@ -61,7 +61,9 @@
                          <span v-if="term.submissions === 1" class="text-primary" >Allowed</span>
                          <span v-else class="text-muted " ><del>Not Allowed</del></span>
                      </td>
-                    <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editTerm" @click="setTerm(term)"></i> <i class="ml-1 far fa-trash-alt" @click="deleteTerm(term.id)"></i></td>
+                     <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editTerm" @click="setTerm(term)"></i>
+                         <i class="ml-1 far fa-trash-alt" @click="deleteTerm(term.id)"></i>
+                         <i class="float-right " v-if="term.status === 0 && term.submissions === 0"  @click="sendResults(term.id)">@</i></td>
                  </tr>
 
 
@@ -143,6 +145,9 @@
         },
         props:[],
         methods:{
+            sendResults(term_id){
+                alert("Sending.....!")
+            },
             setTerm(term){
                 this.term.id = term.id;
                 this.term.name = term.name;
