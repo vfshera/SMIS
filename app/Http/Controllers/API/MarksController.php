@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Resources\ResultsResource;
 use App\Http\Resources\TermInResultsResource;
+use App\Jobs\SendResults;
 use App\Mail\ResultsMail;
 use App\Mark;
 use App\Student;
@@ -30,9 +31,9 @@ class MarksController extends Controller
        }
             // send text and email here
             foreach ($results as $result){
-                Mail::to($result["details"]["primary"]["email"])->send(new ResultsMail());
+                $this->dispatch(new SendResults($result));
             }
-       return json_encode($results);
+       return json_encode("Sending Results....");
     }
 
     public function results(){
