@@ -63,7 +63,8 @@
                      </td>
                      <td><i class="fas fa-pencil-alt mr-1" data-toggle="modal" data-target="#editTerm" @click="setTerm(term)"></i>
                          <i class="ml-1 far fa-trash-alt" @click="deleteTerm(term.id)"></i>
-                         <i class="float-right " v-if="term.status === 0 && term.submissions === 0"  @click="sendResults(term.id)">@</i></td>
+                         <i class="float-right fas fa-play" v-if="term.status === 0 && term.submissions === 0"  @click="sendResults(term.id)"></i>
+                     </td>
                  </tr>
 
 
@@ -146,7 +147,14 @@
         props:[],
         methods:{
             sendResults(term_id){
-                alert("Sending.....!")
+                axios.post('/api/send-results', {
+                    term_id:term_id
+                }).then((response) => {
+
+                    })
+                    .catch(error =>{
+                        this.validationErrors = error.response.data.errors;
+                    });
             },
             setTerm(term){
                 this.term.id = term.id;
@@ -276,3 +284,13 @@
 
 
 </script>
+<style scoped>
+    .fas.fa-play {
+        color:#00FF00 !important;
+    }
+
+    .fas.fa-play :hover{
+        size:10px;
+        color:#009000 !important;
+    }
+</style>

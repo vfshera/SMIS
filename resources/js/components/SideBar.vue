@@ -147,7 +147,7 @@
                             </li>
                               <li class="nav-item" v-if="currentUser.access === 0">
                                  <router-link :to="{ name: 'term' }"  class="nav-link">
-                                <i class=" nav-icon far fa-calendar-alt"></i>
+                                <i class=" nav-icon far fa-object-ungroup"></i>
                                 <p>Term</p>
                                  </router-link>
                             </li>
@@ -159,7 +159,7 @@
                             </li>
                         <li class="nav-item" v-if="currentUser.access === 0">
                             <router-link :to="{ name:'revisionMaterials' }"  class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
+                                <i class="nav-icon fas fa-clipboard"></i>
                                 <p>Revision Materials</p>
                             </router-link>
                         </li>

@@ -47,6 +47,7 @@ Route::middleware('auth:api')->delete('/delete-student/{id}', 'API\StudentsContr
 
 Route::middleware('auth:api')->get('/myinfo', 'API\StudentsController@myInfo');
 Route::middleware('auth:api')->get('/myresults', 'API\MarksController@results');
+Route::middleware('auth:api')->post('/send-results', 'API\MarksController@sendResults');
 Route::middleware('auth:api')->get('/mytimetable', 'API\StudentsController@myTimetable');
 
 //Student Study
