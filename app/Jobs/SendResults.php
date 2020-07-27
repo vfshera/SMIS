@@ -32,6 +32,6 @@ class SendResults implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->result["details"]["primary"]["email"])->send(new ResultsMail());
+        Mail::to($this->result["student"]["email"])->send(new ResultsMail($this->result));
     }
 }

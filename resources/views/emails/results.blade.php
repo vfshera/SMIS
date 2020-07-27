@@ -3,12 +3,11 @@
 
 Here are the results of your child,
 
-# Lucia Masaulu Reg 001 Form 1 South
+# {{ $results["details"]->name }}  Adm No  {{ $results["details"]->admission_no }}  Form {{ $results["details"]->class_name  }}
 
-ENG
-MATH
-KIS
-COMP
+@foreach($results["resultslip"] as $study)
+# {{ $study->subject }} {{ $study->score }}
+@endforeach
 
 Thanks,<br>
 Examination Office

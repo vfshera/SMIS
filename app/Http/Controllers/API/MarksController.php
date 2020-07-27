@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Classroom;
+use App\Http\Resources\ClassroomResource;
 use App\Http\Resources\ResultsResource;
+use App\Http\Resources\StudentResource;
 use App\Http\Resources\TermInResultsResource;
 use App\Jobs\SendResults;
 use App\Mail\ResultsMail;
@@ -13,12 +16,11 @@ use App\Term;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 
 class MarksController extends Controller
 {
     public function sendResults(Request $request){
-       $students = Student::all();
+       $students = StudentResource::collection(Student::all());
        $term = Term::findOrFail($request->term_id);
 
        $results = [];
@@ -26,14 +28,14 @@ class MarksController extends Controller
            foreach ($students as $student){
                $marks = Mark::where('student_id', $student->id)->where('term_id' , $term->id)->orderBy('created_at' , 'DESC')->get();
 
-               array_push($results , ['details' => ['primary' => User::findOrFail($student->user_id) , 'secondary' => $student ], 'resultslip' =>  ResultsResource::collection($marks)]);
+               array_push($results , ['student' => User::findOrFail($student->user_id) ,'details' =>  json_decode(json_encode($student)),  'resultslip' => json_decode(json_encode(ResultsResource::collection($marks))) ]);
            }
        }
             // send text and email here
             foreach ($results as $result){
                 $this->dispatch(new SendResults($result));
             }
-       return json_encode("Sending Results....");
+       return json_encode($results);
     }
 
     public function results(){

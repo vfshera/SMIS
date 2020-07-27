@@ -15,9 +15,10 @@ class ResultsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $sub = json_decode(json_encode(new SubjectsResource(Duty::findOrFail($this->duty_id))));
         return [
-            'subject' => new SubjectsResource(Duty::findOrFail($this->duty_id)),
-            'score' => $this->score,
+            'subject' => $sub->abbr,
+            'score' => $this->score."%",
         ];
     }
 }
