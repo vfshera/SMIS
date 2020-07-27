@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "23e45638e8aa4156e7ce777e79359333",
+    "content-hash": "00cdfe012a4c9f1a43cd96dd88eb1293",
     "packages": [
         {
             "name": "africastalking/africastalking",
-            "version": "2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AfricasTalkingLtd/africastalking-php.git",
-                "reference": "3e2c5e999e1ba2949f7752b6a39715bdd9133388"
+                "reference": "f14094a1e1677ae36bac1a2203083f6eb981aa90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AfricasTalkingLtd/africastalking-php/zipball/3e2c5e999e1ba2949f7752b6a39715bdd9133388",
-                "reference": "3e2c5e999e1ba2949f7752b6a39715bdd9133388",
+                "url": "https://api.github.com/repos/AfricasTalkingLtd/africastalking-php/zipball/f14094a1e1677ae36bac1a2203083f6eb981aa90",
+                "reference": "f14094a1e1677ae36bac1a2203083f6eb981aa90",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "ussd",
                 "voice"
             ],
-            "time": "2019-09-09T11:29:11+00:00"
+            "time": "2020-07-08T14:54:11+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -724,6 +724,7 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
@@ -770,6 +771,7 @@
                 }
             ],
             "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
