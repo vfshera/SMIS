@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\ResultsMail;
+use App\SMS\Smsservice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,16 +11,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
+use AfricasTalking\SDK\AfricasTalking;
+
 class SendResults implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $result = [];
-    private $username;
-    private $apiKey;
-
-
-    /**
+        /**
      * Create a new job instance.
      *
      * @return void
@@ -27,8 +26,7 @@ class SendResults implements ShouldQueue
     public function __construct($result)
     {
         $this->result = $result;
-        $this->username = config("africastalking.username");
-        $this->apiKey = config("africastalking.api_key");
+
     }
 
     /**
@@ -38,22 +36,9 @@ class SendResults implements ShouldQueue
      */
     public function handle()
     {
-        //send sms
-        $AT = new AfricasTalking($this->username, $this->apiKey);
-        $sms = $AT->sms();
-        try {
-             $result = $sms->send([
-                'to'      => '+254700080373',
-                'message' => 'SMIS TALKING BRUH'
-            ]);
+        $sendSms = new Smsservice($this->result);
+        $sendSms->sendResults();
 
-             dd($result);
-
-        } catch (Exception $e) {
-            dd("Error: ".$e.getMessage());
-        }
-
-        //send email
         Mail::to($this->result["student"]["email"])->send(new ResultsMail($this->result));
     }
 }

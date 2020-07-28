@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Classroom;
-use App\Http\Resources\ClassroomResource;
+
+use AfricasTalking\SDK\AfricasTalking;
 use App\Http\Resources\ResultsResource;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\TermInResultsResource;
 use App\Jobs\SendResults;
-use App\Mail\ResultsMail;
 use App\Mark;
 use App\Student;
-use App\Study;
 use App\Term;
 use App\User;
 use Illuminate\Http\Request;
@@ -31,11 +29,38 @@ class MarksController extends Controller
                array_push($results , ['student' => User::findOrFail($student->user_id) ,'details' =>  json_decode(json_encode($student)),  'resultslip' => json_decode(json_encode(ResultsResource::collection($marks))) ]);
            }
        }
+            $data =[];
             // send text and email here
             foreach ($results as $result){
+                $data = $result;
                 $this->dispatch(new SendResults($result));
             }
-       return json_encode($results);
+
+        //START AFRICAS TALKING
+        $username = env('AT_USERNAME','sandbox');
+        $apiKey   = env('AT_API_KEY','NOKEY');
+        $number = '+254700080373';
+
+        $smsHead = 'Dear Parent,'."\n".'Here Are the results of your child for TERM  '
+            .$data["resultslip"][0]->term->name.' '.$data["resultslip"][0]->term->year
+            ."\n".$data["details"]->name.'  Adm No  '.$data["details"]->admission_no.'  Form '.$data["details"]->class_name;
+        $smsBody = '';
+
+        foreach ($data["resultslip"] as $subjectScore){
+            $smsBody .=  $subjectScore->subject." ". $subjectScore->score.' ,  ';
+        }
+
+        $message = $smsHead."\n".$smsBody."\n"."Examinations Office \n MURRAY GIRLS HIGH SCHOOL";
+
+        $AT  = new AfricasTalking($username,  $apiKey);
+        $sms = $AT->sms();
+
+          $info =  $sms->send([
+                'to'      => $number,
+                'message' => $message
+            ]);
+                //END AFRICAS TALKING
+            return $results;
     }
 
     public function results(){
