@@ -20,6 +20,7 @@ import formStream from './components/stream.vue'
 import NotFoundPage from './components/NotFoundPage'
 import AddRevisionMaterials from "./components/AddRevisionMaterials";
 import MailBox from "./components/MailBox";
+import TeacherProfile from "./components/teacherpages/TeacherProfile";
 
 
 export const routes = [
@@ -120,6 +121,11 @@ export const routes = [
         path:'/myclasses',
         name: 'myclasses',
         component: MyClasses,
+    }
+    ,{
+        path:'/teacher-profile',
+        name: 'teacherProfile',
+        component: TeacherProfile,
     }
     ,
     {

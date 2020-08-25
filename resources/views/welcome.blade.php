@@ -59,7 +59,7 @@
                                          With supporting text below as a natural lead-in to additional content.
                                          With supporting text below as a natural lead-in to additional content.
                   </p>
-                  <a href="#" >Read More ....</a>
+                  <a href="/news-post" >Read More ....</a>
                 </div>
             </div>
 
@@ -76,7 +76,7 @@
                                          With supporting text below as a natural lead-in to additional content.
                                          With supporting text below as a natural lead-in to additional content.
                   </p>
-                  <a href="#" class="text-right" >Read More ....</a>
+                  <a href="/news-post" class="text-right" >Read More ....</a>
                 </div>
             </div>
 
@@ -93,7 +93,7 @@
                                          With supporting text below as a natural lead-in to additional content.
                                          With supporting text below as a natural lead-in to additional content.
                   </p>
-                  <a href="#" >Read More ....</a>
+                  <a href="/news-post" >Read More ....</a>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@
                                          With supporting text below as a natural lead-in to additional content.
                                          With supporting text below as a natural lead-in to additional content.
                   </p>
-                  <a href="#" >Read More ....</a>
+                  <a href="/news-post" >Read More ....</a>
                 </div>
             </div>
 
@@ -129,7 +129,7 @@
                                          With supporting text below as a natural lead-in to additional content.
                                          With supporting text below as a natural lead-in to additional content.
                   </p>
-                  <a href="#" class="text-right" >Read More ....</a>
+                  <a href="/news-post" class="text-right" >Read More ....</a>
                 </div>
             </div>
 
@@ -146,13 +146,16 @@
                                          With supporting text below as a natural lead-in to additional content.
                                          With supporting text below as a natural lead-in to additional content.
                   </p>
-                  <a href="#" >Read More ....</a>
+                  <a href="/news-post" >Read More ....</a>
                 </div>
             </div>
         </div>
 
 
+        <div class="mt-4 col-md-3 mx-auto text-center"><a href="/news" style="font-weight: bold; text-decoration: none;">READ MORE NEWS</a></div>
+
     </div>
+
 {{-- IMPORTANT DATES --}}
 
         <div id="announcements"    data-aos="fade-up"
@@ -210,7 +213,7 @@
         </div>
 
 
- <div class="row m-auto"style="width:99%">
+ <div id="contact" class="row m-auto"style="width:99%">
      <div class="col-md-6 mt-5 mb-5"
         data-aos="fade-up"
         data-aos-offset="200"
@@ -223,7 +226,7 @@
 
         </div>
      </div>
-     <div class="col-md-6 smis-contact mt-5 mb-5"
+     <div  class="col-md-6 smis-contact mt-5 mb-5"
         data-aos="fade-up"
         data-aos-offset="200"
         data-aos-delay="20"

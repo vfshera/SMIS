@@ -69,7 +69,15 @@
                                 <!-- ./col -->
                             </div>
 
+
+                            <h4>ACTIONS</h4>
+                            <div class="row pt-2">
+                                NEWS HERE
+
+                            </div>
                     </div>
+
+
                         <!-- /.row -->
 
                         <div class="row" v-if="this.user.access === 1">

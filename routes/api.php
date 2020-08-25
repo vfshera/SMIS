@@ -80,6 +80,7 @@ Route::middleware('auth:api')->delete('/delete-term/{id}', 'API\TermsController@
 Route::middleware('auth:api')->get('/teachers', 'API\TeachersController@getTeachers');
 Route::middleware('auth:api')->get('/loggedteachers', 'API\UserResourceController@teachers');
 Route::middleware('auth:api')->post('/add-teacher-info', 'API\TeachersController@store');
+Route::middleware('auth:api')->get('/teacherinfo', 'API\TeachersController@info');
 Route::middleware('auth:api')->delete('/delete-teacher/{id}', 'API\TeachersController@destroy');
 Route::middleware('auth:api')->get('/myclasses', 'API\TeachersController@myClasses');
 Route::middleware('auth:api')->get('/scoresheet/{classid}/{timetableid}', 'API\TeachersController@scoreSheet');

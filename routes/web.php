@@ -13,9 +13,11 @@
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','PagesController@welcome');
+
+Route::get('/news', 'PagesController@news');
+
+Route::get('/news-post', 'PagesController@singlePostNews');
 
 Auth::routes();
 

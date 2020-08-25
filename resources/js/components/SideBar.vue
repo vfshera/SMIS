@@ -22,14 +22,6 @@
                         </p>
                         </router-link>
                    </li>
-                        <li class="nav-item" v-if="currentUser.access === 1">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    News
-                                </p>
-                            </a>
-                        </li>
 
                             <li class="nav-item">
                                 <router-link :to="{ name: 'allTeachers' }"  class="nav-link"  v-if="currentUser.access === 0">
@@ -138,6 +130,12 @@
                                     </li>
 
                                 </ul>
+                                <li class="nav-item"  v-if="currentUser.access === 2">
+                                    <router-link :to="{ name: 'teacherProfile'}" class="nav-link">
+                                        <i class="fas fa-user-graduate nav-icon"></i>
+                                        <p>My Account</p>
+                                    </router-link>
+                                </li>
                             </li>
                             <li class="nav-item"  v-if="currentUser.access === 0">
                                 <router-link :to="{ name: 'addSubject' }"  class="nav-link">

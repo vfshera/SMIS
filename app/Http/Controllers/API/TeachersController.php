@@ -7,13 +7,17 @@ use App\Http\Resources\ClassroomResource;
 use App\Http\Resources\MyClassesResource;
 use App\Http\Resources\RegisteredStudentsResource;
 use App\Http\Resources\StudentResource;
+use App\Http\Resources\TeacherInfoResource;
 use App\Http\Resources\TeachersResource;
 use App\Teacher;
 use Illuminate\Http\Request;
 
 class TeachersController extends Controller
 {
-
+    public function info()
+    {
+        return new TeacherInfoResource(auth()->user());
+    }
 
     public function getTeachers(){
 
