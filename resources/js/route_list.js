@@ -21,6 +21,7 @@ import NotFoundPage from './components/NotFoundPage'
 import AddRevisionMaterials from "./components/AddRevisionMaterials";
 import MailBox from "./components/MailBox";
 import TeacherProfile from "./components/teacherpages/TeacherProfile";
+import NewsCenter from "./components/NewsCenter";
 
 
 export const routes = [
@@ -132,6 +133,11 @@ export const routes = [
         path:'/exams',
         name: 'exams',
         component: Exams,
+    }
+    , {
+        path:'/news-center',
+        name: 'newsCenter',
+        component: NewsCenter,
     }
     ,
     {

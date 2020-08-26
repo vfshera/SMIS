@@ -2348,28 +2348,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AdminIndex',
   data: function data() {
     return {
       users: [],
-      studentsNo: '',
-      teacherssNo: '',
-      classesNo: '',
-      user: []
+      user: [],
+      stat: []
     };
   },
-  props: [],
   methods: {},
-  computed: {
-    switchSubmitText: function switchSubmitText() {
-      return this.teacherSubmit ? 'Yes' : 'No';
-    }
-  },
+  computed: {},
   mounted: function mounted() {
     var _this = this;
 
     this.user = this.$store.state.currentUser;
+    axios.get('/api/dashStat').then(function (response) {
+      _this.stat = response.data;
+    })["catch"](function (err) {
+      Swal.fire('Error!', err, 'warning');
+    });
     axios.get('/api/allusers').then(function (response) {
       _this.users = response.data.data;
       _this.user = _this.$store.state.currentUser;
@@ -3378,6 +3382,193 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewsCenter.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'MailBox',
+  data: function data() {
+    return {
+      news: []
+    };
+  },
+  methods: {
+    setMsg: function setMsg(msg) {
+      this.MsgEdit = msg;
+    },
+    updateMsg: function updateMsg() {
+      var _this = this;
+
+      axios.post('/api/message', this.MsgEdit).then(function (response) {
+        $(editMsg).modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+
+        _this.fetchData();
+      })["catch"](function (err) {});
+    },
+    scrollChat: function scrollChat() {
+      var scrl = document.querySelector('#msg-scroll');
+      scrl.scrollTop = scrl.scrollHeight;
+    },
+    loadMessage: function loadMessage(index) {
+      var _this2 = this;
+
+      this.current = this.conversations[index];
+      setTimeout(function () {
+        _this2.fetchData();
+      }, 50);
+    },
+    sendMsg: function sendMsg(id) {
+      var _this3 = this;
+
+      this.msg.conv_id = id;
+
+      if (this.msg.conv_id && this.msg.message) {
+        axios.post('/api/message', this.msg).then(function (response) {
+          _this3.startUp();
+
+          _this3.current = _this3.conversations[0];
+          _this3.msg.conv_id = '';
+          _this3.msg.message = '';
+        })["catch"](function (err) {});
+      } else if (this.new_chat.receiver_id && this.new_chat.message) {
+        axios.post('/api/message', this.new_chat).then(function (response) {
+          $(newChat).modal('hide');
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+          _this3.conversations = [];
+
+          _this3.startUp();
+
+          _this3.current = _this3.conversations[0];
+          _this3.new_chat.receiver_id = '';
+          _this3.new_chat.message = '';
+        })["catch"](function (err) {});
+      } else {
+        alert("Ensure All Fields Are Filled!");
+      }
+    },
+    fetchData: function fetchData() {
+      var _this4 = this;
+
+      axios.get('/api/messages').then(function (response) {
+        _this4.conversations = response.data.data;
+
+        _this4.conversations.forEach(function (c) {
+          if (c.id == _this4.current.id) {
+            _this4.current = c;
+            _this4.msg.message = '';
+          } else {
+            _this4.NoMessages = false;
+            _this4.current = _this4.conversations[0];
+          }
+        });
+
+        if (_this4.current["new"] > 0) {
+          _this4.readMsgs(_this4.current.id);
+        }
+      })["catch"](function (err) {});
+      axios.get('/api/recievers').then(function (response) {
+        _this4.recipients = response.data.data;
+      })["catch"](function (err) {});
+    },
+    startUp: function startUp() {
+      var _this5 = this;
+
+      axios.get('/api/messages').then(function (response) {
+        _this5.conversations = response.data.data;
+
+        if (_this5.conversations[0]) {
+          _this5.current = _this5.conversations[0];
+        } else {
+          _this5.NoMessages = true;
+        }
+
+        setTimeout(function () {
+          _this5.scrollChat();
+        }, 150);
+        setInterval(function () {
+          _this5.fetchData();
+        }, 15000);
+      })["catch"](function (err) {});
+      axios.get('/api/recievers').then(function (response) {
+        _this5.recipients = response.data.data;
+      })["catch"](function (err) {});
+    },
+    delMsg: function delMsg(id) {
+      var _this6 = this;
+
+      Swal.fire({
+        title: 'Delete Message?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]('/api/delete-msg/' + id).then(function (response) {
+            _this6.fetchData(); // this.current.messages = []
+
+          })["catch"](function (err) {});
+        }
+      });
+    },
+    setConv: function setConv(index) {
+      this.current = this.conversations[index];
+    },
+    readMsgs: function readMsgs(id) {
+      axios.post('/api/read/' + id).then(function (response) {})["catch"](function (err) {});
+    }
+  },
+  computed: {
+    "function": function _function() {
+      this.NoMessages = this.conversations.length > 0 ? this.conversations[0].messages.length < 1 : true; //  const chatBox = document.querySelector('#message-view');
+      //  const noMsgBox = document.querySelector('#noMsg');
+      // if(this.NoMessages){
+      //      chatBox.style.display = 'none'
+      //     noMsgBox.style.display = 'inherit'
+      // }else{
+      //     chatBox.style.display = 'inherit'
+      //     noMsgBox.style.display = 'none'
+      // }
+    }
+  },
+  mounted: function mounted() {
+    this.startUp();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NotFoundPage.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NotFoundPage.vue?vue&type=script&lang=js& ***!
@@ -3473,6 +3664,14 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -11643,6 +11842,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\n#msg-send-section{\n    background: white;\n}\n#msg-scroll{\n    background: #F5F5F5;\n}\n#conv-holder{\n    border-bottom: .5px solid rgba(192,192,192,.6);\n}\n#conv-holder:hover{\n    background: #F5F5F5;\n}\n#message-view{\n    height: 640px;\n}\n#conversations{\n    padding: 0;\n}\n#recent-chats{\n    margin-top: 0;\n    height: 593px;\n    padding: 5px 0 0 0 !important;\n    /*padding: 5px 0 0 0 !important;*/\n}\n#conv-scroll{\n    height: 560px;\n}\n#msg-scroll,#conv-scroll{\n    overflow-x: hidden;\n    overflow-y: auto;\n    scrollbar-width: thin;\n    scrollbar-color: grey white;\n}\n::-webkit-scrollbar{\n    width: 8px;\n    background-color: white;\n}\n::-webkit-scrollbar-thumb {\n    background-color: grey;\n}\n::-webkit-scrollbar-track {\n    background-color:white;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n#news-header{\n    height: 64px;\n    background: white;\n    border-bottom: rgba(1,1,1,.6) 2px solid;\n}\n#news-body{\n     background: white;\n     width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -42708,6 +42926,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./NewsCenter.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Students.vue?vue&type=style&index=0&lang=css&":
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Students.vue?vue&type=style&index=0&lang=css& ***!
@@ -47028,7 +47276,127 @@ var render = function() {
       _vm._v(" "),
       this.user.access === 0
         ? _c("div", { attrs: { id: "admin" } }, [
-            _vm._m(0),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-lg-3 col-6" }, [
+                _c(
+                  "div",
+                  { staticClass: "small-box bg-info" },
+                  [
+                    _c("div", { staticClass: "inner" }, [
+                      _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                        _vm._v(_vm._s(_vm.stat.tcher_no))
+                      ]),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "animated  fadeInUp " }, [
+                        _vm._v("Teachers")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "small-box-footer  animated  fadeInRight  ",
+                        attrs: { to: { name: "allTeachers" } }
+                      },
+                      [
+                        _vm._v("\n                            More info "),
+                        _c("i", { staticClass: "fas fa-arrow-circle-right" })
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-3 col-6" }, [
+                _c(
+                  "div",
+                  { staticClass: "small-box bg-success" },
+                  [
+                    _c("div", { staticClass: "inner" }, [
+                      _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                        _vm._v(_vm._s(_vm.stat.stud_no))
+                      ]),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "animated  fadeInUp " }, [
+                        _vm._v("Students")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "small-box-footer  animated  fadeInRight  ",
+                        attrs: { to: { name: "allStudents" } }
+                      },
+                      [
+                        _vm._v("\n                            More info "),
+                        _c("i", { staticClass: "fas fa-arrow-circle-right" })
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-3 col-6" }, [
+                _c(
+                  "div",
+                  { staticClass: "small-box bg-warning" },
+                  [
+                    _c("div", { staticClass: "inner" }, [
+                      _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                        _vm._v(_vm._s(_vm.stat.class_count))
+                      ]),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "animated  fadeInUp " }, [
+                        _vm._v("Classes")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "small-box-footer  animated  fadeInRight  ",
+                        attrs: { to: { name: "addClass" } }
+                      },
+                      [
+                        _vm._v("\n                            More info "),
+                        _c("i", { staticClass: "fas fa-arrow-circle-right" })
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-3 col-6" }, [
+                _c("div", { staticClass: "small-box bg-danger" }, [
+                  _c("div", { staticClass: "inner" }, [
+                    _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                      _vm._v(_vm._s(_vm.stat.newsposts))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "animated  fadeInUp " }, [
+                      _vm._v("News Posts")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _vm._m(4)
+                ])
+              ])
+            ]),
             _vm._v(" "),
             _c("h4", [_vm._v("ACTIONS")]),
             _vm._v(" "),
@@ -47039,11 +47407,11 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       this.user.access === 1
-        ? _c("div", { staticClass: "row" }, [_vm._m(1)])
+        ? _c("div", { staticClass: "row" }, [_vm._m(5)])
         : _vm._e(),
       _vm._v(" "),
       this.user.access === 2
-        ? _c("div", { staticClass: "row" }, [_vm._m(2)])
+        ? _c("div", { staticClass: "row" }, [_vm._m(6)])
         : _vm._e()
     ])
   ])
@@ -47053,125 +47421,49 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-lg-3 col-6" }, [
-        _c("div", { staticClass: "small-box bg-info" }, [
-          _c("div", { staticClass: "inner" }, [
-            _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
-              _vm._v("150")
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "animated  fadeInUp " }, [
-              _vm._v("Teachers")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "icon" }, [
-            _c("i", { staticClass: "ion ion-bag" })
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "small-box-footer  animated  fadeInRight  ",
-              attrs: { href: "#" }
-            },
-            [
-              _vm._v("More info "),
-              _c("i", { staticClass: "fas fa-arrow-circle-right" })
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-lg-3 col-6" }, [
-        _c("div", { staticClass: "small-box bg-success" }, [
-          _c("div", { staticClass: "inner" }, [
-            _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
-              _vm._v("1140")
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "animated  fadeInUp " }, [
-              _vm._v("Students")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "icon" }, [
-            _c("i", { staticClass: "ion ion-stats-bars" })
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "small-box-footer  animated  fadeInRight  ",
-              attrs: { href: "#" }
-            },
-            [
-              _vm._v("More info "),
-              _c("i", { staticClass: "fas fa-arrow-circle-right" })
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-lg-3 col-6" }, [
-        _c("div", { staticClass: "small-box bg-warning" }, [
-          _c("div", { staticClass: "inner" }, [
-            _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
-              _vm._v("64")
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "animated  fadeInUp " }, [_vm._v("Classes")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "icon" }, [
-            _c("i", { staticClass: "ion ion-person-add" })
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "small-box-footer  animated  fadeInRight  ",
-              attrs: { href: "#" }
-            },
-            [
-              _vm._v("More info "),
-              _c("i", { staticClass: "fas fa-arrow-circle-right" })
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-lg-3 col-6" }, [
-        _c("div", { staticClass: "small-box bg-danger" }, [
-          _c("div", { staticClass: "inner" }, [
-            _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
-              _vm._v("65")
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "animated  fadeInUp " }, [
-              _vm._v("Unique Visitors")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "icon" }, [
-            _c("i", { staticClass: "ion ion-pie-graph" })
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "small-box-footer  animated  fadeInRight  ",
-              attrs: { href: "#" }
-            },
-            [
-              _vm._v("More info "),
-              _c("i", { staticClass: "fas fa-arrow-circle-right" })
-            ]
-          )
-        ])
-      ])
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "ion ion-bag" })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "ion ion-stats-bars" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "ion ion-person-add" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "ion ion-pie-graph" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "small-box-footer  animated  fadeInRight  ",
+        attrs: { href: "#" }
+      },
+      [
+        _vm._v("More info "),
+        _c("i", { staticClass: "fas fa-arrow-circle-right" })
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -48945,6 +49237,59 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=template&id=35f6fc9a&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewsCenter.vue?vue&type=template&id=35f6fc9a& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c(
+        "div",
+        { staticClass: "pt-3 col-md-12 row", attrs: { id: "news-header" } },
+        [
+          _c("div", { staticClass: "mr-auto" }, [
+            _c("h2", [_vm._v("News Center")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ml-auto pt-3 pr-5 row" }, [
+            _c("span", { staticClass: "text-primary mr-2" }, [
+              _vm._v("Compose")
+            ]),
+            _vm._v(" "),
+            _c("i", { staticClass: "fa fa-envelope-open fa-2x mr-5" }),
+            _vm._v(" "),
+            _c("h5", { staticClass: "text-primary" }, [_vm._v("9 Posts")])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: " col-md-12", attrs: { id: "news-body" } })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NotFoundPage.vue?vue&type=template&id=59da4489&scoped=true&":
 /*!***************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NotFoundPage.vue?vue&type=template&id=59da4489&scoped=true& ***!
@@ -49127,6 +49472,35 @@ var render = function() {
           }
         },
         [
+          _vm.currentUser.access === 0
+            ? _c(
+                "li",
+                { staticClass: "nav-item" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      staticClass: "nav-link",
+                      attrs: { to: { name: "newsCenter" } }
+                    },
+                    [
+                      _c("i", {
+                        staticClass: "nav-icon fas fa-newspaper",
+                        attrs: { "aria-hidden": "true" }
+                      }),
+                      _vm._v(" "),
+                      _c("p", [
+                        _vm._v(
+                          "\n                        News\n                    "
+                        )
+                      ])
+                    ]
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
           _vm.currentUser.access === 0
             ? _c(
                 "li",
@@ -72849,6 +73223,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/NewsCenter.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/NewsCenter.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _NewsCenter_vue_vue_type_template_id_35f6fc9a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NewsCenter.vue?vue&type=template&id=35f6fc9a& */ "./resources/js/components/NewsCenter.vue?vue&type=template&id=35f6fc9a&");
+/* harmony import */ var _NewsCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NewsCenter.vue?vue&type=script&lang=js& */ "./resources/js/components/NewsCenter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NewsCenter.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _NewsCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _NewsCenter_vue_vue_type_template_id_35f6fc9a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _NewsCenter_vue_vue_type_template_id_35f6fc9a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/NewsCenter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/NewsCenter.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/NewsCenter.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./NewsCenter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./NewsCenter.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/NewsCenter.vue?vue&type=template&id=35f6fc9a&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/NewsCenter.vue?vue&type=template&id=35f6fc9a& ***!
+  \*******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_template_id_35f6fc9a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./NewsCenter.vue?vue&type=template&id=35f6fc9a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewsCenter.vue?vue&type=template&id=35f6fc9a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_template_id_35f6fc9a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewsCenter_vue_vue_type_template_id_35f6fc9a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/NotFoundPage.vue":
 /*!**************************************************!*\
   !*** ./resources/js/components/NotFoundPage.vue ***!
@@ -74548,6 +75009,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_AddRevisionMaterials__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./components/AddRevisionMaterials */ "./resources/js/components/AddRevisionMaterials.vue");
 /* harmony import */ var _components_MailBox__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./components/MailBox */ "./resources/js/components/MailBox.vue");
 /* harmony import */ var _components_teacherpages_TeacherProfile__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./components/teacherpages/TeacherProfile */ "./resources/js/components/teacherpages/TeacherProfile.vue");
+/* harmony import */ var _components_NewsCenter__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./components/NewsCenter */ "./resources/js/components/NewsCenter.vue");
+
 
 
 
@@ -74655,6 +75118,10 @@ var routes = [{
   path: '/exams',
   name: 'exams',
   component: _components_teacherpages_Exams_vue__WEBPACK_IMPORTED_MODULE_15__["default"]
+}, {
+  path: '/news-center',
+  name: 'newsCenter',
+  component: _components_NewsCenter__WEBPACK_IMPORTED_MODULE_23__["default"]
 }, {
   path: '/marks/:classid/:timetableid',
   name: 'marks',

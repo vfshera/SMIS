@@ -11,14 +11,16 @@
                                     <!-- small box -->
                                     <div class="small-box bg-info">
                                         <div class="inner">
-                                            <h3 class="animated  fadeInUp  faster">150</h3>
+                                            <h3 class="animated  fadeInUp  faster">{{ stat.tcher_no }}</h3>
 
                                             <p class="animated  fadeInUp ">Teachers</p>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-bag"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer  animated  fadeInRight  ">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                        <router-link :to="{ name: 'allTeachers' }" class="small-box-footer  animated  fadeInRight  ">
+                                            More info <i class="fas fa-arrow-circle-right"></i>
+                                        </router-link>
                                     </div>
                                 </div>
                                 <!-- ./col -->
@@ -26,14 +28,16 @@
                                     <!-- small box -->
                                     <div class="small-box bg-success">
                                         <div class="inner">
-                                            <h3 class="animated  fadeInUp  faster">1140</h3>
+                                            <h3 class="animated  fadeInUp  faster">{{ stat.stud_no }}</h3>
 
                                             <p class="animated  fadeInUp ">Students</p>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-stats-bars"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer  animated  fadeInRight  ">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                        <router-link :to="{ name: 'allStudents' }" class="small-box-footer  animated  fadeInRight  ">
+                                            More info <i class="fas fa-arrow-circle-right"></i>
+                                        </router-link>
                                     </div>
                                 </div>
                                 <!-- ./col -->
@@ -41,14 +45,16 @@
                                     <!-- small box -->
                                     <div class="small-box bg-warning">
                                         <div class="inner">
-                                            <h3 class="animated  fadeInUp  faster">64</h3>
+                                            <h3 class="animated  fadeInUp  faster">{{ stat.class_count}}</h3>
 
                                             <p class="animated  fadeInUp ">Classes</p>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-person-add"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer  animated  fadeInRight  ">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                        <router-link :to="{ name: 'addClass' }" class="small-box-footer  animated  fadeInRight  ">
+                                            More info <i class="fas fa-arrow-circle-right"></i>
+                                        </router-link>
                                     </div>
                                 </div>
                                 <!-- ./col -->
@@ -56,9 +62,9 @@
                                     <!-- small box -->
                                     <div class="small-box bg-danger">
                                         <div class="inner">
-                                            <h3 class="animated  fadeInUp  faster">65</h3>
+                                            <h3 class="animated  fadeInUp  faster">{{ stat.newsposts }}</h3>
 
-                                            <p class="animated  fadeInUp ">Unique Visitors</p>
+                                            <p class="animated  fadeInUp ">News Posts</p>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-pie-graph"></i>
@@ -116,23 +122,28 @@
         data(){
             return{
                 users: [],
-                studentsNo: '',
-                teacherssNo: '',
-                classesNo: '',
                 user:[],
+                stat: []
             }
         },
-        props:[],
         methods:{
 
         },
-        computed:{
-            switchSubmitText(){
-                return (this.teacherSubmit) ? 'Yes' : 'No';
-            }
-        },
+        computed: {},
         mounted() {
                 this.user = this.$store.state.currentUser;
+                    axios.get('/api/dashStat')
+                        .then(response =>{
+                            this.stat = response.data;
+                        })
+                        .catch(err =>{
+                            Swal.fire(
+                                'Error!',
+                                err,
+                                'warning'
+                            )
+
+                        });
 
                    axios.get('/api/allusers')
                     .then(response =>{

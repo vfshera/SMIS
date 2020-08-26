@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //users
 Route::middleware('auth:api')->get('/allusers', 'API\UserResourceController@allUsers');
+Route::middleware('auth:api')->get('/dashStat', 'API\UserResourceController@dashCount');
 Route::middleware('auth:api')->get('/users', 'API\UserResourceController@root');
 
 
