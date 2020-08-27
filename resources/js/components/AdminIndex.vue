@@ -69,8 +69,9 @@
                                         <div class="icon">
                                             <i class="ion ion-pie-graph"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer  animated  fadeInRight  ">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                    </div>
+                                        <router-link :to="{ name: 'newsCenter' }" class="small-box-footer  animated  fadeInRight  ">
+                                            More info <i class="fas fa-arrow-circle-right"></i>
+                                        </router-link></div>
                                 </div>
                                 <!-- ./col -->
                             </div>

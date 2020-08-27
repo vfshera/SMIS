@@ -2354,6 +2354,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AdminIndex',
   data: function data() {
@@ -3411,119 +3412,160 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'MailBox',
+  name: 'NewsCenter',
   data: function data() {
     return {
-      news: []
+      news: [],
+      newspost: {
+        id: '',
+        title: '',
+        info: ''
+      }
     };
   },
   methods: {
-    setMsg: function setMsg(msg) {
-      this.MsgEdit = msg;
+    openModal: function openModal(name) {
+      this.resetNews();
+      $(name).modal('show');
     },
-    updateMsg: function updateMsg() {
+    resetNews: function resetNews() {
+      this.newspost.id = '';
+      this.newspost.title = '';
+      this.newspost.info = '';
+    },
+    editNewsPost: function editNewsPost(post) {
+      this.openModal('#editNews');
+      this.newspost.id = post.id;
+      this.newspost.title = post.title;
+      this.newspost.info = post.info;
+    },
+    updatePost: function updatePost() {
       var _this = this;
 
-      axios.post('/api/message', this.MsgEdit).then(function (response) {
-        $(editMsg).modal('hide');
-        $('body').removeClass('modal-open');
-        $('.modal-backdrop').remove();
-
-        _this.fetchData();
-      })["catch"](function (err) {});
-    },
-    scrollChat: function scrollChat() {
-      var scrl = document.querySelector('#msg-scroll');
-      scrl.scrollTop = scrl.scrollHeight;
-    },
-    loadMessage: function loadMessage(index) {
-      var _this2 = this;
-
-      this.current = this.conversations[index];
-      setTimeout(function () {
-        _this2.fetchData();
-      }, 50);
-    },
-    sendMsg: function sendMsg(id) {
-      var _this3 = this;
-
-      this.msg.conv_id = id;
-
-      if (this.msg.conv_id && this.msg.message) {
-        axios.post('/api/message', this.msg).then(function (response) {
-          _this3.startUp();
-
-          _this3.current = _this3.conversations[0];
-          _this3.msg.conv_id = '';
-          _this3.msg.message = '';
-        })["catch"](function (err) {});
-      } else if (this.new_chat.receiver_id && this.new_chat.message) {
-        axios.post('/api/message', this.new_chat).then(function (response) {
-          $(newChat).modal('hide');
+      if (this.newspost.title != '' && this.newspost.info != '' && this.newspost.id != '') {
+        axios.post('/api/update-news', this.newspost).then(function (response) {
+          $('#editNews').modal('hide');
           $('body').removeClass('modal-open');
           $('.modal-backdrop').remove();
-          _this3.conversations = [];
 
-          _this3.startUp();
-
-          _this3.current = _this3.conversations[0];
-          _this3.new_chat.receiver_id = '';
-          _this3.new_chat.message = '';
+          _this.fetchData();
         })["catch"](function (err) {});
       } else {
-        alert("Ensure All Fields Are Filled!");
+        alert("NO EMPTY UPDATES!");
+      }
+    },
+    addPost: function addPost() {
+      var _this2 = this;
+
+      if (this.newspost.title != '' && this.newspost.info != '') {
+        axios.post('/api/newspost', this.newspost).then(function (response) {
+          $('#addNews').modal('hide');
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+
+          _this2.fetchData();
+        })["catch"](function (err) {});
+      } else {
+        alert("NO EMPTY POSTS!");
       }
     },
     fetchData: function fetchData() {
+      var _this3 = this;
+
+      axios.get('/api/newsposts').then(function (response) {
+        _this3.news = response.data;
+      })["catch"](function (err) {});
+    },
+    deleteNewsPost: function deleteNewsPost(id) {
       var _this4 = this;
-
-      axios.get('/api/messages').then(function (response) {
-        _this4.conversations = response.data.data;
-
-        _this4.conversations.forEach(function (c) {
-          if (c.id == _this4.current.id) {
-            _this4.current = c;
-            _this4.msg.message = '';
-          } else {
-            _this4.NoMessages = false;
-            _this4.current = _this4.conversations[0];
-          }
-        });
-
-        if (_this4.current["new"] > 0) {
-          _this4.readMsgs(_this4.current.id);
-        }
-      })["catch"](function (err) {});
-      axios.get('/api/recievers').then(function (response) {
-        _this4.recipients = response.data.data;
-      })["catch"](function (err) {});
-    },
-    startUp: function startUp() {
-      var _this5 = this;
-
-      axios.get('/api/messages').then(function (response) {
-        _this5.conversations = response.data.data;
-
-        if (_this5.conversations[0]) {
-          _this5.current = _this5.conversations[0];
-        } else {
-          _this5.NoMessages = true;
-        }
-
-        setTimeout(function () {
-          _this5.scrollChat();
-        }, 150);
-        setInterval(function () {
-          _this5.fetchData();
-        }, 15000);
-      })["catch"](function (err) {});
-      axios.get('/api/recievers').then(function (response) {
-        _this5.recipients = response.data.data;
-      })["catch"](function (err) {});
-    },
-    delMsg: function delMsg(id) {
-      var _this6 = this;
 
       Swal.fire({
         title: 'Delete Message?',
@@ -3535,35 +3577,16 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Yes, delete it!'
       }).then(function (result) {
         if (result.value) {
-          axios["delete"]('/api/delete-msg/' + id).then(function (response) {
-            _this6.fetchData(); // this.current.messages = []
-
+          axios["delete"]('/api/delete-news/' + id).then(function (response) {
+            _this4.fetchData();
           })["catch"](function (err) {});
         }
       });
-    },
-    setConv: function setConv(index) {
-      this.current = this.conversations[index];
-    },
-    readMsgs: function readMsgs(id) {
-      axios.post('/api/read/' + id).then(function (response) {})["catch"](function (err) {});
     }
   },
-  computed: {
-    "function": function _function() {
-      this.NoMessages = this.conversations.length > 0 ? this.conversations[0].messages.length < 1 : true; //  const chatBox = document.querySelector('#message-view');
-      //  const noMsgBox = document.querySelector('#noMsg');
-      // if(this.NoMessages){
-      //      chatBox.style.display = 'none'
-      //     noMsgBox.style.display = 'inherit'
-      // }else{
-      //     chatBox.style.display = 'inherit'
-      //     noMsgBox.style.display = 'none'
-      // }
-    }
-  },
+  computed: {},
   mounted: function mounted() {
-    this.startUp();
+    this.fetchData();
   }
 });
 
@@ -47380,21 +47403,37 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-lg-3 col-6" }, [
-                _c("div", { staticClass: "small-box bg-danger" }, [
-                  _c("div", { staticClass: "inner" }, [
-                    _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
-                      _vm._v(_vm._s(_vm.stat.newsposts))
+                _c(
+                  "div",
+                  { staticClass: "small-box bg-danger" },
+                  [
+                    _c("div", { staticClass: "inner" }, [
+                      _c("h3", { staticClass: "animated  fadeInUp  faster" }, [
+                        _vm._v(_vm._s(_vm.stat.newsposts))
+                      ]),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "animated  fadeInUp " }, [
+                        _vm._v("News Posts")
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("p", { staticClass: "animated  fadeInUp " }, [
-                      _vm._v("News Posts")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(3),
-                  _vm._v(" "),
-                  _vm._m(4)
-                ])
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "small-box-footer  animated  fadeInRight  ",
+                        attrs: { to: { name: "newsCenter" } }
+                      },
+                      [
+                        _vm._v("\n                            More info "),
+                        _c("i", { staticClass: "fas fa-arrow-circle-right" })
+                      ]
+                    )
+                  ],
+                  1
+                )
               ])
             ]),
             _vm._v(" "),
@@ -47407,11 +47446,11 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       this.user.access === 1
-        ? _c("div", { staticClass: "row" }, [_vm._m(5)])
+        ? _c("div", { staticClass: "row" }, [_vm._m(4)])
         : _vm._e(),
       _vm._v(" "),
       this.user.access === 2
-        ? _c("div", { staticClass: "row" }, [_vm._m(6)])
+        ? _c("div", { staticClass: "row" }, [_vm._m(5)])
         : _vm._e()
     ])
   ])
@@ -47448,22 +47487,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "icon" }, [
       _c("i", { staticClass: "ion ion-pie-graph" })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "small-box-footer  animated  fadeInRight  ",
-        attrs: { href: "#" }
-      },
-      [
-        _vm._v("More info "),
-        _c("i", { staticClass: "fas fa-arrow-circle-right" })
-      ]
-    )
   },
   function() {
     var _vm = this
@@ -49252,35 +49275,426 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "col-md-12" }, [
+    _c(
+      "div",
+      { staticClass: "pt-3 col-md-12 row", attrs: { id: "news-header" } },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "ml-auto pt-3 pr-5 row" }, [
+          _c(
+            "span",
+            {
+              staticClass: "text-primary mr-2",
+              on: {
+                click: function($event) {
+                  return _vm.openModal("#addNews")
+                }
+              }
+            },
+            [_vm._v("Compose")]
+          ),
+          _vm._v(" "),
+          _c("i", {
+            staticClass: "fa fa-envelope-open fa-2x mr-5",
+            on: {
+              click: function($event) {
+                return _vm.openModal("#addNews")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("h5", { staticClass: "text-primary" }, [
+            _vm._v(_vm._s(_vm.news.length) + " Posts")
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: " card-deck py-3", attrs: { id: "news-body" } },
+      _vm._l(_vm.news, function(post) {
+        return _c("div", { key: post.id, staticClass: "card col-md-4 p-0" }, [
+          _c(
+            "div",
+            {
+              staticClass: "card-body",
+              attrs: {
+                "data-aos": "fade-up",
+                "data-aos-offset": "200",
+                "data-aos-delay": "25",
+                "data-aos-duration": "1000",
+                "data-aos-easing": "ease-in-out"
+              }
+            },
+            [
+              _c("h3", { staticClass: "card-title " }, [
+                _vm._v(
+                  _vm._s(post.title.slice(0, 36)) +
+                    " " +
+                    _vm._s(post.title.length > 36 ? "..." : "")
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "card-text" }, [
+                _vm._v(
+                  "\n                       " +
+                    _vm._s(post.info.slice(0, 180)) +
+                    "\n                       "
+                ),
+                post.info.length > 180 ? _c("span", [_vm._v("...")]) : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c("a", { attrs: { href: "/news-post" } }, [
+                _vm._v("Read More ....")
+              ]),
+              _vm._v(" "),
+              _c("span", { staticClass: "float-right" }, [
+                _c("i", {
+                  staticClass: "fas fa-pencil-alt mr-1",
+                  on: {
+                    click: function($event) {
+                      return _vm.editNewsPost(post)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("i", {
+                  staticClass: "ml-1 far fa-trash-alt",
+                  on: {
+                    click: function($event) {
+                      return _vm.deleteNewsPost(post.id)
+                    }
+                  }
+                })
+              ])
+            ]
+          )
+        ])
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "addNews",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "addNews",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered modal-lg",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "p-2",
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.addPost($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group  col-md-12" }, [
+                        _c("label", { attrs: { for: "newstitle" } }, [
+                          _vm._v("News Title")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.newspost.title,
+                              expression: "newspost.title"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            id: "newstitle",
+                            placeholder: "Enter News Title Here ...."
+                          },
+                          domProps: { value: _vm.newspost.title },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.newspost,
+                                "title",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group col-md-12" }, [
+                        _c("label", { attrs: { for: "info" } }, [
+                          _vm._v("News Information")
+                        ]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.newspost.info,
+                              expression: "newspost.info"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            rows: "8",
+                            id: "info",
+                            placeholder: "Put News here ......"
+                          },
+                          domProps: { value: _vm.newspost.info },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.newspost,
+                                "info",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary float-right",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("POST")]
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "editNews",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "editNews",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered modal-lg",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "p-2",
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.updatePost($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group  col-md-12" }, [
+                        _c("label", { attrs: { for: "newstitle" } }, [
+                          _vm._v("News Title")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.newspost.title,
+                              expression: "newspost.title"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            id: "newstitle",
+                            placeholder: "Enter News Title Here ...."
+                          },
+                          domProps: { value: _vm.newspost.title },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.newspost,
+                                "title",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "form-group col-md-12" }, [
+                        _c("label", { attrs: { for: "info" } }, [
+                          _vm._v("News Information")
+                        ]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.newspost.info,
+                              expression: "newspost.info"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            rows: "8",
+                            id: "info",
+                            placeholder: "Put News here ......"
+                          },
+                          domProps: { value: _vm.newspost.info },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.newspost,
+                                "info",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary float-right",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("UPDATE")]
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
+    return _c("div", { staticClass: "mr-auto" }, [
+      _c("h2", [_vm._v("News Center")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
       _c(
-        "div",
-        { staticClass: "pt-3 col-md-12 row", attrs: { id: "news-header" } },
-        [
-          _c("div", { staticClass: "mr-auto" }, [
-            _c("h2", [_vm._v("News Center")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "ml-auto pt-3 pr-5 row" }, [
-            _c("span", { staticClass: "text-primary mr-2" }, [
-              _vm._v("Compose")
-            ]),
-            _vm._v(" "),
-            _c("i", { staticClass: "fa fa-envelope-open fa-2x mr-5" }),
-            _vm._v(" "),
-            _c("h5", { staticClass: "text-primary" }, [_vm._v("9 Posts")])
-          ])
-        ]
+        "h5",
+        { staticClass: "modal-title ml-2", attrs: { id: "addNewsTitle" } },
+        [_vm._v("ADD NEWS POST")]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: " col-md-12", attrs: { id: "news-body" } })
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title ml-2", attrs: { id: "editNewsTitle" } },
+        [_vm._v("EDIT NEWS POST")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]

@@ -33,6 +33,13 @@ Route::middleware('auth:api')->delete('/delete-upload/{id}', 'API\UploadsControl
 Route::middleware('auth:api')->get('/download-file/{id}', 'API\UploadsController@getFile');
 
 
+//news
+Route::middleware('auth:api')->get('/newsposts', 'API\NewsController@index');
+Route::middleware('auth:api')->post('/newspost', 'API\NewsController@create');
+Route::middleware('auth:api')->post('/update-news', 'API\NewsController@update');
+Route::middleware('auth:api')->delete('/delete-news/{id}', 'API\NewsController@destroy');
+
+
 //messages
 Route::middleware('auth:api')->get('/messages', 'API\MessagesController@index');
 Route::middleware('auth:api')->post('/message', 'API\MessagesController@sendMessage');
