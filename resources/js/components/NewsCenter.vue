@@ -10,30 +10,35 @@
            </div>
        </div>
 
-       <div id="news-body" class=" card-deck py-3">
+       <div id="news-body" class=" card-deck py-3 ">
 
-           <div class="card col-md-4 p-0" v-for="post in news" :key="post.id">
-               <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="200"
-                    data-aos-delay="25"
-                    data-aos-duration="1000"
-                    data-aos-easing="ease-in-out"
-               >
-                   <h3 class="card-title ">{{ post.title.slice(0, 36) }} {{  (post.title.length > 36)  ? '...' : '' }}</h3>
-                   <p class="card-text">
-                       {{ post.info.slice(0,180) }}
-                       <span v-if="post.info.length > 180">...</span>
-                   </p>
+           <div class="col-md-4 col-sm-12 p-0 mb-2" v-for="post in news" :key="post.id">
+              <div class="card h-100 p-0">
+                  <div class="card-body" data-aos="fade-up"
+                       data-aos-offset="200"
+                       data-aos-delay="25"
+                       data-aos-duration="1000"
+                       data-aos-easing="ease-in-out"
+                  >
+                      <h3 class="card-title ">{{ post.title.slice(0, 36) }} {{  (post.title.length > 36)  ? '...' : '' }}</h3>
+                      <p class="card-text">
+                          {{ post.info.slice(0,170) }}
+                          <span v-if="post.info.length > 170">...</span>
 
-                   <a href="/news-post" >Read More ....</a>
+                          <span class="float-right font-italic text-muted">
+                              &#8212; {{ post.created_at }}
+                          </span>
+                      </p>
 
-                   <span class="float-right">
+                      <a href="/news-post" >Read More ....</a>
+
+                      <span class="float-right">
                        <i class="fas fa-pencil-alt mr-1" @click="editNewsPost(post)"></i>
                        <i class="ml-1 far fa-trash-alt" @click="deleteNewsPost(post.id)"></i>
+                       </span>
 
-                   </span>
-
-               </div>
+                  </div>
+              </div>
            </div>
 
        </div>
@@ -174,7 +179,7 @@
             fetchData(){
                     axios.get('/api/newsposts')
                     .then(response => {
-                        this.news = response.data;
+                        this.news = response.data.data;
 
                     })
                     .catch(err => {
@@ -226,4 +231,6 @@
         background: white;
         width: 100%;
     }
+
+
 </style>

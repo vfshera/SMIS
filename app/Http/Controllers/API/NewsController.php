@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NewsResource;
 use App\News;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
     public function index(){
-        return json_encode(News::all());
+        return NewsResource::collection(News::orderBy('created_at' , 'desc')->get());
     }
 
     public function create(Request $request)

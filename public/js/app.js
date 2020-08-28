@@ -3499,6 +3499,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'NewsCenter',
   data: function data() {
@@ -3561,7 +3566,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       axios.get('/api/newsposts').then(function (response) {
-        _this3.news = response.data;
+        _this3.news = response.data.data;
       })["catch"](function (err) {});
     },
     deleteNewsPost: function deleteNewsPost(id) {
@@ -11883,7 +11888,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#news-header{\n    height: 64px;\n    background: white;\n    border-bottom: rgba(1,1,1,.6) 2px solid;\n}\n#news-body{\n     background: white;\n     width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n#news-header{\n    height: 64px;\n    background: white;\n    border-bottom: rgba(1,1,1,.6) 2px solid;\n}\n#news-body{\n     background: white;\n     width: 100%;\n}\n\n\n", ""]);
 
 // exports
 
@@ -49314,65 +49319,85 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: " card-deck py-3", attrs: { id: "news-body" } },
+      { staticClass: " card-deck py-3 ", attrs: { id: "news-body" } },
       _vm._l(_vm.news, function(post) {
-        return _c("div", { key: post.id, staticClass: "card col-md-4 p-0" }, [
-          _c(
-            "div",
-            {
-              staticClass: "card-body",
-              attrs: {
-                "data-aos": "fade-up",
-                "data-aos-offset": "200",
-                "data-aos-delay": "25",
-                "data-aos-duration": "1000",
-                "data-aos-easing": "ease-in-out"
-              }
-            },
-            [
-              _c("h3", { staticClass: "card-title " }, [
-                _vm._v(
-                  _vm._s(post.title.slice(0, 36)) +
-                    " " +
-                    _vm._s(post.title.length > 36 ? "..." : "")
-                )
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "card-text" }, [
-                _vm._v(
-                  "\n                       " +
-                    _vm._s(post.info.slice(0, 180)) +
-                    "\n                       "
-                ),
-                post.info.length > 180 ? _c("span", [_vm._v("...")]) : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("a", { attrs: { href: "/news-post" } }, [
-                _vm._v("Read More ....")
-              ]),
-              _vm._v(" "),
-              _c("span", { staticClass: "float-right" }, [
-                _c("i", {
-                  staticClass: "fas fa-pencil-alt mr-1",
-                  on: {
-                    click: function($event) {
-                      return _vm.editNewsPost(post)
-                    }
+        return _c(
+          "div",
+          { key: post.id, staticClass: "col-md-4 col-sm-12 p-0 mb-2" },
+          [
+            _c("div", { staticClass: "card h-100 p-0" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "card-body",
+                  attrs: {
+                    "data-aos": "fade-up",
+                    "data-aos-offset": "200",
+                    "data-aos-delay": "25",
+                    "data-aos-duration": "1000",
+                    "data-aos-easing": "ease-in-out"
                   }
-                }),
-                _vm._v(" "),
-                _c("i", {
-                  staticClass: "ml-1 far fa-trash-alt",
-                  on: {
-                    click: function($event) {
-                      return _vm.deleteNewsPost(post.id)
-                    }
-                  }
-                })
-              ])
-            ]
-          )
-        ])
+                },
+                [
+                  _c("h3", { staticClass: "card-title " }, [
+                    _vm._v(
+                      _vm._s(post.title.slice(0, 36)) +
+                        " " +
+                        _vm._s(post.title.length > 36 ? "..." : "")
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "card-text" }, [
+                    _vm._v(
+                      "\n                          " +
+                        _vm._s(post.info.slice(0, 170)) +
+                        "\n                          "
+                    ),
+                    post.info.length > 170
+                      ? _c("span", [_vm._v("...")])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "float-right font-italic text-muted" },
+                      [
+                        _vm._v(
+                          "\n                              — " +
+                            _vm._s(post.created_at) +
+                            "\n                          "
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("a", { attrs: { href: "/news-post" } }, [
+                    _vm._v("Read More ....")
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "float-right" }, [
+                    _c("i", {
+                      staticClass: "fas fa-pencil-alt mr-1",
+                      on: {
+                        click: function($event) {
+                          return _vm.editNewsPost(post)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("i", {
+                      staticClass: "ml-1 far fa-trash-alt",
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteNewsPost(post.id)
+                        }
+                      }
+                    })
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
       }),
       0
     ),
