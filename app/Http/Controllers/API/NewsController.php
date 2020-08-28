@@ -9,8 +9,13 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
+    public function onePost($id){
+        $post = News::findOrFail($id);
+        return new NewsResource($post);
+    }
+
     public function index(){
-        return NewsResource::collection(News::orderBy('created_at' , 'desc')->get());
+        return NewsResource::collection(News::orderBy('created_at' , 'desc')->paginate(6));
     }
 
     public function create(Request $request)

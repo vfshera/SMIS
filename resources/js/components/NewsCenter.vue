@@ -1,26 +1,29 @@
 <template>
-   <div class="col-md-12">
+   <div class="col-md-12 pr-2">
        <div class="pt-3 col-md-12 row" id="news-header">
            <div class="mr-auto">
                <h2>News Center</h2>
            </div>
            <div class="ml-auto pt-3 pr-5 row">
               <span class="text-primary mr-2" @click="openModal('#addNews')">Compose</span> <i class="fa fa-envelope-open fa-2x mr-5" @click="openModal('#addNews')"></i>
-               <h5 class="text-primary">{{ news.length }} Posts</h5>
+               <h5 class="text-primary">{{ pageMeta.total }} Posts</h5>
            </div>
        </div>
 
        <div id="news-body" class=" card-deck py-3 ">
 
            <div class="col-md-4 col-sm-12 p-0 mb-2" v-for="post in news" :key="post.id">
-              <div class="card h-100 p-0">
-                  <div class="card-body" data-aos="fade-up"
+              <div class="card h-100 p-0" >
+                  <div class="card-body " data-aos="fade-up"
                        data-aos-offset="200"
                        data-aos-delay="25"
                        data-aos-duration="1000"
                        data-aos-easing="ease-in-out"
                   >
-                      <h3 class="card-title ">{{ post.title.slice(0, 36) }} {{  (post.title.length > 36)  ? '...' : '' }}</h3>
+                      <h3 class="card-title ">
+                              {{ post.title.slice(0, 36) }} {{  (post.title.length > 36)  ? '...' : '' }}
+
+                      </h3>
                       <p class="card-text">
                           {{ post.info.slice(0,170) }}
                           <span v-if="post.info.length > 170">...</span>
@@ -29,14 +32,14 @@
                               &#8212; {{ post.created_at }}
                           </span>
                       </p>
-
-                      <a href="/news-post" >Read More ....</a>
+                  </div>
+                  <div class="card-footer">
+                      <a href="" @click="viewPost(post.title , post.id)" >Read More ....</a>
 
                       <span class="float-right">
-                       <i class="fas fa-pencil-alt mr-1" @click="editNewsPost(post)"></i>
-                       <i class="ml-1 far fa-trash-alt" @click="deleteNewsPost(post.id)"></i>
-                       </span>
-
+                               <i class="fas fa-pencil-alt mr-1" @click="editNewsPost(post)"></i>
+                               <i class="ml-1 far fa-trash-alt" @click="deleteNewsPost(post.id)"></i>
+                           </span>
                   </div>
               </div>
            </div>
@@ -107,6 +110,27 @@
            </div>
        </div>
 <!--       end modal edit news-->
+
+
+<!--       PAGINATION-->
+       <nav aria-label="...">
+           <ul class="pagination">
+               <li class="page-item disabled">
+                   <span class="page-link">Previous</span>
+               </li>
+               <li class="page-item"><a class="page-link" href="#">1</a></li>
+               <li class="page-item active">
+      <span class="page-link">
+        2
+        <span class="sr-only">(current)</span>
+      </span>
+               </li>
+               <li class="page-item"><a class="page-link" href="#">3</a></li>
+               <li class="page-item">
+                   <a class="page-link" href="#">Next</a>
+               </li>
+           </ul>
+       </nav>
    </div>
 </template>
 
@@ -121,11 +145,18 @@
                     id : '',
                     title: '',
                     info : '',
-                }
+                },
+                pageLinks:[],
+                pageMeta:[],
 
             }
         },
         methods:{
+            viewPost(title,id){
+               let postTitle = title.toLowerCase().replace(/ /g , "-");
+                this.$router.push({ name : 'singlepost' , params : { postTitle,id }});
+            }
+            ,
             openModal(name){
                 this.resetNews();
                 $(name).modal('show');
@@ -180,6 +211,8 @@
                     axios.get('/api/newsposts')
                     .then(response => {
                         this.news = response.data.data;
+                        this.pageLinks = response.data.links;
+                        this.pageMeta = response.data.meta;
 
                     })
                     .catch(err => {

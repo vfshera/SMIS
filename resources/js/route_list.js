@@ -22,6 +22,7 @@ import AddRevisionMaterials from "./components/AddRevisionMaterials";
 import MailBox from "./components/MailBox";
 import TeacherProfile from "./components/teacherpages/TeacherProfile";
 import NewsCenter from "./components/NewsCenter";
+import SinglePost from "./components/SinglePost";
 
 
 export const routes = [
@@ -141,6 +142,12 @@ export const routes = [
     }
     ,
     {
+        path:'/:postTitle/:id',
+        name: 'singlepost',
+        props: true,
+        component: SinglePost,
+    }
+    ,{
         path:'/marks/:classid/:timetableid',
         name: 'marks',
         props: true,
