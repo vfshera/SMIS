@@ -1,12 +1,12 @@
 <template>
-   <div class="col-md-12 pr-2">
+   <div id="news" class="col-md-12 pr-2">
        <div class="pt-3 col-md-12 row" id="news-header">
            <div class="mr-auto">
                <h2>News Center</h2>
            </div>
            <div class="ml-auto pt-3 pr-5 row">
               <span class="text-primary mr-2" @click="openModal('#addNews')">Compose</span> <i class="fa fa-envelope-open fa-2x mr-5" @click="openModal('#addNews')"></i>
-               <h5 class="text-primary">{{ pageMeta.total }} Posts</h5>
+               <h5 class="text-primary">{{ news.length }} Posts</h5>
            </div>
        </div>
 
@@ -94,13 +94,13 @@
                            <div class="form-row">
                                <div class="form-group  col-md-12">
                                    <label for="newstitle">News Title</label>
-                                   <input type="text" class="form-control" v-model="newspost.title" id="newstitle" placeholder="Enter News Title Here ....">
+                                   <input type="text" class="form-control" v-model="newspost.title" id="edit_newstitle" placeholder="Enter News Title Here ....">
                                </div>
                            </div>
                            <div class="form-row">
                                <div class="form-group col-md-12">
                                    <label for="info">News Information</label>
-                                   <textarea type="text" v-model="newspost.info" rows="8" class="form-control" id="info" placeholder="Put News here ......"></textarea>
+                                   <textarea type="text" v-model="newspost.info" rows="8" class="form-control" id="edit_info" placeholder="Put News here ......"></textarea>
                                </div>
                            </div>
                            <button type="submit" class="btn btn-primary float-right">UPDATE</button>
@@ -115,19 +115,16 @@
 <!--       PAGINATION-->
        <nav aria-label="...">
            <ul class="pagination">
-               <li class="page-item disabled">
-                   <span class="page-link">Previous</span>
+               <li :class="{ 'disabled' : !pagination.prev_url }" class="page-item">
+                   <a class="page-link" href="" @click.prevent="fetchData(pagination.prev_url)">Prev</a>
                </li>
-               <li class="page-item"><a class="page-link" href="#">1</a></li>
-               <li class="page-item active">
-      <span class="page-link">
-        2
-        <span class="sr-only">(current)</span>
-      </span>
+               <li class="page-item disabled" >
+                  <span class="page-link text-dark">
+                   Page {{ pagination.current_page }} of {{ pagination.last_page }}
+                  </span>
                </li>
-               <li class="page-item"><a class="page-link" href="#">3</a></li>
-               <li class="page-item">
-                   <a class="page-link" href="#">Next</a>
+               <li class="page-item" :class="{ 'disabled' : !pagination.next_url }">
+                   <a class="page-link" href="" @click.prevent="fetchData(pagination.next_url)">Next</a>
                </li>
            </ul>
        </nav>
@@ -146,8 +143,7 @@
                     title: '',
                     info : '',
                 },
-                pageLinks:[],
-                pageMeta:[],
+                pagination: {}
 
             }
         },
@@ -207,18 +203,28 @@
                     alert("NO EMPTY POSTS!")
                 }
             },
-            fetchData(){
-                    axios.get('/api/newsposts')
+            fetchData(posts_url){
+                    let news_url = posts_url || '/api/newsposts';
+                    // let vm = this;
+                    axios.get(news_url)
                     .then(response => {
                         this.news = response.data.data;
-                        this.pageLinks = response.data.links;
-                        this.pageMeta = response.data.meta;
-
+                        this.makePagination(response.data.meta , response.data.links)
                     })
                     .catch(err => {
 
                     })
 
+            },
+            makePagination(meta , links){
+                this.pagination  = {
+                    current_page: meta.current_page,
+                    last_page: meta.last_page,
+                    first_url : links.first,
+                    last_url : links.last,
+                    next_url : links.next,
+                    prev_url : links.prev,
+                }
             },
             deleteNewsPost(id){
                 Swal.fire({
@@ -254,6 +260,10 @@
 </script>
 
 <style>
+    #news{
+        width: 99% !important;
+        box-sizing: border-box;
+    }
    #news-header{
        height: 64px;
        background: white;

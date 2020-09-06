@@ -3525,9 +3525,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'NewsCenter',
   data: function data() {
@@ -3538,8 +3535,7 @@ __webpack_require__.r(__webpack_exports__);
         title: '',
         info: ''
       },
-      pageLinks: [],
-      pageMeta: []
+      pagination: {}
     };
   },
   methods: {
@@ -3598,14 +3594,26 @@ __webpack_require__.r(__webpack_exports__);
         alert("NO EMPTY POSTS!");
       }
     },
-    fetchData: function fetchData() {
+    fetchData: function fetchData(posts_url) {
       var _this3 = this;
 
-      axios.get('/api/newsposts').then(function (response) {
+      var news_url = posts_url || '/api/newsposts'; // let vm = this;
+
+      axios.get(news_url).then(function (response) {
         _this3.news = response.data.data;
-        _this3.pageLinks = response.data.links;
-        _this3.pageMeta = response.data.meta;
+
+        _this3.makePagination(response.data.meta, response.data.links);
       })["catch"](function (err) {});
+    },
+    makePagination: function makePagination(meta, links) {
+      this.pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        first_url: links.first,
+        last_url: links.last,
+        next_url: links.next,
+        prev_url: links.prev
+      };
     },
     deleteNewsPost: function deleteNewsPost(id) {
       var _this4 = this;
@@ -11982,7 +11990,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#news-header{\n    height: 64px;\n    background: white;\n    border-bottom: rgba(1,1,1,.6) 2px solid;\n}\n#news-body{\n     background: white;\n     width: 100%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n#news{\n     width: 99% !important;\n     box-sizing: border-box;\n}\n#news-header{\n    height: 64px;\n    background: white;\n    border-bottom: rgba(1,1,1,.6) 2px solid;\n}\n#news-body{\n     background: white;\n     width: 100%;\n}\n\n\n", ""]);
 
 // exports
 
@@ -49374,7 +49382,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-md-12 pr-2" }, [
+  return _c("div", { staticClass: "col-md-12 pr-2", attrs: { id: "news" } }, [
     _c(
       "div",
       { staticClass: "pt-3 col-md-12 row", attrs: { id: "news-header" } },
@@ -49405,7 +49413,7 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("h5", { staticClass: "text-primary" }, [
-            _vm._v(_vm._s(_vm.pageMeta.total) + " Posts")
+            _vm._v(_vm._s(_vm.news.length) + " Posts")
           ])
         ])
       ]
@@ -49693,7 +49701,7 @@ var render = function() {
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
-                            id: "newstitle",
+                            id: "edit_newstitle",
                             placeholder: "Enter News Title Here ...."
                           },
                           domProps: { value: _vm.newspost.title },
@@ -49732,7 +49740,7 @@ var render = function() {
                           attrs: {
                             type: "text",
                             rows: "8",
-                            id: "info",
+                            id: "edit_info",
                             placeholder: "Put News here ......"
                           },
                           domProps: { value: _vm.newspost.info },
@@ -49769,7 +49777,69 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm._m(3)
+    _c("nav", { attrs: { "aria-label": "..." } }, [
+      _c("ul", { staticClass: "pagination" }, [
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: !_vm.pagination.prev_url }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.fetchData(_vm.pagination.prev_url)
+                  }
+                }
+              },
+              [_vm._v("Prev")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item disabled" }, [
+          _c("span", { staticClass: "page-link text-dark" }, [
+            _vm._v(
+              "\n                   Page " +
+                _vm._s(_vm.pagination.current_page) +
+                " of " +
+                _vm._s(_vm.pagination.last_page) +
+                "\n                  "
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: !_vm.pagination.next_url }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.fetchData(_vm.pagination.next_url)
+                  }
+                }
+              },
+              [_vm._v("Next")]
+            )
+          ]
+        )
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -49829,43 +49899,6 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("nav", { attrs: { "aria-label": "..." } }, [
-      _c("ul", { staticClass: "pagination" }, [
-        _c("li", { staticClass: "page-item disabled" }, [
-          _c("span", { staticClass: "page-link" }, [_vm._v("Previous")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-            _vm._v("1")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "page-item active" }, [
-          _c("span", { staticClass: "page-link" }, [
-            _vm._v("\n        2\n        "),
-            _c("span", { staticClass: "sr-only" }, [_vm._v("(current)")])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-            _vm._v("3")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-            _vm._v("Next")
-          ])
-        ])
-      ])
     ])
   }
 ]
@@ -74168,15 +74201,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************!*\
   !*** ./resources/js/components/SinglePost.vue ***!
   \************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SinglePost_vue_vue_type_template_id_6961d49a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SinglePost.vue?vue&type=template&id=6961d49a& */ "./resources/js/components/SinglePost.vue?vue&type=template&id=6961d49a&");
 /* harmony import */ var _SinglePost_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SinglePost.vue?vue&type=script&lang=js& */ "./resources/js/components/SinglePost.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _SinglePost_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _SinglePost_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -74206,7 +74238,7 @@ component.options.__file = "resources/js/components/SinglePost.vue"
 /*!*************************************************************************!*\
   !*** ./resources/js/components/SinglePost.vue?vue&type=script&lang=js& ***!
   \*************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

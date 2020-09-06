@@ -43,117 +43,26 @@
     </div>
 
     {{-- NEWS --}}
-    <div id="news" class="container m-auto pt-3 pb-5">
+    <div class="container m-auto pt-3 pb-5">
         <h1 class="text-center">News</h1>
-        <div class="row card-deck">
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="200"
-                    data-aos-delay="25"
-                    data-aos-duration="1000"
-                    data-aos-easing="ease-in-out"
-                >
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                  </p>
-                  <a href="/news-post" >Read More ....</a>
+        <div class="row">
+            @foreach($news as $post)
+                <div class="card col-md-4 mb-2 p-0">
+                    <div class="card-body" data-aos="fade-up"
+                        data-aos-offset="200"
+                        data-aos-delay="25"
+                        data-aos-duration="1000"
+                        data-aos-easing="ease-in-out"
+                    >
+                      <h5 class="card-title">{{ $post->title }}</h5>
+                      <p class="card-text">
+                          {{ substr($post->info ,0,240). '...' }}
+                      </p>
+                      <a href="/news-post" >Read More</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="100"
-                    data-aos-delay="15"
-                    data-aos-duration="500"
-                    data-aos-easing="ease-in-out"
-                >
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                  </p>
-                  <a href="/news-post" class="text-right" >Read More ....</a>
-                </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="200"
-                    data-aos-delay="30"
-                    data-aos-duration="1200"
-                    data-aos-easing="ease-in-out"
-                >
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                  </p>
-                  <a href="/news-post" >Read More ....</a>
-                </div>
-            </div>
+            @endforeach
         </div>
-
-        <div class="row card-deck mt-2">
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="200"
-                    data-aos-delay="20"
-                    data-aos-duration="1000"
-                    data-aos-easing="ease-in-out"
-                >
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                  </p>
-                  <a href="/news-post" >Read More ....</a>
-                </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="100"
-                    data-aos-delay="15"
-                    data-aos-duration="500"
-                    data-aos-easing="ease-in-out"
-                >
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                  </p>
-                  <a href="/news-post" class="text-right" >Read More ....</a>
-                </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                    data-aos-offset="200"
-                    data-aos-delay="20"
-                    data-aos-duration="1200"
-                    data-aos-easing="ease-in-out"
-                >
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                                         With supporting text below as a natural lead-in to additional content.
-                  </p>
-                  <a href="/news-post" >Read More ....</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="mt-4 col-md-3 mx-auto text-center"><a href="/news" style="font-weight: bold; text-decoration: none;">READ MORE NEWS</a></div>
-
     </div>
 
 {{-- IMPORTANT DATES --}}
@@ -222,9 +131,11 @@
         data-aos-easing="ease-in-out"
      >
         <h1 class="text-center mb-5">MAP</h1>
-        <div id="map">
+         <div style="overflow:hidden;width: 700px;position: relative;">
+             <iframe width="700" height="450" src="https://maps.google.com/maps?hl=en&amp;q=Murray Girls High School+()&amp;ie=UTF8&amp;t=&amp;z=10&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><div style="position: absolute;width: 80%;bottom: 10px;left: 0;right: 0;margin-left: auto;margin-right: auto;color: #000;text-align: center;"><small style="line-height: 1.8;font-size: 0px;background: #fff;"> <a href="https://googlemapsembed.net/" rel="nofollow">Google Maps Embed</a> </small></div><style>.nvs{position:relative;text-align:right;height:325px;width:643px;} #gmap_canvas img{max-width:none!important;background:none!important}</style></div>
+{{--        <div id="map">--}}
 
-        </div>
+{{--        </div>--}}
      </div>
      <div  class="col-md-6 smis-contact mt-5 mb-5"
         data-aos="fade-up"
