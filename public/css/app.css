@@ -16895,6 +16895,11 @@ readers do not read off random characters that represent icons */
   color: #fab402;
 }
 
+#school-map {
+  width: 700px;
+  height: 450px;
+}
+
 #map {
   height: 400px;
   width: 100%;
@@ -16943,5 +16948,22 @@ html {
 
 .fa-trash-alt {
   color: red;
+}
+
+@media screen and (max-width: 576px) {
+  #school-map {
+    width: 500px;
+    height: 450px;
+  }
+}
+
+@media screen and (max-width: 721px) {
+  #school-map {
+    display: block;
+  }
+
+  .smis-contact {
+    display: block;
+  }
 }
 

@@ -19,8 +19,14 @@ class PagesController extends Controller
         return view('pages.news');
     }
 
-    public function singlePostNews()
+    public function singlePostNews($id)
     {
-        return view('pages.news-post');
+        $post = News::findOrFail($id);
+
+        return view('pages.news-post' , compact('post'));
     }
+
+
+
+
 }

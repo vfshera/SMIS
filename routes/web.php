@@ -17,7 +17,9 @@ Route::get('/','PagesController@welcome');
 
 Route::get('/news', 'PagesController@news');
 
-Route::get('/news-post', 'PagesController@singlePostNews');
+Route::get('/news-post/{id}/{title}', 'PagesController@singlePostNews');
+
+Route::post('/contact' , 'ContactController@create')->name('contact-form');
 
 Auth::routes();
 

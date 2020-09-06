@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
+
     public function onePost($id){
         $post = News::findOrFail($id);
         return new NewsResource($post);

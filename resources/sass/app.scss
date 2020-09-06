@@ -81,7 +81,10 @@ $fa-font-path: "../webfonts";
     color:rgb(250, 180, 2);
 }
 
-
+#school-map{
+    width:700px;
+    height:450px;
+}
 
 #map{
     height: 400px;
@@ -136,4 +139,23 @@ html{
 .fa-trash-alt
 {
     color: rgb(255, 0, 0);
+}
+
+
+@media screen and (max-width: 576px){
+    #school-map{
+        width:500px;
+        height:450px;
+    }
+}
+
+
+@media screen and (max-width: 721px){
+    #school-map{
+        display: block;
+    }
+
+    .smis-contact{
+        display: block;
+    }
 }

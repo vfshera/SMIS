@@ -58,7 +58,7 @@
                       <p class="card-text">
                           {{ substr($post->info ,0,240). '...' }}
                       </p>
-                      <a href="/news-post" >Read More</a>
+                      <a href="/news-post/{{ $post->id }}/{{ preg_replace("/[\s_]/", "-", strtolower($post->title)) }}" >Read More</a>
                     </div>
                 </div>
             @endforeach
@@ -123,7 +123,7 @@
 
 
  <div id="contact" class="row m-auto"style="width:99%">
-     <div class="col-md-6 mt-5 mb-5"
+     <div class="col-md-6 col-sm-5 mt-5 mb-5"
         data-aos="fade-up"
         data-aos-offset="200"
         data-aos-delay="20"
@@ -132,12 +132,12 @@
      >
         <h1 class="text-center mb-5">MAP</h1>
          <div style="overflow:hidden;width: 700px;position: relative;">
-             <iframe width="700" height="450" src="https://maps.google.com/maps?hl=en&amp;q=Murray Girls High School+()&amp;ie=UTF8&amp;t=&amp;z=10&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><div style="position: absolute;width: 80%;bottom: 10px;left: 0;right: 0;margin-left: auto;margin-right: auto;color: #000;text-align: center;"><small style="line-height: 1.8;font-size: 0px;background: #fff;"> <a href="https://googlemapsembed.net/" rel="nofollow">Google Maps Embed</a> </small></div><style>.nvs{position:relative;text-align:right;height:325px;width:643px;} #gmap_canvas img{max-width:none!important;background:none!important}</style></div>
+             <iframe id="school-map" src="https://maps.google.com/maps?hl=en&amp;q=Murray Girls High School+()&amp;ie=UTF8&amp;t=&amp;z=10&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><div style="position: absolute;width: 80%;bottom: 10px;left: 0;right: 0;margin-left: auto;margin-right: auto;color: #000;text-align: center;"><small style="line-height: 1.8;font-size: 0px;background: #fff;"> <a href="https://googlemapsembed.net/" rel="nofollow">Google Maps Embed</a> </small></div><style>.nvs{position:relative;text-align:right;height:325px;width:643px;} #gmap_canvas img{max-width:none!important;background:none!important}</style></div>
 {{--        <div id="map">--}}
 
 {{--        </div>--}}
      </div>
-     <div  class="col-md-6 smis-contact mt-5 mb-5"
+     <div  class="col-md-6 col-sm-5 smis-contact mt-5 mb-5"
         data-aos="fade-up"
         data-aos-offset="200"
         data-aos-delay="20"
@@ -145,22 +145,26 @@
         data-aos-easing="ease-in-out"
      >
         <h1 class="text-center mb-5">Contact US</h1>
-        <form class="m-auto">
+        <form class="m-auto" method="POST" action="{{ route('contact-form') }}">
+            @csrf
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Your Name Please" required>
+                <input type="text" class="form-control" value="{{ old('name') }}" id="name" placeholder="Your Name Please" required>
+                  <div class="text-danger">{{ $errors->first('name') }}</div>
               </div>
               <div class="form-group col-md-6">
                 <label for="email">Email / Phone</label>
-                <input type="text" class="form-control" id="email" placeholder="email or phone" required>
+                <input type="text" class="form-control" value="{{ old('email') }}"  id="email" placeholder="email or phone" required>
+                  <div class="text-danger" >{{ $errors->first('email') }}</div>
               </div>
             </div>
             <div class="form-row mb-2">
                 <label for="message">Message :</label>
-                <textarea name="message" class="col-md-12 form-control" id="" cols="30" rows="10" required>
-
+                <div class="text-danger" >{{ $errors->first('message') }}</div>
+                <textarea value="{{ old('message') }}"  name="message" class="col-md-12 form-control" id="message" cols="30" rows="10" required>
                 </textarea>
+
             </div>
             <button type="submit" class="btn btn-lg btn-primary col-md-4 mt-5 m-auto float-right">SEND</button>
         </form>
