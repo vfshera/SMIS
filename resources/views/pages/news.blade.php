@@ -4,120 +4,30 @@
 
     <div id="news" class="container m-auto pt-5">
         <h1 class="text-center mt-5">News</h1>
-        <div class="row card-deck">
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                     data-aos-offset="200"
-                     data-aos-delay="25"
-                     data-aos-duration="1000"
-                     data-aos-easing="ease-in-out"
-                >
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <a href="/news-post" >Read More ....</a>
+        <div class="row ">
+            @foreach($news as $post)
+                <div class="card col-md-4 mb-2 p-0">
+                    <div class="card-body" data-aos="fade-up"
+                         data-aos-offset="200"
+                         data-aos-delay="25"
+                         data-aos-duration="1000"
+                         data-aos-easing="ease-in-out"
+                    >
+                        <h5 class="card-title">{{ $post->title }}</h5>
+                        <p class="card-text">
+                            {{ substr($post->info ,0,240). '...' }}
+                        </p>
+                        <a href="/news-post/{{ $post->id }}/{{ preg_replace("/[\s_]/", "-", strtolower($post->title)) }}" >Read More...</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                     data-aos-offset="100"
-                     data-aos-delay="15"
-                     data-aos-duration="500"
-                     data-aos-easing="ease-in-out"
-                >
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <a href="/news-post" class="text-right" >Read More ....</a>
-                </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                     data-aos-offset="200"
-                     data-aos-delay="30"
-                     data-aos-duration="1200"
-                     data-aos-easing="ease-in-out"
-                >
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <a href="/news-post" >Read More ....</a>
-                </div>
+            @endforeach
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {{ $news->links() }}
             </div>
         </div>
-
-        <div class="row card-deck mt-2">
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                     data-aos-offset="200"
-                     data-aos-delay="20"
-                     data-aos-duration="1000"
-                     data-aos-easing="ease-in-out"
-                >
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <a href="/news-post" >Read More ....</a>
-                </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                     data-aos-offset="100"
-                     data-aos-delay="15"
-                     data-aos-duration="500"
-                     data-aos-easing="ease-in-out"
-                >
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <a href="/news-post" class="text-right" >Read More ....</a>
-                </div>
-            </div>
-
-            <div class="card col-md-4 p-0">
-                <div class="card-body" data-aos="fade-up"
-                     data-aos-offset="200"
-                     data-aos-delay="20"
-                     data-aos-duration="1200"
-                     data-aos-easing="ease-in-out"
-                >
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <a href="/news-post" >Read More ....</a>
-                </div>
-            </div>
-        </div>
-
     </div>
-
-
-
-
-
-
-
 
 
     {{-- SCROLL TO TOP --}}

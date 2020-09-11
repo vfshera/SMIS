@@ -16,7 +16,8 @@ class PagesController extends Controller
 
     public function news()
     {
-        return view('pages.news');
+        $news = News::orderBy('created_at' , 'DESC')->paginate(6);
+        return view('pages.news' , compact('news'));
     }
 
     public function singlePostNews($id)

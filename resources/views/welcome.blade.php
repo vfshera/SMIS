@@ -43,7 +43,7 @@
     </div>
 
     {{-- NEWS --}}
-    <div class="container m-auto pt-3 pb-5">
+    <div class="container m-auto pt-3 pb-3">
         <h1 class="text-center">News</h1>
         <div class="row">
             @foreach($news as $post)
@@ -63,6 +63,9 @@
                 </div>
             @endforeach
         </div>
+        <div class="col-md-12 mt-2 container" style="display: flex; justify-content: center;">
+            <h4><a href="/news" >More News</a></h4>
+        </div>
     </div>
 
 {{-- IMPORTANT DATES --}}
@@ -78,7 +81,7 @@
                   <div class="carousel-item active" data-interval="10000">
                       <div class="row col-md-12">
                           <div class="col-md-8">
-                            <h1 class="textres">Special Examinations Form 4</h1>
+                            <h1>Special Examinations Form 4</h1>
                           </div>
                           <div class="col-md-4">
                               <h1  id="count" class="row">00:00:00</h1>
