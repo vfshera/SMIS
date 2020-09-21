@@ -15,6 +15,9 @@ class CreateImportantDatesTable extends Migration
     {
         Schema::create('important_dates', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
+            $table->dateTime('occur_date');
+            $table->time('occur_time');
             $table->timestamps();
         });
     }

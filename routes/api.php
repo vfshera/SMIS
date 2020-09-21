@@ -40,6 +40,12 @@ Route::middleware('auth:api')->get('/news-post/{id}', 'API\NewsController@onePos
 Route::middleware('auth:api')->post('/update-news', 'API\NewsController@update');
 Route::middleware('auth:api')->delete('/delete-news/{id}', 'API\NewsController@destroy');
 
+//Important Dates
+Route::middleware('auth:api')->get('/dateposts', 'API\ImportantDatesController@index');
+Route::middleware('auth:api')->post('/datepost', 'API\ImportantDatesController@create');
+Route::middleware('auth:api')->post('/update-date', 'API\ImportantDatesController@update');
+Route::middleware('auth:api')->delete('/delete-date/{id}', 'API\ImportantDatesController@destroy');
+
 
 //messages
 Route::middleware('auth:api')->get('/messages', 'API\MessagesController@index');

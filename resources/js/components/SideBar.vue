@@ -13,6 +13,14 @@
                         </router-link>
                     </li>
                         <li class="nav-item"  v-if="currentUser.access === 0">
+                            <router-link :to="{ name: 'schDates' }"  class="nav-link">
+                                <i class="nav-icon fas fa-newspaper" aria-hidden="true"></i>
+                                <p>
+                                    Dates
+                                </p>
+                            </router-link>
+                        </li>
+                        <li class="nav-item"  v-if="currentUser.access === 0">
                         <router-link :to="{ name: 'admins' }"  class="nav-link">
                             <i class="nav-icon fas fa-hashtag"></i>
                             <p>

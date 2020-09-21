@@ -23,6 +23,7 @@ import MailBox from "./components/MailBox";
 import TeacherProfile from "./components/teacherpages/TeacherProfile";
 import NewsCenter from "./components/NewsCenter";
 import SinglePost from "./components/SinglePost";
+import ImportantDates from "./components/ImportantDates";
 
 
 export const routes = [
@@ -139,6 +140,10 @@ export const routes = [
         path:'/news-center',
         name: 'newsCenter',
         component: NewsCenter,
+    }, {
+        path:'/important-school-dates',
+        name: 'schDates',
+        component: ImportantDates,
     }
     ,
     {
