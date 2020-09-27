@@ -2904,7 +2904,7 @@ __webpack_require__.r(__webpack_exports__);
       }, 1000);
     },
     twoDecimal: function twoDecimal(num) {
-      return num < 10 ? '0' + num : num;
+      return num < 10 ? '0' + num : num.toString();
     }
   },
   mounted: function mounted() {
@@ -74556,6 +74556,7 @@ vue__WEBPACK_IMPORTED_MODULE_6___default.a.component('admin', __webpack_require_
 vue__WEBPACK_IMPORTED_MODULE_6___default.a.component('sidebar', __webpack_require__(/*! ./components/SideBar.vue */ "./resources/js/components/SideBar.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_6___default.a.component('notifications', __webpack_require__(/*! ./components/Notifications.vue */ "./resources/js/components/Notifications.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_6___default.a.component('messages', __webpack_require__(/*! ./components/Messages.vue */ "./resources/js/components/Messages.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_6___default.a.component('Timer', __webpack_require__(/*! ./components/CountDownTimer */ "./resources/js/components/CountDownTimer.vue")["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_6___default.a({
   el: '#app',
   router: router,

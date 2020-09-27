@@ -81,11 +81,17 @@
                   <div class="carousel-item active" data-interval="10000">
                       <div class="row col-md-12">
                           <div class="col-md-8">
-                            <h1>Special Examinations Form 4</h1>
+                            <h1>{{ $idates[0]->title }}</h1>
                           </div>
                           <div class="col-md-4">
-                              <h1  id="count" class="row">00:00:00</h1>
-                              <h3 class="row">28th March 2020</h1>
+                              <h1  id="count" class="row">
+                                  <Timer :date="{{ date('d', strtotime($idates[0]->occur_date)) }}"
+                                         :hour="{{ date('H', strtotime($idates[0]->occur_time)) }}"
+                                         :minute="{{ date('i', strtotime($idates[0]->occur_time)) }}"
+                                         :month="{{ date('n', strtotime($idates[0]->occur_date))-1 }}"
+                                         :year="{{ date('Y', strtotime($idates[0]->occur_date)) }}" />
+                              </h1>
+                              <h3 class="row">{{ date('dS F  Y', strtotime($idates[0]->occur_date)) }}</h3>
                             </div>
                       </div>
 
@@ -93,22 +99,34 @@
                   <div class="carousel-item" data-interval="2000">
                     <div class="row col-md-12">
                         <div class="col-md-8">
-                          <h1>Annual General Meeting</h1>
+                          <h1>{{ $idates[1]->title }}</h1>
                         </div>
                         <div class="col-md-4">
-                            <h1  id="count" class="row">00:00:00</h1>
-                            <h3 class="row">18th May 2020</h1>
+                            <h1  id="count" class="row">
+                                <Timer :date="{{ date('d', strtotime($idates[1]->occur_date)) }}"
+                                                :hour="{{ date('H', strtotime($idates[1]->occur_time)) }}"
+                                                :minute="{{ date('i', strtotime($idates[1]->occur_time)) }}"
+                                                :month="{{ date('n', strtotime($idates[1]->occur_date))-1 }}"
+                                                :year="{{ date('Y', strtotime($idates[1]->occur_date)) }}" />
+                            </h1>
+                            <h3 class="row">{{ date('dS F  Y', strtotime($idates[1]->occur_date)) }}</h3>
                           </div>
                     </div>
                   </div>
                   <div class="carousel-item">
                     <div class="row col-md-12">
                         <div class="col-md-8">
-                          <h1>April Intake Form 1</h1>
+                          <h1>{{ $idates[2]->title }}</h1>
                         </div>
                         <div class="col-md-4">
-                            <h1 id="count"class="row ">00:00:00</h1>
-                            <h3 class="row">12th April 2020</h1>
+                            <h1  id="count" class="row">
+                                <Timer :date="{{ date('d', strtotime($idates[2]->occur_date)) }}"
+                                       :hour="{{ date('H', strtotime($idates[2]->occur_time)) }}"
+                                       :minute="{{ date('i', strtotime($idates[2]->occur_time)) }}"
+                                       :month="{{ date('n', strtotime($idates[2]->occur_date))-1 }}"
+                                       :year="{{ date('Y', strtotime($idates[2]->occur_date)) }}" />
+                            </h1>
+                            <h3 class="row">{{ date('dS F  Y', strtotime($idates[2]->occur_date)) }}</h3>
                           </div>
                     </div>
                   </div>
@@ -197,6 +215,8 @@
 {{-- SCRIPTS --}}
 
         <script>
+                import CountDownTimer from "../js/components/CountDownTimer";
+
                 function initMap() {
 
                 const murray = {lat: -3.4558834, lng: 38.3488217};
@@ -205,6 +225,9 @@
                     document.getElementById('map'), {zoom: 16, center: murray});
 
                 cost marker = new google.maps.Marker({position: murray, map: map});
+                }
+                export default {
+                    components: {CountDownTimer}
                 }
         </script>
 

@@ -11,8 +11,9 @@ class PagesController extends Controller
     public function welcome()
     {
         $news = News::orderBy('created_at' , 'DESC')->take(6)->get();
+        $idates = ImportantDate::orderBy('occur_date', 'DESC')->get();
 
-        return view('welcome', compact('news'));
+        return view('welcome', compact('news' , 'idates'));
     }
 
     public function news()

@@ -55,6 +55,7 @@ Vue.component('admin', require('./components/AdminHome.vue').default);
 Vue.component('sidebar', require('./components/SideBar.vue').default);
 Vue.component('notifications', require('./components/Notifications.vue').default);
 Vue.component('messages', require('./components/Messages.vue').default);
+Vue.component('Timer', require('./components/CountDownTimer').default);
 
 const app = new Vue({
     el: '#app',
