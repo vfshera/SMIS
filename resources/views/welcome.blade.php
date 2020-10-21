@@ -211,25 +211,3 @@
 
 </footer>
 
-
-{{-- SCRIPTS --}}
-
-        <script>
-                import CountDownTimer from "../js/components/CountDownTimer";
-
-                function initMap() {
-
-                const murray = {lat: -3.4558834, lng: 38.3488217};
-
-                const map = new google.maps.Map(
-                    document.getElementById('map'), {zoom: 16, center: murray});
-
-                cost marker = new google.maps.Marker({position: murray, map: map});
-                }
-                export default {
-                    components: {CountDownTimer}
-                }
-        </script>
-
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvcIspinZD9e-KrQON36ITVP2ygT5HK6c&callback=initMap"></script>
-@endsection

@@ -6,8 +6,16 @@
 
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
+
+            <div class="card-body bg-danger pt-5 pb-5 pl-2 pr-2 mt-4" v-if="NoTimetable">
+                <h2 class="text-center mb-2">OOOPS!</h2>
+                <h4 class="text-center">It seems like Your Exams timetable is not yet ready...</h4>
+                <h4 class="text-center mt-2">Please try again later or contact IT Department.</h4>
+            </div>
+
+            <div class="card-body" v-if="!NoTimetable">
                 <h4 >Please Select a class to administer exams : </h4>
+
                 <div class="row mt-3" v-if="levels.one">
                     <div class="col-md-2 col-sm-6 col-12" v-for="frm in levels.one" :key="frm.id" @click="addMarks(frm.classData.name,frm.classData.id,frm.duty.subject.title,frm.duty.id)">
                         <div class="info-box" >
@@ -82,6 +90,7 @@
         data(){
             return{
                 timetables: [],
+                NoTimetable: false,
                 levels:{
                     one: [],
                     two: [],
@@ -173,11 +182,18 @@
 
                 return num + abbr;
             },
+            tblAvailability(){
+                console.log("Checking Exams Availability!");
+                if(this.timetables.length > 0){
+                    this.NoTimetable = false;
+                }else{
+                    this.NoTimetable = true;
+                }
+            },
             fetchData(){
                 axios.get('/api/myclasses')
                     .then(response =>{
                         this.timetables = response.data.data;
-
                         this.timetables.forEach(tbl => {
                             tbl.teaches.forEach(cls => {
                                 if(cls.classData.form.math_rep === "1"){
@@ -194,7 +210,7 @@
                         });
 
                         this.singleFilter();
-                    })
+                    }).then(this.tblAvailability())
                     .catch(err =>{
                         alert(err)
                     });

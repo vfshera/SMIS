@@ -36,24 +36,24 @@ class MarksController extends Controller
                 $this->dispatch(new SendResults($result));
             }
 
-        //START AFRICAS TALKING
-        $username = env('AT_USERNAME','sandbox');
-        $apiKey   = env('AT_API_KEY','NOKEY');
-        $number = '+254700080373';
+            //START AFRICAS TALKING
+            $username = env('AT_USERNAME','sandbox');
+            $apiKey   = env('AT_API_KEY','NOKEY');
+            $number = '+254700080373';
 
-        $smsHead = 'Dear Parent,'."\n".'Here Are the results of your child for TERM  '
-            .$data["resultslip"][0]->term->name.' '.$data["resultslip"][0]->term->year
-            ."\n".$data["details"]->name.'  Adm No  '.$data["details"]->admission_no.'  Form '.$data["details"]->class_name;
-        $smsBody = '';
+            $smsHead = 'Dear Parent,'."\n".'Here Are the results of your child for TERM  '
+                .$data["resultslip"][0]->term->name.' '.$data["resultslip"][0]->term->year
+                ."\n".$data["details"]->name.'  Adm No  '.$data["details"]->admission_no.'  Form '.$data["details"]->class_name;
+            $smsBody = '';
 
-        foreach ($data["resultslip"] as $subjectScore){
-            $smsBody .=  $subjectScore->subject." ". $subjectScore->score.' ,  ';
-        }
+            foreach ($data["resultslip"] as $subjectScore){
+                $smsBody .=  $subjectScore->subject." ". $subjectScore->score.' ,  ';
+            }
 
-        $message = $smsHead."\n".$smsBody."\n"."Examinations Office \n MURRAY GIRLS HIGH SCHOOL";
+            $message = $smsHead."\n".$smsBody."\n"."Examinations Office \n MURRAY GIRLS HIGH SCHOOL";
 
-        $AT  = new AfricasTalking($username,  $apiKey);
-        $sms = $AT->sms();
+            $AT  = new AfricasTalking($username,  $apiKey);
+            $sms = $AT->sms();
 
           $info =  $sms->send([
                 'to'      => $number,

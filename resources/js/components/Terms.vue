@@ -10,8 +10,8 @@
                                </div>
 
                                  <div class="form-group col-md-4">
-                                    <label for="name">Beginning</label>
-                                    <input type="date" v-model="term.begin" class="form-control" id="name">
+                                    <label for="begin">Beginning</label>
+                                    <input type="date" v-model="term.begin" class="form-control" id="begin">
                                     <span v-if="validationErrors.name" class="text-danger">Form Name Field is Required</span>
                                </div>
                                 <div class="form-group col-md-4">

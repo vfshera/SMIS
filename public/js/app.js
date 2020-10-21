@@ -7220,11 +7220,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MyClasses',
   data: function data() {
     return {
       timetables: [],
+      NoTimetable: false,
       levels: {
         one: [],
         two: [],
@@ -7311,6 +7320,15 @@ __webpack_require__.r(__webpack_exports__);
       var abbr = name.charAt(index).toUpperCase();
       return num + abbr;
     },
+    tblAvailability: function tblAvailability() {
+      console.log("Checking Exams Availability!");
+
+      if (this.timetables.length > 0) {
+        this.NoTimetable = false;
+      } else {
+        this.NoTimetable = true;
+      }
+    },
     fetchData: function fetchData() {
       var _this = this;
 
@@ -7332,7 +7350,7 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         _this.singleFilter();
-      })["catch"](function (err) {
+      }).then(this.tblAvailability())["catch"](function (err) {
         alert(err);
       });
     }
@@ -7645,11 +7663,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MyClasses',
   data: function data() {
     return {
       timetables: [],
+      NoTimetable: false,
       levels: {
         one: [],
         two: [],
@@ -7663,6 +7690,15 @@ __webpack_require__.r(__webpack_exports__);
       var index = name.indexOf(" ") + 1;
       var abbr = name.charAt(index).toUpperCase();
       return num + abbr;
+    },
+    tblAvailability: function tblAvailability() {
+      console.log("Checking Exams Availability!");
+
+      if (this.timetables.length > 0) {
+        this.NoTimetable = false;
+      } else {
+        this.NoTimetable = true;
+      }
     },
     fetcthData: function fetcthData() {
       var _this = this;
@@ -7683,7 +7719,7 @@ __webpack_require__.r(__webpack_exports__);
             }
           });
         });
-      }).then(console.log(this.students))["catch"](function (err) {});
+      }).then(this.tblAvailability())["catch"](function (err) {});
     }
   },
   computed: {},
@@ -55188,7 +55224,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group col-md-4" }, [
-              _c("label", { attrs: { for: "name" } }, [_vm._v("Beginning")]),
+              _c("label", { attrs: { for: "begin" } }, [_vm._v("Beginning")]),
               _vm._v(" "),
               _c("input", {
                 directives: [
@@ -55200,7 +55236,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { type: "date", id: "name" },
+                attrs: { type: "date", id: "begin" },
                 domProps: { value: _vm.term.begin },
                 on: {
                   input: function($event) {
@@ -57535,211 +57571,231 @@ var render = function() {
     _c("div", { staticClass: "card" }, [
       _vm._m(0),
       _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("h4", [_vm._v("Please Select a class to administer exams : ")]),
-        _vm._v(" "),
-        _vm.levels.one
-          ? _c(
-              "div",
-              { staticClass: "row mt-3" },
-              _vm._l(_vm.levels.one, function(frm) {
-                return _c(
+      _vm.NoTimetable
+        ? _c(
+            "div",
+            { staticClass: "card-body bg-danger pt-5 pb-5 pl-2 pr-2 mt-4" },
+            [
+              _c("h2", { staticClass: "text-center mb-2" }, [_vm._v("OOOPS!")]),
+              _vm._v(" "),
+              _c("h4", { staticClass: "text-center" }, [
+                _vm._v("It seems like Your Exams timetable is not yet ready...")
+              ]),
+              _vm._v(" "),
+              _c("h4", { staticClass: "text-center mt-2" }, [
+                _vm._v("Please try again later or contact IT Department.")
+              ])
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.NoTimetable
+        ? _c("div", { staticClass: "card-body" }, [
+            _c("h4", [_vm._v("Please Select a class to administer exams : ")]),
+            _vm._v(" "),
+            _vm.levels.one
+              ? _c(
                   "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12",
-                    on: {
-                      click: function($event) {
-                        return _vm.addMarks(
-                          frm.classData.name,
-                          frm.classData.id,
-                          frm.duty.subject.title,
-                          frm.duty.id
-                        )
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-danger",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(1, frm.classData.name)
-                          )
+                  { staticClass: "row mt-3" },
+                  _vm._l(_vm.levels.one, function(frm) {
+                    return _c(
+                      "div",
+                      {
+                        key: frm.id,
+                        staticClass: "col-md-2 col-sm-6 col-12",
+                        on: {
+                          click: function($event) {
+                            return _vm.addMarks(
+                              frm.classData.name,
+                              frm.classData.id,
+                              frm.duty.subject.title,
+                              frm.duty.id
+                            )
+                          }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content" }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "info-box-number",
-                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
-                        })
-                      ])
-                    ])
-                  ]
+                      },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-danger",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(1, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content" }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", {
+                              staticClass: "info-box-number",
+                              domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.two
-          ? _c(
-              "div",
-              { staticClass: "row " },
-              _vm._l(_vm.levels.two, function(frm) {
-                return _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.levels.two
+              ? _c(
                   "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12",
-                    on: {
-                      click: function($event) {
-                        return _vm.addMarks(
-                          frm.classData.name,
-                          frm.classData.id,
-                          frm.duty.subject.title,
-                          frm.duty.id
-                        )
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-warning",
-                        attrs: { "data-toggle": "modal" },
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(2, frm.classData.name)
-                          )
+                  { staticClass: "row " },
+                  _vm._l(_vm.levels.two, function(frm) {
+                    return _c(
+                      "div",
+                      {
+                        key: frm.id,
+                        staticClass: "col-md-2 col-sm-6 col-12",
+                        on: {
+                          click: function($event) {
+                            return _vm.addMarks(
+                              frm.classData.name,
+                              frm.classData.id,
+                              frm.duty.subject.title,
+                              frm.duty.id
+                            )
+                          }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content" }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "info-box-number",
-                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
-                        })
-                      ])
-                    ])
-                  ]
+                      },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-warning",
+                            attrs: { "data-toggle": "modal" },
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(2, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content" }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", {
+                              staticClass: "info-box-number",
+                              domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.three
-          ? _c(
-              "div",
-              { staticClass: "row  " },
-              _vm._l(_vm.levels.three, function(frm) {
-                return _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.levels.three
+              ? _c(
                   "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12 ",
-                    on: {
-                      click: function($event) {
-                        return _vm.addMarks(
-                          frm.classData.name,
-                          frm.classData.id,
-                          frm.duty.subject.title,
-                          frm.duty.id
-                        )
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-info ",
-                        attrs: { "data-toggle": "modal" },
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(3, frm.classData.name)
-                          )
+                  { staticClass: "row  " },
+                  _vm._l(_vm.levels.three, function(frm) {
+                    return _c(
+                      "div",
+                      {
+                        key: frm.id,
+                        staticClass: "col-md-2 col-sm-6 col-12 ",
+                        on: {
+                          click: function($event) {
+                            return _vm.addMarks(
+                              frm.classData.name,
+                              frm.classData.id,
+                              frm.duty.subject.title,
+                              frm.duty.id
+                            )
+                          }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content " }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "info-box-number",
-                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
-                        })
-                      ])
-                    ])
-                  ]
+                      },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-info ",
+                            attrs: { "data-toggle": "modal" },
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(3, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content " }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", {
+                              staticClass: "info-box-number",
+                              domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.four
-          ? _c(
-              "div",
-              { staticClass: "row" },
-              _vm._l(_vm.levels.four, function(frm) {
-                return _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.levels.four
+              ? _c(
                   "div",
-                  {
-                    key: frm.id,
-                    staticClass: "col-md-2 col-sm-6 col-12",
-                    on: {
-                      click: function($event) {
-                        return _vm.addMarks(
-                          frm.classData.name,
-                          frm.classData.id,
-                          frm.duty.subject.title,
-                          frm.duty.id
-                        )
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-success ",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(4, frm.classData.name)
-                          )
+                  { staticClass: "row" },
+                  _vm._l(_vm.levels.four, function(frm) {
+                    return _c(
+                      "div",
+                      {
+                        key: frm.id,
+                        staticClass: "col-md-2 col-sm-6 col-12",
+                        on: {
+                          click: function($event) {
+                            return _vm.addMarks(
+                              frm.classData.name,
+                              frm.classData.id,
+                              frm.duty.subject.title,
+                              frm.duty.id
+                            )
+                          }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content " }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "info-box-number",
-                          domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
-                        })
-                      ])
-                    ])
-                  ]
+                      },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-success ",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(4, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content " }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", {
+                              staticClass: "info-box-number",
+                              domProps: { textContent: _vm._s(_vm.stdNo(frm)) }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e()
-      ])
+              : _vm._e()
+          ])
+        : _vm._e()
     ])
   ])
 }
@@ -57962,169 +58018,189 @@ var render = function() {
     _c("div", { staticClass: "card" }, [
       _vm._m(0),
       _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _vm.levels.one
-          ? _c(
-              "div",
-              { staticClass: "row" },
-              _vm._l(_vm.levels.one, function(frm) {
-                return _c(
+      _vm.NoTimetable
+        ? _c(
+            "div",
+            { staticClass: "card-body bg-danger pt-5 pb-5 pl-2 pr-2 mt-4" },
+            [
+              _c("h2", { staticClass: "text-center mb-2" }, [_vm._v("OOOPS!")]),
+              _vm._v(" "),
+              _c("h4", { staticClass: "text-center" }, [
+                _vm._v("It seems like Your timetable is not yet ready...")
+              ]),
+              _vm._v(" "),
+              _c("h4", { staticClass: "text-center mt-2" }, [
+                _vm._v("Please try again later or contact IT Department.")
+              ])
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.NoTimetable
+        ? _c("div", { staticClass: "card-body" }, [
+            _vm.levels.one
+              ? _c(
                   "div",
-                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-danger",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(1, frm.classData.name)
-                          )
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content" }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
+                  { staticClass: "row" },
+                  _vm._l(_vm.levels.one, function(frm) {
+                    return _c(
+                      "div",
+                      { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-danger",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(1, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content" }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.time))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.day))
+                            ])
+                          ])
                         ])
-                      ])
-                    ])
-                  ]
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.two
-          ? _c(
-              "div",
-              { staticClass: "row " },
-              _vm._l(_vm.levels.two, function(frm) {
-                return _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.levels.two
+              ? _c(
                   "div",
-                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-warning",
-                        attrs: { "data-toggle": "modal" },
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(2, frm.classData.name)
-                          )
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content" }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
+                  { staticClass: "row " },
+                  _vm._l(_vm.levels.two, function(frm) {
+                    return _c(
+                      "div",
+                      { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-warning",
+                            attrs: { "data-toggle": "modal" },
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(2, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content" }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.time))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.day))
+                            ])
+                          ])
                         ])
-                      ])
-                    ])
-                  ]
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.three
-          ? _c(
-              "div",
-              { staticClass: "row  " },
-              _vm._l(_vm.levels.three, function(frm) {
-                return _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.levels.three
+              ? _c(
                   "div",
-                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12 " },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-info ",
-                        attrs: { "data-toggle": "modal" },
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(3, frm.classData.name)
-                          )
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content " }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
+                  { staticClass: "row  " },
+                  _vm._l(_vm.levels.three, function(frm) {
+                    return _c(
+                      "div",
+                      { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12 " },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-info ",
+                            attrs: { "data-toggle": "modal" },
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(3, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content " }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.time))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.day))
+                            ])
+                          ])
                         ])
-                      ])
-                    ])
-                  ]
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.levels.four
-          ? _c(
-              "div",
-              { staticClass: "row" },
-              _vm._l(_vm.levels.four, function(frm) {
-                return _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.levels.four
+              ? _c(
                   "div",
-                  { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
-                  [
-                    _c("div", { staticClass: "info-box" }, [
-                      _c("span", {
-                        staticClass: "info-box-icon bg-success ",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.getAbbr(4, frm.classData.name)
-                          )
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "info-box-content " }, [
-                        _c("span", { staticClass: "info-box-text" }, [
-                          _vm._v(_vm._s(frm.duty.subject.abbreviation))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.time))
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "info-box-number" }, [
-                          _vm._v(_vm._s(frm.day))
+                  { staticClass: "row" },
+                  _vm._l(_vm.levels.four, function(frm) {
+                    return _c(
+                      "div",
+                      { key: frm.id, staticClass: "col-md-2 col-sm-6 col-12" },
+                      [
+                        _c("div", { staticClass: "info-box" }, [
+                          _c("span", {
+                            staticClass: "info-box-icon bg-success ",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.getAbbr(4, frm.classData.name)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "info-box-content " }, [
+                            _c("span", { staticClass: "info-box-text" }, [
+                              _vm._v(_vm._s(frm.duty.subject.abbreviation))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.time))
+                            ]),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "info-box-number" }, [
+                              _vm._v(_vm._s(frm.day))
+                            ])
+                          ])
                         ])
-                      ])
-                    ])
-                  ]
+                      ]
+                    )
+                  }),
+                  0
                 )
-              }),
-              0
-            )
-          : _vm._e()
-      ])
+              : _vm._e()
+          ])
+        : _vm._e()
     ])
   ])
 }
