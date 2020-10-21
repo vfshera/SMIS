@@ -30,9 +30,6 @@
                             </li>
                      @endif
 
-                    <messages></messages>
-                    <notifications class="mr-4"></notifications>
-
                 </ul>
             </nav>
             <!-- /.navbar -->
