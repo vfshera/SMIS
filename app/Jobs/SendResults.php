@@ -36,8 +36,9 @@ class SendResults implements ShouldQueue
      */
     public function handle()
     {
-        $sendSms = new Smsservice($this->result);
-        $sendSms->sendResults();
+//        $sendSms = new Smsservice($this->result);
+//        $sendSms->sendResults();
+
 
         Mail::to($this->result["student"]["email"])->send(new ResultsMail($this->result));
     }

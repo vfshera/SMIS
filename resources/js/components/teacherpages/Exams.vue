@@ -7,13 +7,13 @@
             </div>
             <!-- /.card-header -->
 
-            <div class="card-body bg-danger pt-5 pb-5 pl-2 pr-2 mt-4" v-if="NoTimetable">
-                <h2 class="text-center mb-2">OOOPS!</h2>
-                <h4 class="text-center">It seems like Your Exams timetable is not yet ready...</h4>
-                <h4 class="text-center mt-2">Please try again later or contact IT Department.</h4>
-            </div>
+<!--            <div class="card-body bg-danger pt-5 pb-5 pl-2 pr-2 mt-4" v-if="NoTimetable">-->
+<!--                <h2 class="text-center mb-2">OOOPS!</h2>-->
+<!--                <h4 class="text-center">It seems like Your Exams timetable is not yet ready...</h4>-->
+<!--                <h4 class="text-center mt-2">Please try again later or contact IT Department.</h4>-->
+<!--            </div>-->
 
-            <div class="card-body" v-if="!NoTimetable">
+            <div class="card-body" >
                 <h4 >Please Select a class to administer exams : </h4>
 
                 <div class="row mt-3" v-if="levels.one">

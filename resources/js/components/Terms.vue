@@ -147,14 +147,29 @@
         props:[],
         methods:{
             sendResults(term_id){
-                axios.post('/api/send-results', {
-                    term_id:term_id
-                }).then((response) => {
+                Swal.fire({
+                    title: 'Send Results?',
+                    text: "This Will Run In Background",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes,Send!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.post('/api/send-results', {
+                            term_id:term_id
+                        }).then((response) => {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Results Sending Started . . .'
+                            });
+                        }).catch(error =>{
+                                this.validationErrors = error.response.data.errors;
+                          });
+                    }
+                })
 
-                    })
-                    .catch(error =>{
-                        this.validationErrors = error.response.data.errors;
-                    });
             },
             setTerm(term){
                 this.term.id = term.id;
