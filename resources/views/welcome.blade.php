@@ -166,17 +166,17 @@
         data-aos-easing="ease-in-out"
      >
         <h1 class="text-center mb-5">Contact US</h1>
-        <form class="m-auto" method="POST" action="{{ route('contact-form') }}">
+        <form class="m-auto" method="POST" action="/contact">
             @csrf
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" value="{{ old('name') }}" id="name" placeholder="Your Name Please" required>
+                <input type="text" class="form-control" value="{{ old('name') }}" name="name" id="name" placeholder="Your Name Please" required>
                   <div class="text-danger">{{ $errors->first('name') }}</div>
               </div>
               <div class="form-group col-md-6">
                 <label for="email">Email / Phone</label>
-                <input type="text" class="form-control" value="{{ old('email') }}"  id="email" placeholder="email or phone" required>
+                <input type="text" class="form-control" value="{{ old('email') }}" name="email" id="email" placeholder="email or phone" required>
                   <div class="text-danger" >{{ $errors->first('email') }}</div>
               </div>
             </div>

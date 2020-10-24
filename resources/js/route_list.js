@@ -24,6 +24,7 @@ import TeacherProfile from "./components/teacherpages/TeacherProfile";
 import NewsCenter from "./components/NewsCenter";
 import SinglePost from "./components/SinglePost";
 import ImportantDates from "./components/ImportantDates";
+import DirectMessages from "./components/DirectMessages";
 
 
 export const routes = [
@@ -58,8 +59,8 @@ export const routes = [
         component: MyProfile,
     },
     {
-        path:'/mailbox',
-        name: 'mailbox',
+        path:'/direct-messages',
+        name: 'directMessage',
         component: MailBox,
     },
     {
@@ -140,7 +141,12 @@ export const routes = [
         path:'/news-center',
         name: 'newsCenter',
         component: NewsCenter,
-    }, {
+    },
+    {
+        path:'/mailbox',
+        name: 'mailBox',
+        component: DirectMessages,
+    },{
         path:'/important-school-dates',
         name: 'schDates',
         component: ImportantDates,

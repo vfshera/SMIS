@@ -31,13 +31,22 @@
 
 
                     <li class="nav-item" v-if="currentUser.access === 0 || currentUser.access === 2">
-                        <router-link :to="{ name: 'mailbox' }"  class="nav-link" >
+                        <router-link :to="{ name: 'directMessage' }"  class="nav-link" >
                         <i class="nav-icon far fa-envelope"></i>
                         <p>
-                            Mailbox
+                            Direct Messages
                         </p>
                         </router-link>
                    </li>
+
+                        <li class="nav-item" v-if="currentUser.access === 0 || currentUser.access === 2">
+                            <router-link :to="{ name: 'mailBox' }"  class="nav-link" >
+                                <i class="nav-icon far fa-envelope"></i>
+                                <p>
+                                    Mailbox
+                                </p>
+                            </router-link>
+                        </li>
 
                             <li class="nav-item">
                                 <router-link :to="{ name: 'allTeachers' }"  class="nav-link"  v-if="currentUser.access === 0">

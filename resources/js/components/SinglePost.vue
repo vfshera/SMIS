@@ -3,15 +3,15 @@
         <div class="card col-md-12 mt-5">
             <div class="card-body container  mt-3">
                 <h3 class="card-title text-bold d-inline">
-                    <router-link  :to="{ name: 'newsCenter' }" style="text-decoration: none">
-                     {{ post.title}}
+                    <router-link  :to="{ name: 'mailBox' }" style="text-decoration: none">
+                     {{ post.name}}
                     </router-link>
                 </h3>
                 <span class="float-right text-muted font-italic">
-                        {{ post.created_at }}
+                        {{ post.email }}
                     </span>
 
-                <p class="card-text">{{ post.info }} </p>
+                <p class="card-text">{{ post.message }} </p>
             </div>
         </div>
 
@@ -34,7 +34,7 @@
         methods: {
 
             fetchData() {
-                axios.get('/api/news-post/'+this.id)
+                axios.get('/api/direct-msgs/'+this.id)
                     .then(response => {
                         this.post = response.data.data;
 
